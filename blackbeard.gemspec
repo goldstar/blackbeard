@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Blackbeard::VERSION
   spec.authors       = ["Robert Graff"]
   spec.email         = ["robert_graff@yahoo.com"]
-  spec.description   = %q{Blackbeard is an AB testing rollout pirate metric superhero}
-  spec.summary       = %q{Blackbeard is an AB testing rollout pirate metric superhero}
-  spec.homepage      = ""
+  spec.description   = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard. It dreams of being a replacement for rollout and split, but is early in it's development.}
+  spec.summary       = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard}
+  spec.homepage      = "https://github.com/goldstar/blackbeard"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,13 +18,13 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 2.14.1"
-  spec.add_development_dependency 'rack-test',   '>= 0.6.2'
+  spec.add_development_dependency "bundler", "~> 0"
+  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rspec", "~> 2"
+  spec.add_development_dependency 'rack-test', '~> 0.6'
 
-  spec.add_runtime_dependency "sinatra-base", "~> 1.4.0"
-  spec.add_runtime_dependency "tzinfo"
-  spec.add_runtime_dependency "redis"
-  spec.add_runtime_dependency "redis-namespace"
+  spec.add_runtime_dependency "sinatra-base", "~> 1.4"
+  spec.add_runtime_dependency "tzinfo", "~> 1"
+  spec.add_runtime_dependency 'redis', '~> 3.0', '>= 3.0.4'
+  spec.add_runtime_dependency 'redis-namespace', '~> 1.4', '>= 1.4.1'
 end
