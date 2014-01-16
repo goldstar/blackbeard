@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Blackbeard::VERSION
   spec.authors       = ["Robert Graff"]
   spec.email         = ["robert_graff@yahoo.com"]
-  spec.description   = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard. It dreams of being a replacement for rollout and split, but is early in it's development.}
+  spec.description   = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard. It dreams of being a replacement for rollout and split, but is early in its development.}
   spec.summary       = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard}
   spec.homepage      = "https://github.com/goldstar/blackbeard"
   spec.license       = "MIT"
