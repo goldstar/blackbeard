@@ -1,0 +1,10 @@
+<h2>Metrics</h2>
+<% if @metrics.any? %>
+  <ul>
+  <% @metrics.each do |metric| %>
+  <li><a href="<%= url("metrics/#{metric.type}/#{metric.name}") %>"><%= metric.name.capitalize %> - <%= metric.type.capitalize %></a></li>
+  <% end %>
+  </ul>
+<% else %>
+  No metrics recorded.
+<% end %>

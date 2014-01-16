@@ -1,0 +1,38 @@
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+require 'rack/test'
+require 'blackbeard/dashboard'
+
+describe Blackbeard::Dashboard do
+  include Rack::Test::Methods
+
+  let(:app) { Blackbeard::Dashboard }
+
+  describe "/" do
+    it "should redirect" do
+      get "/"
+      last_response.should be_redirect
+    end
+  end
+
+  describe "/metrics" do
+    it "should list all the metrics" do
+      Blackbeard::Metric::Total.new("Jostling")
+      get "/metrics"
+
+      last_response.should be_ok
+      last_response.body.should include('Jostling')
+    end
+  end
+
+  describe "/metrics/:type/:name" do
+    it "should show a metric" do
+      metric = Blackbeard::Metric::Total.new("Jostling")
+      get "/metrics/#{metric.type}/#{metric.name}"
+
+      last_response.should be_ok
+      last_response.body.should include("Jostling")
+    end
+  end
+
+end

@@ -1,0 +1,16 @@
+<h2><%= @metric.name.capitalize %> - <%= @metric.type.capitalize %></h2>
+
+<table>
+  <tr>
+    <th>Hour</th>
+    <th>Count</th>
+  </tr>
+
+  <% @metric.hours.each do |metric_hour| %>
+  <tr>
+    <td><%= metric_hour.hour %></td>
+    <td><%= metric_hour.result %></td>
+  </tr>
+  <% end %>
+
+</table>
