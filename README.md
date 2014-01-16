@@ -1,22 +1,6 @@
 # Blackbeard
 
-Blackbeard is a Redis & Rack metric and dashboard.
-Rack based
-Redis
-Browser managed
-Server-side (in views, controllers, crons)
-Browser-side (in javascript via REST hook)
-Minimal configuration
-
-
-Multiple experiments running simultaneously
-  Each experiment supports
-    Multi-goals
-      * true or false (e.g. join)
-      * increments (e.g. likes, revenues)
-      * funnels (e.g. step 3 of 4)
-      * reusable accross experiments
-      * define goals in controllers, views, javascript
+Blackbeard is a Redis backed collection system with a rack dashboard.
 
 ## Installation
 
@@ -38,13 +22,19 @@ In an initializer create your global $pirate and pass in your configuration.
 
 ```ruby
 $pirate = Blackbeard.pirate do |config|
-  config.namespace = "Hello"
-  config.unique_indentifier = proc { |context| context.current_user_id }
-  config.timezone = "America/Los_Angeles"
+  config.redis = Redis.new # required. Will automatically be namespaced.
+  config.namespace = "Blackbeard" # optional
+  config.timezone = "America/Los_Angeles" # optional
 end
 ```
 
 Note that the configuration is shared by all pirates, so only create one pirate at a time.
+
+To get the rack dashboard on Rails, mount it in your `routes.rb`. Don't forget to protect it with some constraints.
+
+```ruby
+mount Blackbeard::Dashboard => '/sidekiq', :constraints => ConstraintClassYouCreate.new
+```
 
 ### Collecting Metrics
 
@@ -75,7 +65,4 @@ $pirate.context(...).add(:revenue, +119.95)              # can also accept float
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-.test(...)
-```
 
