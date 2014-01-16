@@ -1,6 +1,6 @@
 # Blackbeard
 
-Blackbeard is a Redis backed collection system with a rack dashboard.
+Blackbeard is a Redis backed metrics collection system with a Rack dashboard.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Note that the configuration is shared by all pirates, so only create one pirate 
 To get the rack dashboard on Rails, mount it in your `routes.rb`. Don't forget to protect it with some constraints.
 
 ```ruby
-mount Blackbeard::Dashboard => '/sidekiq', :constraints => ConstraintClassYouCreate.new
+mount Blackbeard::Dashboard => '/blackbeard', :constraints => ConstraintClassYouCreate.new
 ```
 
 ### Collecting Metrics
