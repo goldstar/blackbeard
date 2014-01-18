@@ -2,14 +2,14 @@ require "blackbeard/context"
 require "blackbeard/metric"
 require "blackbeard/metric/unique"
 require "blackbeard/metric/total"
+require "blackbeard/feature"
 
 module Blackbeard
   class Pirate
-    attr_accessor :total_metrics, :unique_metrics
-
     def initialize
       @total_metrics = {}
       @unique_metrics = {}
+      @features = {}
     end
 
     def total_metric(name)
@@ -18,6 +18,10 @@ module Blackbeard
 
     def unique_metric(name)
       @unique_metrics[name] ||= Metric::Unique.new(name)
+    end
+
+    def feature(name)
+      @features[name] ||= Feature.new(name)
     end
 
     def context(options = {})
