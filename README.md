@@ -21,6 +21,9 @@ Or install it yourself as:
 In an initializer create your global $pirate and pass in your configuration.
 
 ```ruby
+require 'blackbeard'
+require 'blackbeard/dashboard'
+
 $pirate = Blackbeard.pirate do |config|
   config.redis = Redis.new # required. Will automatically be namespaced.
   config.namespace = "Blackbeard" # optional

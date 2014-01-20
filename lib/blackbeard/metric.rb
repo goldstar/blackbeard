@@ -44,7 +44,7 @@ module Blackbeard
 private
 
     def hour_keys
-      db.hash_keys(hours_set_key)
+      db.set_members(hours_set_key)
     end
 
     def hours_set_key

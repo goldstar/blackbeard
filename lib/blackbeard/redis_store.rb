@@ -26,6 +26,10 @@ module Blackbeard
       redis.hkeys(hash_key)
     end
 
+    def set_members(set_key)
+      redis.smembers(set_key)
+    end
+
     def set_add_member(set_key, member)
       redis.sadd(set_key, member)
     end

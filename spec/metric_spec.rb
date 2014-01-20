@@ -1,6 +1,24 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Metric do
+
+  describe "hour_keys" do
+    before :each do
+      @total_metric = Blackbeard::Metric::Total.new("one-total")
+    end
+
+    it "should return an empty array if no metrics" do
+      @total_metric.send(:hour_keys).should == []
+    end
+
+    it "should return an array for each hour" do
+      @total_metric.add('user1', 1)
+      key = @total_metric.send(:key_for_hour, Blackbeard.tz.now)
+      @total_metric.send(:hour_keys).should == [key]
+    end
+
+  end
+
   describe "self.all" do
     before :each do
       Blackbeard::Metric::Total.new("one-total")
