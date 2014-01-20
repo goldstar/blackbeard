@@ -8,8 +8,8 @@
 
   <% @metric.hours.each do |metric_hour| %>
   <tr>
-    <td><%= metric_hour.hour %></td>
-    <td><%= metric_hour.result %></td>
+    <td><%= metric_hour[:hour] %></td>
+    <td><%= metric_hour[:result] %></td>
   </tr>
   <% end %>
 
