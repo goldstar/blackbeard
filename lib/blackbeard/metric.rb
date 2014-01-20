@@ -28,7 +28,7 @@ module Blackbeard
     end
 
     def hours
-      hour_keys.each do |hour_key|
+      hour_keys.map do |hour_key|
         {
           :hour => hour_key.split("::").last,
           :result => result_for_hour_key(hour_key)

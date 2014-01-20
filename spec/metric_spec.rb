@@ -19,6 +19,18 @@ describe Blackbeard::Metric do
 
   end
 
+  describe "hours" do
+    before :each do
+      @total_metric = Blackbeard::Metric::Total.new("one-total")
+    end
+
+    it "should return an array of hashes" do
+      @total_metric.add('user1', 1)
+      @total_metric.hours.should be_an(Array)
+      @total_metric.hours.first.should be_a(Hash)
+    end
+  end
+
   describe "self.all" do
     before :each do
       Blackbeard::Metric::Total.new("one-total")
