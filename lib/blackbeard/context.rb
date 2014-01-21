@@ -9,22 +9,23 @@ module Blackbeard
     end
 
     def add_total(name, amount = 1)
-      @pirate.total_metric(name.to_s).add(amount) unless bot?
+      @pirate.total_metric(name.to_s).add(unique_identifier, amount) unless bot?
     end
 
     def add_unique(name)
       @pirate.unique_metric(name.to_s).add(unique_identifier) unless bot?
     end
 
-  private
 
     def bot?
       @bot
     end
 
     def unique_identifier
-      @user_id.present? ? "a#{@user_id}" : "b#{@blackbeard_identifier}"
+      @user_id.nil? ? "b#{blackbeard_visitor_id}" : "a#{@user_id}"
     end
+
+private
 
     def blackbeard_visitor_id(cookies)
       cookies[:bbd] ||= generate_blackbeard_visitor_id(cookies)
