@@ -56,10 +56,38 @@ $pirate.context(:user_id => user_id, :cookies => cookies).add_unique(:logged_in_
 Non-unique counts are for metrics wherein a user may trigger the same metric multiple times and the amounts are summed up.
 
 ```ruby
-$pirate.context(...).add(:like, +1)                      # increment a like
-$pirate.context(...).add(:like, -1)                      # de-increment a like
-$pirate.context(...).add(:revenue, +119.95)              # can also accept floats
+$pirate.context(...).add_total(:like, +1)                      # increment a like
+$pirate.context(...).add_total(:like, -1)                      # de-increment a like
+$pirate.context(...).add_total(:revenue, +119.95)              # can also accept floats
 ```
+
+### Setting Context
+
+Most of Blackbeard's calls are done via a context.
+
+```ruby
+$pirate.context(:user_id => current_user.id, :bot => false, :cookies => app_cookie_jar)
+```
+
+To establish identity, a context must have a user_id or a cookie_jar where blackbeard will cookie a visitor with it's own uid.  As cookie_jar is optional, you can collect metrics outside a web request.  You can also increment metrics for users other than the one currently logged in.  For example, if user A refers visitor B and vistor B joins, then you can increment User A's referrals.
+
+It gets pretty tedious for a web app to constantly set the context. To make that more paletable you can use a before filter in Rails (or your framework's equivalent) and the $pirate.set_context method.
+
+```ruby
+before_action do |controller|
+  $pirate.set_context(
+    :user_id => controller.current_user.id,
+    :bot => controller.bot?,
+    :cookies => controller.cookies)
+end
+```
+
+If you `set_context` you can now make calls directly on $pirate and they will be delegate to that context.
+
+```ruby
+$pirate.add_total(:like, +1)
+```
+
 
 ## Contributing
 

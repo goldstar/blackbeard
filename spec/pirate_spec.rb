@@ -23,4 +23,36 @@ describe Blackbeard::Pirate do
 
   end
 
+  describe "#context" do
+    it "should return a brand new context" do
+      new_context = double
+      Blackbeard::Context.should_receive(:new).and_return(new_context)
+      pirate.context.should == new_context
+    end
+  end
+
+  describe "set context delegations" do
+    context "with no set context" do
+      it "should raise Blackbeard::MissingContextError" do
+        expect{ pirate.add_unique(:exmaple) }.to raise_error( Blackbeard::MissingContextError )
+      end
+      it "should raise Blackbeard::MissingContextError" do
+        expect{ pirate.add_total(:exmaple, 1) }.to raise_error( Blackbeard::MissingContextError )
+      end
+    end
+    context "with context set" do
+      let!(:set_context){ pirate.set_context(:user_id => 1) }
+
+      it "should delegate #add_unique" do
+        set_context.should_receive(:add_unique).with(:example_metric).and_return(set_context)
+        pirate.add_unique(:example_metric)
+      end
+
+      it "should delegate #add_total" do
+        set_context.should_receive(:add_total).with(:example_metric, 1).and_return(set_context)
+        pirate.add_total(:example_metric, 1)
+      end
+    end
+  end
+
 end

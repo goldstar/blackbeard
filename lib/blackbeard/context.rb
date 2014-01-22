@@ -5,17 +5,25 @@ module Blackbeard
       @pirate = pirate
       @user_id = options[:user_id]
       @bot = options[:bot] || false
-      @blackbeard_identifier = blackbeard_visitor_id(options[:cookies] || {}) unless bot?
+      @cookies = options[:cookies] || {}
+      raise NonIdentifyingContextError unless @cookies || @user_id
     end
 
     def add_total(name, amount = 1)
       @pirate.total_metric(name.to_s).add(unique_identifier, amount) unless bot?
+      self
     end
 
     def add_unique(name)
       @pirate.unique_metric(name.to_s).add(unique_identifier) unless bot?
+      self
     end
 
+    def feature(name, options = {})
+      variations = options.keys
+      variation_to_show = @pirate.feature(name.to_s).select_variation(variations, unique_identifier)
+      options[:variation_to_show]
+    end
 
     def bot?
       @bot
@@ -28,12 +36,12 @@ module Blackbeard
 private
 
     def blackbeard_visitor_id(cookies)
-      cookies[:bbd] ||= generate_blackbeard_visitor_id(cookies)
+      @cookies[:bbd] ||= generate_blackbeard_visitor_id(cookies)
     end
 
     def generate_blackbeard_visitor_id(cookies)
       id = Blackbeard.db.increment("visitor_id")
-      cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
+      @cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id
     end
 
