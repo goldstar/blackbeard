@@ -34,6 +34,10 @@ module Blackbeard
       redis.sadd(set_key, member)
     end
 
+    def set_add_members(set_key, *members)
+      redis.sadd(set_key, members.flatten)
+    end
+
     def set_count(set_key)
       redis.scard(set_key)
     end

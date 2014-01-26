@@ -39,28 +39,6 @@ To get the rack dashboard on Rails, mount it in your `routes.rb`. Don't forget t
 mount Blackbeard::Dashboard => '/blackbeard', :constraints => ConstraintClassYouCreate.new
 ```
 
-### Collecting Metrics
-
-In your app, have your pirate collect the important metrics.
-
-#### Counting Unique Metrics
-
-Unique counts are for metrics wherein a user may trigger the same metric twice, but should only be counted once.
-
-```ruby
-$pirate.context(:user_id => user_id, :cookies => cookies).add_unique(:logged_in_user)
-```
-
-#### Counting Non-Unique Metrics
-
-Non-unique counts are for metrics wherein a user may trigger the same metric multiple times and the amounts are summed up.
-
-```ruby
-$pirate.context(...).add_total(:like, +1)                      # increment a like
-$pirate.context(...).add_total(:like, -1)                      # de-increment a like
-$pirate.context(...).add_total(:revenue, +119.95)              # can also accept floats
-```
-
 ### Setting Context
 
 Most of Blackbeard's calls are done via a context.
@@ -88,6 +66,101 @@ If you `set_context` you can now make calls directly on $pirate and they will be
 $pirate.add_total(:like, +1)
 ```
 
+### Collecting Metrics
+
+In your app, have your pirate collect the important metrics.
+
+#### Counting Unique Metrics
+
+Unique counts are for metrics wherein a user may trigger the same metric twice, but should only be counted once.
+
+```ruby
+$pirate.add_unique(:logged_in_user)
+```
+
+#### Counting Non-Unique Metrics
+
+Non-unique counts are for metrics wherein a user may trigger the same metric multiple times and the amounts are summed up.
+
+```ruby
+$pirate.add_total(:like, +1)                      # increment a like
+$pirate.add_total(:like, -1)                      # de-increment a like
+$pirate.add_total(:revenue, +119.95)              # can also accept floats
+```
+
+### Chaining Metrics
+
+Context methods that inrement metrics always return the context, so you can chain them together.
+
+```ruby
+$pirate.set_context(:user_id => 1)
+$pirate.add_total(:like, +1).add_unique(:likers)
+
+$pirate.context(:user_id => 2).add_total(:like, +1).add_unique(:likers)
+```
+
+
+### Defining Tests (changes or features)
+
+Features are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
+
+
+In a view:
+
+```erb
+<%= $pirate.ab_test(:new_onboarding, :control => '/onboarding', :welcome_flow => '/welcome') %>
+```
+
+In a controller:
+
+```ruby
+@onboarding_path = $pirate.ab_test(:new_onboarding, :control => '/onboarding', :welcome_flow => '/welcome') %>
+```
+
+You can call the feature multiple times with different variations:
+
+```ruby
+@button_bg_color = $pirate.ab_test(:button_color, :control => "#FFF", :black => "#000")
+@button_text_color = $pirate.ab_test(:button_color, :control => "#CCC", :black => "#FFF")
+```
+
+The best things to test are the biggest things that don't fit into a hash of options:
+
+```erb
+<% if $pirate.ab_test(:join_form) == :long_version do %>
+  <!-- extra field here -->
+<% end %>
+```
+
+```ruby
+if $pirate.ab_test(:join_form) == :long_version do
+  # validate the extra fields
+end
+```
+
+If you're simply rolling out a feature or want a feature flipper, you can:
+
+```ruby
+if $pirate.active?(:friend_feed){ ... }  # shorthand for test(:friend_feed) == :active
+```
+
+GOTCHA #1:  It's good to avoid elsif and case statements when testing for features. Blackbeard learns about the features and their variations dynamically. If you're not passing in your variations as a hash, but only using conditionals, you can ensure all your variations are available with:
+
+```ruby
+$pirate.test(:friend_feed).add_variations(:variation_one, :variation_two, ...)
+```
+
+Look at the dashboard to see which variations are registered.
+
+Features do not turn on automatically. When you first deploy the feature will be set to `:inactive` or `:control`, `:off`, or `:default` if any of those variations are defined.
+
+GOTCHA #2:  If you do not define the :inactive, :control, :off or :default variations, the result will be nil. This is the desired behavior but it may be confusing.
+
+```ruby
+$pirate.ab_test(:new_onboarding, :one => 'one', :two => 'two') # is the same as the next line
+$pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when feature is inactive
+$pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when feature is inactive
+```
 
 ## Contributing
 

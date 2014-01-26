@@ -1,3 +1,5 @@
+require 'blackbeard/selected_variation'
+
 module Blackbeard
   class Context
 
@@ -19,10 +21,19 @@ module Blackbeard
       self
     end
 
-    def feature(name, options = {})
-      variations = options.keys
-      variation_to_show = @pirate.feature(name.to_s).select_variation(variations, unique_identifier)
-      options[:variation_to_show]
+    def ab_test(name, options = nil)
+      test = @pirate.test(name.to_s)
+      if options.is_a? Hash
+        variation = test.add_variations(options.keys).select_variation
+        options[variation.to_sym]
+      else
+        variation = test.select_variation
+        SelectedVariation.new(test, variation)
+      end
+    end
+
+    def active?(name)
+      ab_test(name) == :active
     end
 
     def bot?

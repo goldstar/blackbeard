@@ -1,5 +1,6 @@
 require 'blackbeard'
 require 'redis'
+require 'byebug'
 
 RSpec.configure do |config|
   config.before do

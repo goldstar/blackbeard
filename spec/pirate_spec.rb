@@ -6,20 +6,21 @@ describe Blackbeard::Pirate do
   describe "memoization" do
     let(:name){ "bond" }
 
-    it "should get features once" do
-      Blackbeard::Feature.should_receive(:new).with(name).once.and_return(true)
-      4.times{ pirate.feature(name) }
-    end
-
     it "should get unique metrics once" do
-      Blackbeard::Metric::Unique.should_receive(:new).with(name).once.and_return(true)
+      Blackbeard::Metric::Unique.should_receive(:new).with(name).once.and_return(double)
       4.times{ pirate.unique_metric(name) }
     end
 
     it "should get total metrics once" do
-      Blackbeard::Metric::Total.should_receive(:new).with(name).once.and_return(true)
+      Blackbeard::Metric::Total.should_receive(:new).with(name).once.and_return(double)
       4.times{ pirate.total_metric(name) }
     end
+
+    it "should get test once" do
+      Blackbeard::Test.should_receive(:new).with(name).once.and_return(double)
+      4.times{ pirate.test(name) }
+    end
+
 
   end
 
@@ -33,12 +34,22 @@ describe Blackbeard::Pirate do
 
   describe "set context delegations" do
     context "with no set context" do
-      it "should raise Blackbeard::MissingContextError" do
-        expect{ pirate.add_unique(:exmaple) }.to raise_error( Blackbeard::MissingContextError )
+      it "add_unique should raise Blackbeard::MissingContextError" do
+        expect{ pirate.add_unique(:example) }.to raise_error( Blackbeard::MissingContextError )
       end
-      it "should raise Blackbeard::MissingContextError" do
-        expect{ pirate.add_total(:exmaple, 1) }.to raise_error( Blackbeard::MissingContextError )
+
+      it "add_total should raise Blackbeard::MissingContextError" do
+        expect{ pirate.add_total(:example, 1) }.to raise_error( Blackbeard::MissingContextError )
       end
+
+      it "ab_test should raise Blackbeard::MissingContextError" do
+        expect{ pirate.ab_test(:example, :on => 1, :off => 2) }.to raise_error( Blackbeard::MissingContextError )
+      end
+
+      it "active? should raise Blackbeard::MissingContextError" do
+        expect{ pirate.active?(:example) }.to raise_error( Blackbeard::MissingContextError )
+      end
+
     end
     context "with context set" do
       let!(:set_context){ pirate.set_context(:user_id => 1) }
@@ -51,6 +62,16 @@ describe Blackbeard::Pirate do
       it "should delegate #add_total" do
         set_context.should_receive(:add_total).with(:example_metric, 1).and_return(set_context)
         pirate.add_total(:example_metric, 1)
+      end
+
+      it "should delegate #ab_test" do
+        set_context.should_receive(:ab_test).with(:example_metric, :on => 1, :off => 2).and_return(set_context)
+        pirate.ab_test(:example_metric, :on => 1, :off => 2)
+      end
+
+      it "should delegate #active?" do
+        set_context.should_receive(:active?).with(:example_metric).and_return(false)
+        pirate.active?(:example_metric)
       end
     end
   end
