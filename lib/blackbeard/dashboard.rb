@@ -1,10 +1,10 @@
 require 'sinatra/base'
 require 'blackbeard'
-require 'blackbeard/dashboard/helpers'
+require 'blackbeard/dashboard_helpers'
 
 module Blackbeard
   class Dashboard < Sinatra::Base
-    set :root, File.expand_path(File.dirname(__FILE__) + "/dashboard")
+    set :root, File.expand_path(File.dirname(__FILE__) + "./../../dashboard")
     set :public_folder, Proc.new { "#{root}/public" }
     set :views, Proc.new { "#{root}/views" }
     set :raise_errors, true

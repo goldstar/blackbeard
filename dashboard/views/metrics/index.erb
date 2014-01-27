@@ -1,10 +1,15 @@
-<h2>Metrics</h2>
+<div class="page-header">
+  <h1>Metrics</h1>
+</div>
+
 <% if @metrics.any? %>
-  <ul>
+  <ul class="list-group">
   <% @metrics.each do |metric| %>
   <li><a href="<%= url("metrics/#{metric.type}/#{metric.name}") %>"><%= metric.name.capitalize %> - <%= metric.type.capitalize %></a></li>
   <% end %>
   </ul>
 <% else %>
-  No metrics recorded.
+  <div class="alert alert-danger">
+    <strong>No Metrics recorded!</strong> Something may be wrong or you may just need to define some metrics.
+  </div>
 <% end %>
