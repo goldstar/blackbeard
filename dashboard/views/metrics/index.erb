@@ -5,7 +5,7 @@
 <% if @metrics.any? %>
   <ul class="list-group">
   <% @metrics.each do |metric| %>
-  <li><a href="<%= url("metrics/#{metric.type}/#{metric.name}") %>"><%= metric.name.capitalize %> - <%= metric.type.capitalize %></a></li>
+  <li><a href="<%= url("metrics/#{metric.type}/#{metric.id}") %>"><%= metric.name.capitalize %> - <%= metric.type.capitalize %></a></li>
   <% end %>
   </ul>
 <% else %>

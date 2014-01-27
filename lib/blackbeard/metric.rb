@@ -3,8 +3,8 @@ require "blackbeard/storable"
 module Blackbeard
   class Metric < Storable
 
-    def self.new_from_type_name(type, name)
-      self.const_get(type.capitalize).new(name)
+    def self.new_from_type_id(type, id)
+      self.const_get(type.capitalize).new(id)
     end
 
     def type
@@ -17,14 +17,14 @@ module Blackbeard
 
     def self.new_from_key(key)
       if key =~ /^metrics::(.+)::(.+)$/
-        new_from_type_name($1, $2)
+        new_from_type_id($1, $2)
       else
         nil
       end
     end
 
     def key
-      "metrics::#{ type }::#{ name }"
+      "metrics::#{ type }::#{ id }"
     end
 
     def hours

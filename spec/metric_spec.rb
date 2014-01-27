@@ -42,8 +42,8 @@ describe Blackbeard::Metric do
     end
 
     it "should instantiate each metric with the correct class" do
-      Blackbeard::Metric.all.select{|m| m.name == "two-total"}.should have(1).metric
-      Blackbeard::Metric.all.select{|m| m.name == "two-total"}.first.should be_a(Blackbeard::Metric::Total)
+      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.should have(1).metric
+      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.first.should be_a(Blackbeard::Metric::Total)
     end
   end
 

@@ -1,19 +1,23 @@
 module Blackbeard
   class Storable
-    attr_reader :name
+    attr_reader :id
 
-    def initialize(name)
-      @name = name.to_s.downcase
+    def initialize(id)
+      @id = id.to_s.downcase
       db.hash_key_set_if_not_exists(master_key, key, tz.now.to_date)
+    end
+
+    def name
+      @id
     end
 
     def master_key
       raise "define master key in the class that inherits from storable"
     end
 
-    def self.new_from_key(key)
-      name = key.split('::').last
-      self.new(name)
+    def self.new_from_id(key)
+      id = key.split('::').last
+      self.new(id)
     end
 
     def self.all_keys
@@ -31,7 +35,7 @@ module Blackbeard
   protected
 
     def key
-      "#{master_key}::#{ name }"
+      "#{master_key}::#{ id }"
     end
 
     def master_key

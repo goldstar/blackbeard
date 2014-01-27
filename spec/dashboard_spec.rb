@@ -25,10 +25,10 @@ describe Blackbeard::Dashboard do
     end
   end
 
-  describe "/metrics/:type/:name" do
+  describe "/metrics/:type/:id" do
     it "should show a metric" do
       metric = Blackbeard::Metric::Total.new("Jostling")
-      get "/metrics/#{metric.type}/#{metric.name}"
+      get "/metrics/#{metric.type}/#{metric.id}"
 
       last_response.should be_ok
       last_response.body.should include("Jostling")

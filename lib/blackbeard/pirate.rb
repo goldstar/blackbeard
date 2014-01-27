@@ -13,16 +13,16 @@ module Blackbeard
       @tests = {}
     end
 
-    def total_metric(name)
-      @total_metrics[name] ||= Metric::Total.new(name)
+    def total_metric(id)
+      @total_metrics[id] ||= Metric::Total.new(id)
     end
 
-    def unique_metric(name)
-      @unique_metrics[name] ||= Metric::Unique.new(name)
+    def unique_metric(id)
+      @unique_metrics[id] ||= Metric::Unique.new(id)
     end
 
-    def test(name)
-      @tests[name] ||= Test.new(name)
+    def test(id)
+      @tests[id] ||= Test.new(id)
     end
 
 
@@ -34,24 +34,24 @@ module Blackbeard
       @set_context = Context.new(self, options)
     end
 
-    def add_unique(name)
+    def add_unique(id)
       raise MissingContextError unless @set_context
-      @set_context.add_unique(name)
+      @set_context.add_unique(id)
     end
 
-    def add_total(name, amount)
+    def add_total(id, amount)
       raise MissingContextError unless @set_context
-      @set_context.add_total(name, amount)
+      @set_context.add_total(id, amount)
     end
 
-    def ab_test(name, options)
+    def ab_test(id, options)
       raise MissingContextError unless @set_context
-      @set_context.ab_test(name, options)
+      @set_context.ab_test(id, options)
     end
 
-    def active?(name)
+    def active?(id)
       raise MissingContextError unless @set_context
-      @set_context.active?(name)
+      @set_context.active?(id)
     end
 
 

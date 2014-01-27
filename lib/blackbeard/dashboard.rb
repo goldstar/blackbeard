@@ -21,8 +21,8 @@ module Blackbeard
       erb 'metrics/index'.to_sym
     end
 
-    get "/metrics/:type/:name" do
-      @metric = Blackbeard::Metric.new_from_type_name(params[:type], params[:name])
+    get "/metrics/:type/:id" do
+      @metric = Blackbeard::Metric.new_from_type_id(params[:type], params[:id])
       erb 'metrics/show'.to_sym
     end
 

@@ -11,18 +11,18 @@ module Blackbeard
       raise NonIdentifyingContextError unless @cookies || @user_id
     end
 
-    def add_total(name, amount = 1)
-      @pirate.total_metric(name.to_s).add(unique_identifier, amount) unless bot?
+    def add_total(id, amount = 1)
+      @pirate.total_metric(id.to_s).add(unique_identifier, amount) unless bot?
       self
     end
 
-    def add_unique(name)
-      @pirate.unique_metric(name.to_s).add(unique_identifier) unless bot?
+    def add_unique(id)
+      @pirate.unique_metric(id.to_s).add(unique_identifier) unless bot?
       self
     end
 
-    def ab_test(name, options = nil)
-      test = @pirate.test(name.to_s)
+    def ab_test(id, options = nil)
+      test = @pirate.test(id.to_s)
       if options.is_a? Hash
         variation = test.add_variations(options.keys).select_variation
         options[variation.to_sym]
@@ -32,8 +32,8 @@ module Blackbeard
       end
     end
 
-    def active?(name)
-      ab_test(name) == :active
+    def active?(id)
+      ab_test(id) == :active
     end
 
     def bot?

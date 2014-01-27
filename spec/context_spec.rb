@@ -10,23 +10,23 @@ describe Blackbeard::Context do
 
   describe "#add_total" do
     it "should call add on the total metric" do
-      pirate.should_receive(:total_metric).with(total_metric.name){ total_metric }
+      pirate.should_receive(:total_metric).with(total_metric.id){ total_metric }
       total_metric.should_receive(:add).with(uid, 3)
-      context.add_total( total_metric.name, 3 )
+      context.add_total( total_metric.id, 3 )
     end
   end
 
   describe "#add_unique" do
     it "should call add on the unique metric" do
-      pirate.should_receive(:unique_metric).with(unique_metric.name){ unique_metric }
+      pirate.should_receive(:unique_metric).with(unique_metric.id){ unique_metric }
       unique_metric.should_receive(:add).with(uid)
-      context.add_unique( unique_metric.name )
+      context.add_unique( unique_metric.id )
     end
   end
 
   describe "#ab_test" do
     before :each do
-      pirate.should_receive(:test).with(test.name).and_return(test)
+      pirate.should_receive(:test).with(test.id).and_return(test)
     end
 
     it "should call select_variation on the test" do
@@ -68,8 +68,8 @@ describe Blackbeard::Context do
     let(:active_test) { Blackbeard::Test.new(:active_test) }
 
     before :each do
-      pirate.stub(:test).with(active_test.name).and_return(active_test)
-      pirate.stub(:test).with(inactive_test.name).and_return(inactive_test)
+      pirate.stub(:test).with(active_test.id).and_return(active_test)
+      pirate.stub(:test).with(inactive_test.id).and_return(inactive_test)
     end
 
     it "should return true when active" do
