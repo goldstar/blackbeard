@@ -18,12 +18,20 @@ module Blackbeard
       redis.hsetnx(hash_key, field, value)
     end
 
+    def hash_set(hash_key, field, value)
+      redis.hset(hash_key, field, value)
+    end
+
     def hash_length(hash_key)
       redis.hlen(hash_key)
     end
 
     def hash_keys(hash_key)
       redis.hkeys(hash_key)
+    end
+
+    def hash_get_all(hash_key)
+      redis.hgetall(hash_key)
     end
 
     def set_members(set_key)

@@ -2,6 +2,13 @@ require "blackbeard/storable"
 
 module Blackbeard
   class Metric < Storable
+    set_master_key :metrics
+    string_attributes :name
+
+    def initialize(id)
+      raise "do not create a Metric directly. Instead use a subclass." if self.class == Blackbeard::Metric
+      super
+    end
 
     def self.new_from_type_id(type, id)
       self.const_get(type.capitalize).new(id)
@@ -11,8 +18,8 @@ module Blackbeard
       self.class.name.split("::").last.downcase
     end
 
-    def self.master_key
-      "metrics"
+    def name
+      storable_attributes_hash[:name] || id
     end
 
     def self.new_from_key(key)
