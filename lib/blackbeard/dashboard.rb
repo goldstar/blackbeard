@@ -13,7 +13,7 @@ module Blackbeard
     helpers Blackbeard::DashboardHelpers
 
     get '/' do
-      redirect url('/metrics')
+      erb :index
     end
 
     get '/metrics' do
@@ -24,6 +24,16 @@ module Blackbeard
     get "/metrics/:type/:id" do
       @metric = Blackbeard::Metric.new_from_type_id(params[:type], params[:id])
       erb 'metrics/show'.to_sym
+    end
+
+    get '/tests' do
+      @tests = Blackbeard::Test.all
+      erb 'tests/index'.to_sym
+    end
+
+    get "/tests/:id" do
+      @test = Blackbeard::Test.new(params[:id])
+      erb 'tests/show'.to_sym
     end
 
   end

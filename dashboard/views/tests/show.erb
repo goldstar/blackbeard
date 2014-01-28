@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1><%= @test.name %></h1>
+</div>
+
+<table>
+  <tr>
+    <th>Variations</th>
+  </tr>
+
+  <% @test.variations.each do |variation| %>
+  <tr>
+    <td><%= variation %></td>
+  </tr>
+  <% end %>
+
+</table>

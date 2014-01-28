@@ -55,6 +55,14 @@ module Blackbeard
       db.hash_length(master_key)
     end
 
+    def self.new_from_key(key)
+      if key =~ /^#{master_key}::(.+)$/
+        new($1)
+      else
+        nil
+      end
+    end
+
     def self.all
       all_keys.map{ |key| new_from_key(key) }
     end
