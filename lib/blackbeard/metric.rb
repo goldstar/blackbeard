@@ -34,6 +34,14 @@ module Blackbeard
       "metrics::#{ type }::#{ id }"
     end
 
+    def recent_hours(count = 24, starting_at = tz.now)
+      Array(0..count-1).map do |offset|
+        hour = starting_at - (offset * 3600)
+        result = result_for_hour(hour)
+        {:hour => hour.strftime("%Y%m%d%H"), :result => result}
+      end
+    end
+
     def hours
       hour_keys.map do |hour_key|
         {

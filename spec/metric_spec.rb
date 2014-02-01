@@ -16,7 +16,19 @@ describe Blackbeard::Metric do
       key = @total_metric.send(:key_for_hour, Blackbeard.tz.now)
       @total_metric.send(:hour_keys).should == [key]
     end
+  end
 
+  describe "recent_hours" do
+    let(:metric) { Blackbeard::Metric::Total.new("one-total") }
+    let(:start_at) { Time.new(2014,1,1,12,0,0) }
+
+    it "should return results for recent hours" do
+      metric.recent_hours(3, start_at).should == [
+        {:hour => '2014010112', :result => 0 },
+        {:hour => '2014010111', :result => 0 },
+        {:hour => '2014010110', :result => 0 }
+      ]
+    end
   end
 
   describe "hours" do
