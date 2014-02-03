@@ -9,7 +9,8 @@ module Blackbeard
       db.increment_by_float(key, amount.to_f)
     end
 
-    def result_for_hour_key(key)
+    def result_for_hour(time)
+      key = key_for_hour(time)
       db.get(key).to_f
     end
 

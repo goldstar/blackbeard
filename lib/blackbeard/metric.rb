@@ -1,4 +1,6 @@
 require "blackbeard/storable"
+require "blackbeard/metric_hour"
+require "date"
 
 module Blackbeard
   class Metric < Storable
@@ -38,22 +40,8 @@ module Blackbeard
       Array(0..count-1).map do |offset|
         hour = starting_at - (offset * 3600)
         result = result_for_hour(hour)
-        {:hour => hour.strftime("%Y%m%d%H"), :result => result}
+        MetricHour.new(hour, result)
       end
-    end
-
-    def hours
-      hour_keys.map do |hour_key|
-        {
-          :hour => hour_key.split("::").last,
-          :result => result_for_hour_key(hour_key)
-        }
-      end
-    end
-
-    def result_for_hour(time)
-      key = key_for_hour(time)
-      result_for_hour_key(key)
     end
 
 private

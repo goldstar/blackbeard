@@ -9,7 +9,8 @@ module Blackbeard
       db.set_add_member(key, uid)
     end
 
-    def result_for_hour_key(key)
+    def result_for_hour(time)
+      key = key_for_hour(time)
       db.set_count(key)
     end
 

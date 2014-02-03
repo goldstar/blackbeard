@@ -23,23 +23,7 @@ describe Blackbeard::Metric do
     let(:start_at) { Time.new(2014,1,1,12,0,0) }
 
     it "should return results for recent hours" do
-      metric.recent_hours(3, start_at).should == [
-        {:hour => '2014010112', :result => 0 },
-        {:hour => '2014010111', :result => 0 },
-        {:hour => '2014010110', :result => 0 }
-      ]
-    end
-  end
-
-  describe "hours" do
-    before :each do
-      @total_metric = Blackbeard::Metric::Total.new("one-total")
-    end
-
-    it "should return an array of hashes" do
-      @total_metric.add('user1', 1)
-      @total_metric.hours.should be_an(Array)
-      @total_metric.hours.first.should be_a(Hash)
+      metric.recent_hours(3, start_at).should have(3).metric_hours
     end
   end
 
