@@ -20,9 +20,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 2.6"
+  spec.add_development_dependency "rspec", "~> 2.14.1"
   spec.add_development_dependency 'rack-test', '~> 0.6'
   spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'guard-rspec', '~> 4.2.5'
+  spec.add_development_dependency 'terminal-notifier-guard'
 
   spec.add_runtime_dependency "sinatra-base", "~> 1.4"
   spec.add_runtime_dependency "tzinfo", "~> 0.3"
