@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe Blackbeard::Metric::Total do
 
   let(:metric) { Blackbeard::Metric::Total.new("page views") }
+  let(:db) { metric.send(:db) }
   let(:uid) { "unique identifier" }
   let(:ouid) { "other unique identifier" }
 
@@ -60,6 +61,52 @@ describe Blackbeard::Metric::Total do
       metric.add(uid, 4)
       metric.result_for_hour(Blackbeard.tz.now).should == 6
     end
+  end
+
+  describe "result_for_day" do
+    let(:date) { Date.new(2014,1,1) }
+    context "result in db" do
+      before :each do
+        day_key = metric.send(:key_for_date, date)
+        db.set(day_key, 4)
+      end
+      it "should return the result from db" do
+        metric.result_for_day(date).should == 4.0
+      end
+      it "should not remerge the results" do
+        metric.should_not_receive(:generate_result_for_day).with(date)
+        metric.result_for_day(date)
+      end
+    end
+
+    context "result in not in db" do
+      it "should merge hours" do
+        metric.should_receive(:generate_result_for_day).with(date).and_return(2.0)
+        metric.result_for_day(date).should == 2.0
+      end
+    end
+  end
+
+
+  describe "generate_result_for_day" do
+    let(:date) { Date.new(2014,1,1) }
+    before :each do
+      key_for_1am = metric.send(:key_for_hour, Time.new(2014,1,1,1))
+      db.set(key_for_1am, 2)
+      key_for_2pm = metric.send(:key_for_hour, Time.new(2014,1,1,14))
+      db.set(key_for_2pm, 3)
+    end
+
+    it "should sum the hours" do
+      metric.send(:generate_result_for_day, date).should == 5.0
+    end
+
+    it "should store the result if it's not today's result" do
+      day_key = metric.send(:key_for_date, date)
+      db.should_receive(:set).with(day_key, 5.0)
+      metric.send(:generate_result_for_day, date)
+    end
+
   end
 
 end

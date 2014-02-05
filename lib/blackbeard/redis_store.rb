@@ -66,5 +66,13 @@ module Blackbeard
       redis.get(key)
     end
 
+    def multi_get(*keys)
+      redis.mget(*keys.flatten)
+    end
+
+    def set(key, value)
+      redis.set(key, value)
+    end
+
   end
 end

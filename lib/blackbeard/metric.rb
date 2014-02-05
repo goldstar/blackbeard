@@ -44,6 +44,12 @@ module Blackbeard
       end
     end
 
+    def hour_keys_for_day(date)
+      start_of_day = date.to_time
+      Array(0..23).map{|x| start_of_day + (3600 * x) }.map{|t| key_for_hour(t) }
+    end
+
+
 private
 
     def hour_keys
@@ -52,6 +58,14 @@ private
 
     def hours_set_key
       "#{key}::hours"
+    end
+
+    def days_set_key
+      "#{key}::days"
+    end
+
+    def key_for_date(date)
+      "#{key}::#{ date.strftime("%Y%m%d") }"
     end
 
     def key_for_hour(time)

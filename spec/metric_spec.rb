@@ -1,6 +1,23 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Metric do
+  let(:metric) { Blackbeard::Metric::Total.new("one-total") }
+
+  describe "self.all" do
+    before :each do
+      Blackbeard::Metric::Total.new("one-total")
+      Blackbeard::Metric::Total.new("two-total")
+      Blackbeard::Metric::Unique.new("one-unique")
+    end
+    it "should return a Metric Object for each Metric created" do
+      Blackbeard::Metric.all.should have(3).metrics
+    end
+
+    it "should instantiate each metric with the correct class" do
+      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.should have(1).metric
+      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.first.should be_a(Blackbeard::Metric::Total)
+    end
+  end
 
   describe "hour_keys" do
     before :each do
@@ -19,7 +36,6 @@ describe Blackbeard::Metric do
   end
 
   describe "recent_hours" do
-    let(:metric) { Blackbeard::Metric::Total.new("one-total") }
     let(:start_at) { Time.new(2014,1,1,12,0,0) }
 
     it "should return results for recent hours" do
@@ -27,19 +43,12 @@ describe Blackbeard::Metric do
     end
   end
 
-  describe "self.all" do
-    before :each do
-      Blackbeard::Metric::Total.new("one-total")
-      Blackbeard::Metric::Total.new("two-total")
-      Blackbeard::Metric::Unique.new("one-unique")
-    end
-    it "should return a Metric Object for each Metric created" do
-      Blackbeard::Metric.all.should have(3).metrics
-    end
-
-    it "should instantiate each metric with the correct class" do
-      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.should have(1).metric
-      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.first.should be_a(Blackbeard::Metric::Total)
+  describe "hour_keys_for_day" do
+    it "should return 1 key for every hour from morning to night" do
+        keys_for_day = metric.hour_keys_for_day(Date.new(2014,1,1))
+        keys_for_day.should have(24).keys
+        keys_for_day.first.should == metric.send(:key_for_hour, Time.new(2014,1,1,0,0,0))
+        keys_for_day.last.should == metric.send(:key_for_hour, Time.new(2014,1,1,23,0,0))
     end
   end
 
