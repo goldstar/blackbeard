@@ -7,9 +7,5 @@ module Blackbeard
       @result = result
     end
 
-    def date_array
-      [date.year, date.month, date.day]
-    end
-
   end
 end

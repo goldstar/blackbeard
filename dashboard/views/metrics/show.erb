@@ -25,7 +25,7 @@
     data.addColumn('datetime', 'Hour');
     data.addColumn('number', 'Result');
     data.addRows([
-    <%= @metric.recent_hours.map{|h| "[new Date(#{ h.hour_array.join(',')}), #{h.result}]" }.join(',') %>
+    <%= @metric.recent_hours.map{|h| "[#{js_hour(h.hour)}, #{h.result}]" }.join(',') %>
     ]);
 
     // Set chart options
@@ -45,7 +45,7 @@
     data.addColumn('date', 'Day');
     data.addColumn('number', 'Result');
     data.addRows([
-    <%= @metric.recent_days.map{|d| "[new Date(#{ d.date_array.join(',')}), #{d.result}]" }.join(',') %>
+    <%= @metric.recent_days.map{|d| "[#{js_date(d.date)}, #{d.result}]" }.join(',') %>
     ]);
 
     // Set chart options

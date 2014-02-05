@@ -58,6 +58,11 @@ module Blackbeard
       Array(0..23).map{|x| start_of_day + (3600 * x) }.map{|t| key_for_hour(t) }
     end
 
+    def result_for_day(date)
+      key = key_for_date(date)
+      result = db.get(key) || generate_result_for_day(date)
+      result.to_f
+    end
 
 private
 

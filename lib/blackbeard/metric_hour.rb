@@ -7,10 +7,6 @@ module Blackbeard
       @result = result
     end
 
-    def hour_array
-      hour.to_a.first(6).reverse
-    end
-
   private
 
     def round_to_beginning_of_hour(t)

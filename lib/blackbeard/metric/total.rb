@@ -15,12 +15,6 @@ module Blackbeard
       db.get(key).to_f
     end
 
-    def result_for_day(date)
-      key = key_for_date(date)
-      result = db.get(key) || generate_result_for_day(date)
-      result.to_f
-    end
-
   private
 
     def merge_results(keys)
