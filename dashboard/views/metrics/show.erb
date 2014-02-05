@@ -2,6 +2,7 @@
   <h1><%= @metric.name %> - <%= @metric.type %></h1>
 </div>
 <div id="recent_hours_chart_div"></div>
+<div id="recent_days_chart_div"></div>
 
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -11,19 +12,20 @@
   google.load('visualization', '1.0', {'packages':['corechart']});
 
   // Set a callback to run when the Google Visualization API is loaded.
-  google.setOnLoadCallback(drawChart);
+  google.setOnLoadCallback(drawHoursChart);
+  google.setOnLoadCallback(drawDaysChart);
 
   // Callback that creates and populates a data table,
   // instantiates the pie chart, passes in the data and
   // draws it.
-  function drawChart() {
+  function drawHoursChart() {
 
     // Create the data table.
     var data = new google.visualization.DataTable();
     data.addColumn('datetime', 'Hour');
     data.addColumn('number', 'Result');
     data.addRows([
-    <%= @metric.recent_hours.map{|h| "[new Date(#{ h.hour.to_a.first(6).reverse.join(',')}), #{h.result}]" }.join(',') %>
+    <%= @metric.recent_hours.map{|h| "[new Date(#{ h.hour_array.join(',')}), #{h.result}]" }.join(',') %>
     ]);
 
     // Set chart options
@@ -33,6 +35,26 @@
 
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.LineChart(document.getElementById('recent_hours_chart_div'));
+    chart.draw(data, options);
+  }
+
+  function drawDaysChart() {
+
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Day');
+    data.addColumn('number', 'Result');
+    data.addRows([
+    <%= @metric.recent_days.map{|d| "[new Date(#{ d.date_array.join(',')}), #{d.result}]" }.join(',') %>
+    ]);
+
+    // Set chart options
+    var options = {'title':'Last 28 Days',
+                   // 'width':900,
+                   'height':300};
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.LineChart(document.getElementById('recent_days_chart_div'));
     chart.draw(data, options);
   }
 </script>

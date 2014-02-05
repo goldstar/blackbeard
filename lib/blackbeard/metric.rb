@@ -1,5 +1,6 @@
 require "blackbeard/storable"
 require "blackbeard/metric_hour"
+require "blackbeard/metric_date"
 require "date"
 
 module Blackbeard
@@ -36,6 +37,14 @@ module Blackbeard
       "metrics::#{ type }::#{ id }"
     end
 
+    def recent_days(count=28, starting_on = tz.now.to_date)
+      Array(0..count-1).map do |offset|
+        date = starting_on - offset
+        result = result_for_day(date)
+        MetricDate.new(date, result)
+      end
+    end
+
     def recent_hours(count = 24, starting_at = tz.now)
       Array(0..count-1).map do |offset|
         hour = starting_at - (offset * 3600)
@@ -51,6 +60,14 @@ module Blackbeard
 
 
 private
+
+    def generate_result_for_day(date)
+      date_key = key_for_date(date)
+      hours_keys = hour_keys_for_day(date)
+      result = merge_results(hours_keys)
+      db.set(date_key, result) unless date == Blackbeard.tz.now.to_date
+      result
+    end
 
     def hour_keys
       db.set_members(hours_set_key)

@@ -74,5 +74,9 @@ module Blackbeard
       redis.set(key, value)
     end
 
+    def set_union_count(keys)
+      redis.sunionstore('set_union_count', keys)
+    end
+
   end
 end

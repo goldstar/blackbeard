@@ -23,14 +23,6 @@ module Blackbeard
 
   private
 
-    def generate_result_for_day(date)
-      date_key = key_for_date(date)
-      hours_keys = hour_keys_for_day(date)
-      result = merge_results(hours_keys)
-      db.set(date_key, result) unless date == Blackbeard.tz.now.to_date
-      result
-    end
-
     def merge_results(keys)
       db.multi_get(keys).map(&:to_f).inject(:+) # .sum
     end

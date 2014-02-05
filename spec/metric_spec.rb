@@ -43,6 +43,14 @@ describe Blackbeard::Metric do
     end
   end
 
+  describe "recent_days" do
+    let(:start_on) { Date.new(2014,1,3) }
+
+    it "shoud return results for recent days" do
+      metric.recent_days(3, start_on).should have(3).metric_days
+    end
+  end
+
   describe "hour_keys_for_day" do
     it "should return 1 key for every hour from morning to night" do
         keys_for_day = metric.hour_keys_for_day(Date.new(2014,1,1))

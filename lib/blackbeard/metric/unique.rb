@@ -14,6 +14,12 @@ module Blackbeard
       db.set_count(key)
     end
 
+  private
+
+    def merge_results(keys)
+      db.set_union_count(keys)
+    end
+
   end
 end
 
