@@ -6,7 +6,7 @@ require "date"
 module Blackbeard
   class Metric < Storable
     set_master_key :metrics
-    string_attributes :name
+    string_attributes :name, :description
 
     def initialize(id)
       raise "do not create a Metric directly. Instead use a subclass." if self.class == Blackbeard::Metric
@@ -22,7 +22,7 @@ module Blackbeard
     end
 
     def name
-      storable_attributes_hash[:name] || id
+      storable_attributes_hash['name'] || id
     end
 
     def self.new_from_key(key)

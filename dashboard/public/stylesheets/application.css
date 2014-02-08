@@ -12,3 +12,17 @@ body {
 .home > p > .btn {
   margin: 5px 0;
 }
+
+.editable-error-block{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.editable-click{
+  border-bottom: none;
+  cursor: pointer;
+}
+
+.editable-click:hover {
+  background-color: #EEE;
+}

@@ -8,14 +8,14 @@ describe Blackbeard::Dashboard do
 
   let(:app) { Blackbeard::Dashboard }
 
-  describe "/" do
+  describe "get /" do
     it "should redirect" do
       get "/"
       last_response.should be_ok
     end
   end
 
-  describe "/metrics" do
+  describe "get /metrics" do
     it "should list all the metrics" do
       Blackbeard::Metric::Total.new("jostling")
       get "/metrics"
@@ -25,13 +25,23 @@ describe Blackbeard::Dashboard do
     end
   end
 
-  describe "/metrics/:type/:id" do
+  describe "get /metrics/:type/:id" do
     it "should show a metric" do
       metric = Blackbeard::Metric::Total.new("jostling")
       get "/metrics/#{metric.type}/#{metric.id}"
 
       last_response.should be_ok
       last_response.body.should include("jostling")
+    end
+  end
+
+  describe "post /metrics/:type/:id" do
+    it "should update the metric" do
+      metric = Blackbeard::Metric::Total.new("jostling")
+      post "/metrics/#{metric.type}/#{metric.id}", :name => 'hello'
+
+      last_response.should be_ok
+      reloaded_metric = Blackbeard::Metric::Total.new("jostling").name.should == 'hello'
     end
   end
 

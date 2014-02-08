@@ -26,6 +26,12 @@ module Blackbeard
       erb 'metrics/show'.to_sym
     end
 
+    post "/metrics/:type/:id" do
+      @metric = Blackbeard::Metric.new_from_type_id(params[:type], params[:id])
+      @metric.update_attributes(params)
+      "OK"
+    end
+
     get '/tests' do
       @tests = Blackbeard::Test.all
       erb 'tests/index'.to_sym

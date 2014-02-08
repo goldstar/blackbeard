@@ -17,7 +17,9 @@ module Blackbeard
       end
 
       def storable_attributes
-        @storable_attributes || []
+        return @storable_attributes if defined? @storable_attributes
+        return self.superclass.storable_attributes if self.superclass.respond_to?(:storable_attributes)
+        []
       end
 
       def string_attributes(*attributes)
@@ -65,6 +67,14 @@ module Blackbeard
 
     def self.all
       all_keys.map{ |key| new_from_key(key) }
+    end
+
+    def update_attributes(tainted_params)
+      attributes = self.class.storable_attributes
+      safe_attributes = tainted_params.keys.select{ |k| attributes.include?(k.to_sym) }
+      safe_attributes.each do |attribute|
+        self.send("#{attribute}=".to_sym, tainted_params[attribute])
+      end
     end
 
 protected
