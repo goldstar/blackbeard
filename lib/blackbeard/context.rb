@@ -3,21 +3,25 @@ require 'blackbeard/selected_variation'
 module Blackbeard
   class Context
 
-    def initialize(pirate, options)
+    def initialize(pirate, user, request = nil)
       @pirate = pirate
-      @user_id = options[:user_id]
-      @bot = options[:bot] || false
-      @cookies = options[:cookies] || {}
-      raise NonIdentifyingContextError unless @cookies || @user_id
+      @request = request
+      @user = user
+
+      guest_method = Blackbeard.guest_method
+
+      if (@user == false) || (@user && guest_method && @user.send(guest_method) == false)
+        @user = nil
+      end
     end
 
     def add_total(id, amount = 1)
-      @pirate.total_metric(id.to_s).add(unique_identifier, amount) unless bot?
+      @pirate.total_metric(id.to_s).add(unique_identifier, amount)
       self
     end
 
     def add_unique(id)
-      @pirate.unique_metric(id.to_s).add(unique_identifier) unless bot?
+      @pirate.unique_metric(id.to_s).add(unique_identifier)
       self
     end
 
@@ -36,23 +40,19 @@ module Blackbeard
       ab_test(id) == :active
     end
 
-    def bot?
-      @bot
-    end
-
     def unique_identifier
-      @user_id.nil? ? "b#{blackbeard_visitor_id}" : "a#{@user_id}"
+      @user.nil? ? "b#{blackbeard_visitor_id}" : "a#{@user.id}"
     end
 
 private
 
-    def blackbeard_visitor_id(cookies)
-      @cookies[:bbd] ||= generate_blackbeard_visitor_id(cookies)
+    def blackbeard_visitor_id
+      request.cookies[:bbd] ||= generate_blackbeard_visitor_id
     end
 
-    def generate_blackbeard_visitor_id(cookies)
+    def generate_blackbeard_visitor_id
       id = Blackbeard.db.increment("visitor_id")
-      @cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
+      request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id
     end
 

@@ -13,6 +13,10 @@ module Blackbeard
     config.db
   end
 
+  def guest_method
+    config.guest_method
+  end
+
   def self.pirate
     @config ||= Configuration.new
     yield(config)

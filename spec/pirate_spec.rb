@@ -35,19 +35,19 @@ describe Blackbeard::Pirate do
   describe "set context delegations" do
     context "with no set context" do
       it "add_unique should raise Blackbeard::MissingContextError" do
-        expect{ pirate.add_unique(:example) }.to raise_error( Blackbeard::MissingContextError )
+        expect{ pirate.add_unique(:example) }.to_not raise_error
       end
 
       it "add_total should raise Blackbeard::MissingContextError" do
-        expect{ pirate.add_total(:example, 1) }.to raise_error( Blackbeard::MissingContextError )
+        expect{ pirate.add_total(:example, 1) }.to_not raise_error
       end
 
       it "ab_test should raise Blackbeard::MissingContextError" do
-        expect{ pirate.ab_test(:example, :on => 1, :off => 2) }.to raise_error( Blackbeard::MissingContextError )
+        expect{ pirate.ab_test(:example, :on => 1, :off => 2) }.to_not raise_error
       end
 
       it "active? should raise Blackbeard::MissingContextError" do
-        expect{ pirate.active?(:example) }.to raise_error( Blackbeard::MissingContextError )
+        expect{ pirate.active?(:example) }.to_not raise_error
       end
 
     end

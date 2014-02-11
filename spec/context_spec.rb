@@ -2,7 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Context do
   let(:pirate) { Blackbeard::Pirate.new }
-  let(:context) { Blackbeard::Context.new(pirate, :user_id => 9) }
+  let(:user) { double(:id => 1) }
+  let(:context) { Blackbeard::Context.new(pirate, user) }
   let(:uid) { context.unique_identifier }
   let(:total_metric) { Blackbeard::Metric::Total.new(:total_things) }
   let(:unique_metric) { Blackbeard::Metric::Unique.new(:unique_things) }

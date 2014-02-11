@@ -3,7 +3,7 @@ require "blackbeard/redis_store"
 
 module Blackbeard
   class Configuration
-    attr_accessor :timezone, :namespace, :redis
+    attr_accessor :timezone, :namespace, :redis, :guest_method
 
     def initialize
       @timezone = 'America/Los_Angeles'

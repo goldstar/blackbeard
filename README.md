@@ -18,20 +18,64 @@ Or install it yourself as:
 
 ## Usage
 
-In an initializer create your global $pirate and pass in your configuration.
+All Blackbeard operations are done via the global `$pirate` which you should initialize early in your app.
+
+### Rails
+
+To configure Rails 3+ create an initializer in `config/initializers`
 
 ```ruby
 require 'blackbeard'
 require 'blackbeard/dashboard'
 
 $pirate = Blackbeard.pirate do |config|
-  config.redis = Redis.new # required. Will automatically be namespaced.
-  config.namespace = "Blackbeard" # optional
-  config.timezone = "America/Los_Angeles" # optional
+  # see configuration options below
 end
 ```
 
+And inside your ApplicationController:
+
+```ruby
+before_filter { |c| $pirate.set_context(c.current_user, c.request) }, :unless => robot?
+```
+
+### Sinatra
+
+To configure Sinatra
+
+```ruby
+require 'blackbeard'
+require 'blackbeard/dashboard'
+
+class MySinatraApp < Sinatra::Base
+  enable :sessions
+
+  $pirate = Blackbead.pirate do |config|
+    # see configuration options below
+  end
+
+  before do
+    $pirate.set_context(current_user, request) unless robot?
+  end
+
+  ...
+end
+```
+
+### Configuration options
+
+```ruby
+  $pirate = Blackbeard.pirate do |config|
+    config.redis = Redis.new # required. Will automatically be namespaced.
+    config.namespace = "Blackbeard" # optional
+    config.timezone = "America/Los_Angeles" # optional
+    config.guest_method = :guest? # optional method to call on user objects if they are guests or visitors
+  end
+```
+
 Note that the configuration is shared by all pirates, so only create one pirate at a time.
+
+### Mounting the dashboard
 
 To get the rack dashboard on Rails, mount it in your `routes.rb`. Don't forget to protect it with some constraints.
 
@@ -43,28 +87,21 @@ mount Blackbeard::Dashboard => '/blackbeard', :constraints => ConstraintClassYou
 
 Most of Blackbeard's calls are done via a context.
 
-```ruby
-$pirate.context(:user_id => current_user.id, :bot => false, :cookies => app_cookie_jar)
-```
-
-To establish identity, a context must have a user_id or a cookie_jar where blackbeard will cookie a visitor with it's own uid.  As cookie_jar is optional, you can collect metrics outside a web request.  You can also increment metrics for users other than the one currently logged in.  For example, if user A refers visitor B and vistor B joins, then you can increment User A's referrals.
-
-It gets pretty tedious for a web app to constantly set the context. To make that more paletable you can use a before filter in Rails (or your framework's equivalent) and the $pirate.set_context method.
+In a web request, this is handled by a before filter:
 
 ```ruby
-before_action do |controller|
-  $pirate.set_context(
-    :user_id => controller.current_user.id,
-    :bot => controller.bot?,
-    :cookies => controller.cookies)
-end
+before_filter { |c| $pirate.set_context(c.current_user, c.request) }
 ```
 
-If you `set_context` you can now make calls directly on $pirate and they will be delegate to that context.
+Outside of a web request--or if you want to reference a user other than the one in the current request (e..g referrals)--you set the context before each call to `$pirate`.
 
 ```ruby
-$pirate.add_total(:like, +1)
+$pirate.context(user).add_metric(:referral)
 ```
+
+If a contet does not exist, `$pirate` will silently ignore all actions. This is useful for dealing with bots.
+
+If the user is unidentied set user to nil or false. If your app can return a Guest object for unidentied users, see the guest configuration setting.
 
 ### Collecting Metrics
 

@@ -26,31 +26,31 @@ module Blackbeard
     end
 
 
-    def context(options = {})
-      Context.new(self, options)
+    def context(*args)
+      Context.new(self, *args)
     end
 
-    def set_context(options = {})
-      @set_context = Context.new(self, options)
+    def set_context(*args)
+      @set_context = context(*args)
     end
 
     def add_unique(id)
-      raise MissingContextError unless @set_context
+      return self unless @set_context
       @set_context.add_unique(id)
     end
 
     def add_total(id, amount)
-      raise MissingContextError unless @set_context
+      return self unless @set_context
       @set_context.add_total(id, amount)
     end
 
     def ab_test(id, options)
-      raise MissingContextError unless @set_context
+      return self unless @set_context
       @set_context.ab_test(id, options)
     end
 
     def active?(id)
-      raise MissingContextError unless @set_context
+      return self unless @set_context
       @set_context.active?(id)
     end
 
