@@ -35,6 +35,10 @@ module Blackbeard
       @set_context = context(*args)
     end
 
+    def clear_context
+      @set_context = nil
+    end
+
     def add_unique(id)
       return self unless @set_context
       @set_context.add_unique(id)

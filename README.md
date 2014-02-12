@@ -37,6 +37,7 @@ And inside your ApplicationController:
 
 ```ruby
 before_filter { |c| $pirate.set_context(c.current_user, c.request) }, :unless => robot?
+after_filter{ |c| $pirate.clear_context }
 ```
 
 ### Sinatra
@@ -56,6 +57,10 @@ class MySinatraApp < Sinatra::Base
 
   before do
     $pirate.set_context(current_user, request) unless robot?
+  end
+
+  after do
+    $pirate.clear_context
   end
 
   ...
@@ -90,7 +95,8 @@ Most of Blackbeard's calls are done via a context.
 In a web request, this is handled by a before filter:
 
 ```ruby
-before_filter { |c| $pirate.set_context(c.current_user, c.request) }
+before_filter { |c| $pirate.set_context(c.current_user, c.request) }, :unless => robot?
+after_filter { |c| $pirate.clear_context }
 ```
 
 Outside of a web request--or if you want to reference a user other than the one in the current request (e..g referrals)--you set the context before each call to `$pirate`.
