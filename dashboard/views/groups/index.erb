@@ -1,0 +1,15 @@
+<div class="page-header">
+  <h1>Groups</h1>
+</div>
+
+<% if @groups.any? %>
+  <ul class="list-group">
+  <% @groups.each do |group| %>
+  <li><a href="<%= url("groups/#{group.id}") %>"><%= group.name %></a></li>
+  <% end %>
+  </ul>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>No groups!</strong> Something may be wrong or you may just need to define some groups.
+  </div>
+<% end %>

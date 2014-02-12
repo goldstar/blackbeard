@@ -199,6 +199,30 @@ $pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two')
 $pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when feature is inactive
 ```
 
+### Defining groups
+
+```ruby
+$pirate.define_group(:admin) do |user, context|
+  user.admin? # true, false
+end
+
+$pirate.define_group(:medalist) do |user, context|
+  user.engagement_level # nil, :bronze, :silver, :gold
+end
+
+$pirate.define_group(:seo_traffic) do |user, context|
+  context.session.refer =~ /google.com/ # remember to store refer in sessions
+end
+
+$pirate.define_group(:seo_traffic) do |user, context|
+  context.session.refer =~ /google.com/ # remember to store refer in sessions
+end
+
+$pirate.define_group(:purchasers) do |user, context|
+  user.purchases.any?
+end
+```
+
 ## Contributing
 
 1. Fork it

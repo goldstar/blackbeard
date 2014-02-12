@@ -4,6 +4,7 @@ require "blackbeard/metric/unique"
 require "blackbeard/metric/total"
 require "blackbeard/test"
 require "blackbeard/errors"
+require "blackbeard/group"
 
 module Blackbeard
   class Pirate

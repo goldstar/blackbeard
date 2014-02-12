@@ -1,9 +1,10 @@
 require 'tzinfo'
 require "blackbeard/redis_store"
+require "blackbeard/group"
 
 module Blackbeard
   class Configuration
-    attr_accessor :timezone, :namespace, :redis, :guest_method
+    attr_accessor :timezone, :namespace, :redis, :guest_method, :group_definitions
 
     def initialize
       @timezone = 'America/Los_Angeles'
@@ -19,5 +20,9 @@ module Blackbeard
       @tz ||= TZInfo::Timezone.get(@timezone)
     end
 
+    def define_group(id, &block)
+      @group_definitions[id.to_sym] = block
+      Group.new(id)
+    end
   end
 end

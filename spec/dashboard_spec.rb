@@ -15,6 +15,26 @@ describe Blackbeard::Dashboard do
     end
   end
 
+  describe "get /groups" do
+    it "should list all the groups" do
+      Blackbeard::Group.new("jostling")
+      get "/groups"
+
+      last_response.should be_ok
+      last_response.body.should include('jostling')
+    end
+  end
+
+  describe "get /groups/:id" do
+    it "should show a metric" do
+      group = Blackbeard::Group.new("jostling")
+      get "/groups/#{group.id}"
+
+      last_response.should be_ok
+      last_response.body.should include("jostling")
+    end
+  end
+
   describe "get /metrics" do
     it "should list all the metrics" do
       Blackbeard::Metric::Total.new("jostling")

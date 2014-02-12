@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1><%= @group.name %></h1>
+</div>
+
+<table>
+  <tr>
+    <th>Segments</th>
+  </tr>
+
+  <% @group.segments.each do |segment| %>
+  <tr>
+    <td><%= segment %></td>
+  </tr>
+  <% end %>
+
+</table>
