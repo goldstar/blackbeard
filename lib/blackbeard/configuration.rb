@@ -4,11 +4,13 @@ require "blackbeard/group"
 
 module Blackbeard
   class Configuration
-    attr_accessor :timezone, :namespace, :redis, :guest_method, :group_definitions
+    attr_accessor :timezone, :namespace, :redis, :guest_method
+    attr_reader :group_definitions
 
     def initialize
       @timezone = 'America/Los_Angeles'
       @namespace = 'Blackbeard'
+      @group_definitions = {}
       @redis = nil
     end
 
