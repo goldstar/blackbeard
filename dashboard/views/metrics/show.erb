@@ -2,6 +2,22 @@
   <h1><span id="editable-name"><%= @metric.name %></span> <small><%= @metric.type %></small></h1>
 </div>
 <p id="editable-description"><%= @metric.description %></p>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">Home</a></li>
+  <% @metric.groups.each do |group| %>
+  <li><a href="#"><%= group.name %></a></li>
+  <% end %>
+  <li class="dropdown">
+     <a id="drop5" role="button" data-toggle="dropdown" href="#">Segment by Group <b class="caret"></b></a>
+        <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
+          <% @metric.addable_groups.each do |group| %>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
+          <% end %>
+        </ul>
+  </li>
+</ul>
+
 <div id="recent_hours_chart_div"></div>
 <div id="recent_days_chart_div"></div>
 
@@ -74,7 +90,7 @@
     $('#editable-name').editable({
       placement: 'right',
       type: 'text',
-      url: '<%= url("metrics/#{@metric.type}/#{@metric.id}") %>',
+      url: '<%= url("metrics/#{@metric.type}/#{@metric.type_id}") %>',
       name: 'name',
       title: 'Edit metric name',
       validate: function(value) {
@@ -86,7 +102,7 @@
     $('#editable-description').editable({
       placement: 'bottom',
       type: 'textarea',
-      url: '<%= url("metrics/#{@metric.type}/#{@metric.id}") %>',
+      url: '<%= url("metrics/#{@metric.type}/#{@metric.type_id}") %>',
       name: 'description',
       title: 'Edit metric description'
     });

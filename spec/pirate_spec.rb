@@ -6,14 +6,9 @@ describe Blackbeard::Pirate do
   describe "memoization" do
     let(:name){ "bond" }
 
-    it "should get unique metrics once" do
-      Blackbeard::Metric::Unique.should_receive(:new).with(name).once.and_return(double)
-      4.times{ pirate.unique_metric(name) }
-    end
-
-    it "should get total metrics once" do
-      Blackbeard::Metric::Total.should_receive(:new).with(name).once.and_return(double)
-      4.times{ pirate.total_metric(name) }
+    it "should get metrics once" do
+      Blackbeard::Metric.should_receive(:new).with(:total, name).once.and_return(double)
+      4.times{ pirate.metric(:total, name) }
     end
 
     it "should get test once" do

@@ -38,6 +38,10 @@ module Blackbeard
       redis.smembers(set_key)
     end
 
+    def set_remove_member(set_key, member)
+      redis.srem(set_key, member)
+    end
+
     def set_add_member(set_key, member)
       redis.sadd(set_key, member)
     end

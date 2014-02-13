@@ -1,7 +1,7 @@
 require "blackbeard/context"
 require "blackbeard/metric"
-require "blackbeard/metric/unique"
-require "blackbeard/metric/total"
+require "blackbeard/metric_data/unique"
+require "blackbeard/metric_data/total"
 require "blackbeard/test"
 require "blackbeard/errors"
 require "blackbeard/group"
@@ -9,23 +9,17 @@ require "blackbeard/group"
 module Blackbeard
   class Pirate
     def initialize
-      @total_metrics = {}
-      @unique_metrics = {}
+      @metrics = {}
       @tests = {}
     end
 
-    def total_metric(id)
-      @total_metrics[id] ||= Metric::Total.new(id)
-    end
-
-    def unique_metric(id)
-      @unique_metrics[id] ||= Metric::Unique.new(id)
+    def metric(type, type_id)
+      @metrics["#{type}::#{type_id}"] ||= Metric.new(type, type_id)
     end
 
     def test(id)
       @tests[id] ||= Test.new(id)
     end
-
 
     def context(*args)
       Context.new(self, *args)

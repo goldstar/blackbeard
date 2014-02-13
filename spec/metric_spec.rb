@@ -1,63 +1,77 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Blackbeard::Metric do
-  let(:metric) { Blackbeard::Metric::Total.new("one-total") }
+module Blackbeard
+  describe Metric do
+    let(:metric) { Metric.new(:total, "one-total") }
+    let(:group) { Group.new(:example) }
 
-  describe "self.all" do
-    before :each do
-      Blackbeard::Metric::Total.new("one-total")
-      Blackbeard::Metric::Total.new("two-total")
-      Blackbeard::Metric::Unique.new("one-unique")
-    end
-    it "should return a Metric Object for each Metric created" do
-      Blackbeard::Metric.all.should have(3).metrics
+    describe "self.all" do
+      before :each do
+        Metric.new(:total, "one-total")
+        Metric.new(:total, "two-total")
+        Metric.new(:unique, "one-unique")
+      end
+      it "should return a Metric Object for each Metric created" do
+        Metric.all.should have(3).metrics
+      end
     end
 
-    it "should instantiate each metric with the correct class" do
-      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.should have(1).metric
-      Blackbeard::Metric.all.select{|m| m.id == "two-total"}.first.should be_a(Blackbeard::Metric::Total)
+    describe "add" do
+      it "should increment metric data" do
+        metric.metric_data.should_receive(:add).with("uid",1)
+        metric.add("uid", 1)
+      end
     end
+
+    describe "groups" do
+      it "should return an empty array for no groups" do
+        metric.groups.should == []
+      end
+
+      it "should return the groups when there are groups" do
+        metric.add_group(group)
+        metric.groups.map{|g| g.id}.should == [group.id]
+      end
+    end
+
+    describe "add_group" do
+      it "should add the group to the metric" do
+        expect{
+          metric.add_group(group)
+          }.to change{ metric.groups.count }.by(1)
+      end
+    end
+
+    describe "remove_group" do
+      it "should remove the group from the metric" do
+        metric.add_group(group)
+        expect{
+          metric.remove_group(group)
+        }.to change{ metric.groups.count }.by(-1)
+      end
+      it "should remove all the group metric data"
+    end
+
+    describe "addable_groups" do
+      it "should include the groups not added" do
+        group # to initialize it
+        metric.addable_groups.map{|g| g.id }.should include(group.id)
+      end
+
+      it "should not include the group added" do
+        metric.add_group(group)
+        metric.addable_groups.map{|g| g.id }.should_not include(group.id)
+      end
+    end
+
+
+    describe "has_group?" do
+      it "should return true if metric has group" do
+        expect{
+          metric.add_group(group)
+        }.to change{ metric.has_group?(group) }.from(false).to(true)
+      end
+    end
+
   end
-
-  describe "hour_keys" do
-    before :each do
-      @total_metric = Blackbeard::Metric::Total.new("one-total")
-    end
-
-    it "should return an empty array if no metrics" do
-      @total_metric.send(:hour_keys).should == []
-    end
-
-    it "should return an array for each hour" do
-      @total_metric.add('user1', 1)
-      key = @total_metric.send(:key_for_hour, Blackbeard.tz.now)
-      @total_metric.send(:hour_keys).should == [key]
-    end
-  end
-
-  describe "recent_hours" do
-    let(:start_at) { Time.new(2014,1,1,12,0,0) }
-
-    it "should return results for recent hours" do
-      metric.recent_hours(3, start_at).should have(3).metric_hours
-    end
-  end
-
-  describe "recent_days" do
-    let(:start_on) { Date.new(2014,1,3) }
-
-    it "shoud return results for recent days" do
-      metric.recent_days(3, start_on).should have(3).metric_days
-    end
-  end
-
-  describe "hour_keys_for_day" do
-    it "should return 1 key for every hour from morning to night" do
-        keys_for_day = metric.hour_keys_for_day(Date.new(2014,1,1))
-        keys_for_day.should have(24).keys
-        keys_for_day.first.should == metric.send(:key_for_hour, Time.new(2014,1,1,0,0,0))
-        keys_for_day.last.should == metric.send(:key_for_hour, Time.new(2014,1,1,23,0,0))
-    end
-  end
-
 end

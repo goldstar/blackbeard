@@ -31,13 +31,13 @@ module Blackbeard
       erb 'metrics/index'.to_sym
     end
 
-    get "/metrics/:type/:id" do
-      @metric = Metric.new_from_type_id(params[:type], params[:id])
+    get "/metrics/:type/:type_id" do
+      @metric = Metric.new(params[:type], params[:type_id])
       erb 'metrics/show'.to_sym
     end
 
-    post "/metrics/:type/:id" do
-      @metric = Metric.new_from_type_id(params[:type], params[:id])
+    post "/metrics/:type/:type_id" do
+      @metric = Metric.new(params[:type], params[:type_id])
       @metric.update_attributes(params)
       "OK"
     end

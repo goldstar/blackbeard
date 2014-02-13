@@ -44,17 +44,16 @@ module Blackbeard
       db.hash_key_set_if_not_exists(master_key, key, tz.now.to_date)
     end
 
-    def self.new_from_id(key)
-      id = key.split('::').last
-      self.new(id)
-    end
-
     def self.all_keys
       db.hash_keys(master_key)
     end
 
     def self.count
       db.hash_length(master_key)
+    end
+
+    def self.new_from_keys(*keys)
+      keys.flatten.map{ |key| new_from_key(key) }
     end
 
     def self.new_from_key(key)
@@ -77,6 +76,10 @@ module Blackbeard
       end
     end
 
+    def key
+      "#{master_key}::#{ id }"
+    end
+
 protected
 
     def storable_attributes_hash
@@ -85,10 +88,6 @@ protected
 
     def attributes_hash_key
       "#{key}::attributes"
-    end
-
-    def key
-      "#{master_key}::#{ id }"
     end
 
     def master_key
