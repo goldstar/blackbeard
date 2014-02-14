@@ -8,14 +8,9 @@ module Blackbeard
       def initialize(metric)
         @metric = metric
       end
+      include ConfigurationMethods
 
-      def tz
-        @metric.send(:tz)
-      end
 
-      def db
-        @metric.send(:db)
-      end
 
       def recent_days(count=28, starting_on = tz.now.to_date)
         Array(0..count-1).map do |offset|

@@ -1,5 +1,8 @@
+require 'blackbeard/configuration_methods'
+
 module Blackbeard
   class Storable
+    include ConfigurationMethods
 
     class << self
       def set_master_key(master_key)
@@ -94,20 +97,5 @@ protected
       self.class.master_key
     end
 
-    def db
-      self.class.db
-    end
-
-    def self.db
-      Blackbeard.db
-    end
-
-    def tz
-      self.class.tz
-    end
-
-    def self.tz
-      Blackbeard.tz
-    end
   end
 end
