@@ -14,6 +14,8 @@ module Blackbeard
       redis.keys
     end
 
+
+    # Hash commands
     def hash_key_set_if_not_exists(hash_key, field, value)
       redis.hsetnx(hash_key, field, value)
     end
@@ -30,10 +32,15 @@ module Blackbeard
       redis.hkeys(hash_key)
     end
 
+    def hash_get(hash_key, field)
+      redis.hget(hash_key, field)
+    end
+
     def hash_get_all(hash_key)
       redis.hgetall(hash_key)
     end
 
+    # Set commands
     def set_members(set_key)
       redis.smembers(set_key)
     end
@@ -54,6 +61,11 @@ module Blackbeard
       redis.scard(set_key)
     end
 
+    def set_union_count(*keys)
+      redis.sunionstore('set_union_count', keys.flatten)
+    end
+
+    # String commands
     def del(*keys)
       redis.del(*keys)
     end
@@ -76,10 +88,6 @@ module Blackbeard
 
     def set(key, value)
       redis.set(key, value)
-    end
-
-    def set_union_count(keys)
-      redis.sunionstore('set_union_count', keys)
     end
 
   end
