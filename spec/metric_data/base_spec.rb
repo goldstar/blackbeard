@@ -4,7 +4,15 @@ module Blackbeard
   module MetricData
     describe Base do
       let(:metric) { Blackbeard::Metric.new(:total, "one-total") }
+      let(:metric2) { Blackbeard::Metric.new(:total, "two-total") }
       let(:metric_data) { metric.metric_data }
+
+      describe "key" do
+        it "should auto increment" do
+          metric_data.key.should == "data::1"
+          metric2.metric_data.key.should == "data::2"
+        end
+      end
 
       describe "hour_keys" do
 

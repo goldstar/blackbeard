@@ -4,7 +4,7 @@ module Blackbeard
   module MetricData
     class Total < Base
 
-      def add(uid, amount = 1)
+      def add(uid, amount = 1, segment = "Total")
         key = key_for_hour(tz.now)
         db.set_add_member(hours_set_key, key)
         db.increment_by_float(key, amount.to_f)

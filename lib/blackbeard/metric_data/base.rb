@@ -5,12 +5,13 @@ require 'date'
 module Blackbeard
   module MetricData
     class Base
-      def initialize(metric)
-        @metric = metric
-      end
       include ConfigurationMethods
+      attr_reader :metric, :group
 
-
+      def initialize(metric, group = nil)
+        @metric = metric
+        @group = group
+      end
 
       def recent_days(count=28, starting_on = tz.now.to_date)
         Array(0..count-1).map do |offset|
@@ -39,6 +40,22 @@ module Blackbeard
         result.to_f
       end
 
+      def key
+        @key ||= begin
+          lookup_hash = "metric_data_keys"
+          lookup_field = "metric-#{metric.id}"
+          lookup_field += "::group-#{group.id}" if group
+          uid = db.hash_get(lookup_hash, lookup_field)
+          if uid.nil?
+            uid = db.increment("metric_data_next_uid")
+            # write and read to avoid race conditional writes
+            db.hash_key_set_if_not_exists(lookup_hash, lookup_field, uid)
+            uid = db.hash_get(lookup_hash, lookup_field)
+          end
+          "data::#{uid}"
+        end
+      end
+
     private
 
       def generate_result_for_day(date)
@@ -55,19 +72,19 @@ module Blackbeard
       end
 
       def hours_set_key
-        "#{@metric.key}::hours"
+        "#{key}::hours"
       end
 
       def days_set_key
-        "#{@metric.key}::days"
+        "#{key}::days"
       end
 
       def key_for_date(date)
-        "#{@metric.key}::#{ date.strftime("%Y%m%d") }"
+        "#{key}::#{ date.strftime("%Y%m%d") }"
       end
 
       def key_for_hour(time)
-        "#{@metric.key}::#{ time.strftime("%Y%m%d%H") }"
+        "#{key}::#{ time.strftime("%Y%m%d%H") }"
       end
 
     end

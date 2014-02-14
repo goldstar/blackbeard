@@ -4,7 +4,7 @@ module Blackbeard
   module MetricData
     class Unique < Base
 
-      def add(uid, amount = nil)
+      def add(uid, amount = nil, segment = "Uniques")
         key = key_for_hour(tz.now)
         db.set_add_member(hours_set_key, key)
         db.set_add_member(key, uid)
