@@ -11,6 +11,7 @@ module Blackbeard
     def initialize(type, type_id)
       @type = type
       @type_id = type_id
+      @metric_data = {}
       super("#{type}::#{type_id}")
     end
 
@@ -35,7 +36,7 @@ module Blackbeard
     end
 
     def metric_data(group = nil)
-      @metric_data ||= begin
+      @metric_data[group] ||= begin
         raise GroupNotInMetric unless group.nil? || has_group?(group)
         MetricData.const_get(type.capitalize).new(self)
       end
