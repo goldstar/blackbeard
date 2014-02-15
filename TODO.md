@@ -16,6 +16,12 @@
       * by defined segments (e.g. staff?)
       * by user_id (e.g. rollout like)
 
+### Funnels - collection of metrics
+
+hour: hash each "uid->from->to" => segment
+day: hash each "segment->from->to" => count
+week: hash each "segment->from->to" => count
+
 
 Create and manage multiple experiments in a browser/rack dashboard
 
