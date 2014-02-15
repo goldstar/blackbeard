@@ -35,6 +35,12 @@ module Blackbeard
         db.hash_set('a_hash', 'hello', 'world')
         db.hash_get_all('a_hash').should include('foo' => 'bar', 'hello' => 'world')
       end
+
+      it "should increment by float" do
+        db.hash_increment_by_float('a_hash', 'field', 1)
+        db.hash_increment_by_float('a_hash', 'field', 2.5)
+        db.hash_get('a_hash', 'field').should == "3.5"
+      end
     end
 
     describe "sets" do
@@ -44,6 +50,11 @@ module Blackbeard
         db.set_members('a_set').should include('foo', 'bar')
         db.set_remove_member('a_set', 'bar')
         db.set_members('a_set').should_not include('bar')
+      end
+
+      it "should return true if added" do
+        db.set_add_member('a_set', 'foo').should be(true)
+        db.set_add_member('a_set', 'foo').should be(false)
       end
 
       it "should return all the members" do

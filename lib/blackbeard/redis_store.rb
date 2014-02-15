@@ -40,6 +40,10 @@ module Blackbeard
       redis.hgetall(hash_key)
     end
 
+    def hash_increment_by_float(hash_key, field, float)
+      redis.hincrbyfloat(hash_key, field, float)
+    end
+
     # Set commands
     def set_members(set_key)
       redis.smembers(set_key)
@@ -70,8 +74,8 @@ module Blackbeard
       redis.del(*keys)
     end
 
-    def increment_by_float(key, increment)
-      redis.incrbyfloat(key, increment)
+    def increment_by_float(key, float)
+      redis.incrbyfloat(key, float)
     end
 
     def increment(key)
