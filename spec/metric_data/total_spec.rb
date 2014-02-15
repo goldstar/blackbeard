@@ -37,6 +37,22 @@ module Blackbeard
             metric_data.add(uid, 1.25)
           }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.to(3.75)
         end
+
+        context "with segment" do
+          it "should increment the segment" do
+            expect{
+              metric_data.add(uid, 1, "segment")
+            }.to change{ metric_data.result_for_hour(Blackbeard.tz.now, "segment") }.by(1)
+          end
+
+          it "should not increment the global" do
+            expect{
+              metric_data.add(uid, 1, "segment")
+            }.to_not change{ metric_data.result_for_hour(Blackbeard.tz.now) }
+          end
+        end
+
+
       end
 
 
