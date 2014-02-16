@@ -1,10 +1,12 @@
 require 'blackbeard/configuration_methods'
 require 'blackbeard/storable_has_many'
+require 'blackbeard/storable_has_set'
 
 module Blackbeard
   class Storable
     include ConfigurationMethods
     extend StorableHasMany
+    extend StorableHasSet
 
     class << self
       def set_master_key(master_key)

@@ -30,13 +30,13 @@ module Blackbeard
       end
 
       it "should increment metric data for each group" do
-        group.stub(:segment).and_return("segment")
+        group.stub(:segment_for).and_return("segment")
         group_metric_data.should_receive(:add).with("uid", 1, "segment" )
         metric.add(context, 1)
       end
 
       it "should not increment nil segments" do
-        group.stub(:segment).and_return(nil)
+        group.stub(:segment_for).and_return(nil)
         group_metric_data.should_not_receive(:add)
         metric.add(context, 1)
       end

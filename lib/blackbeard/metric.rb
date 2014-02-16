@@ -36,7 +36,7 @@ module Blackbeard
       uid = context.unique_identifier
       metric_data.add(uid, amount)
       groups.each do |group|
-        segment = group.segment(context)
+        segment = group.segment_for(context)
         metric_data(group).add(uid, amount, segment) unless segment.nil?
       end
     end
