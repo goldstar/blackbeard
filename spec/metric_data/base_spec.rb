@@ -22,7 +22,7 @@ module Blackbeard
 
         it "should return an array for each hour" do
           metric_data.add('user1', 1)
-          key = metric_data.send(:key_for_hour, Blackbeard.tz.now)
+          key = metric_data.send(:key_for_hour, tz.now)
           metric_data.send(:hour_keys).should == [key]
         end
       end

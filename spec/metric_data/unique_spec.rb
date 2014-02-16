@@ -6,7 +6,6 @@ module Blackbeard
 
       let(:metric) { Blackbeard::Metric.new(:unique, "join") }
       let(:metric_data) { metric.metric_data }
-      let(:db) { metric.send(:db) }
       let(:uid) { "unique identifier" }
       let(:ouid) { "other unique identifier" }
 
@@ -14,27 +13,27 @@ module Blackbeard
         it "should increment the metric for the uid" do
           expect{
             metric_data.add(uid)
-          }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.by(1)
+          }.to change{ metric_data.result_for_hour(tz.now) }.by(1)
         end
 
         it "should not increment the metric for duplicate uids" do
           metric_data.add(uid)
           expect{
             metric_data.add(uid)
-          }.to_not change{ metric_data.result_for_hour(Blackbeard.tz.now) }
+          }.to_not change{ metric_data.result_for_hour(tz.now) }
         end
 
         context "with segment" do
           it "should increment the segment" do
             expect{
               metric_data.add(uid, 1, "segment")
-            }.to change{ metric_data.result_for_hour(Blackbeard.tz.now, "segment") }
+            }.to change{ metric_data.result_for_hour(tz.now, "segment") }
           end
 
           it "should not increment the global" do
             expect{
               metric_data.add(uid, 1, "segment")
-            }.to_not change{ metric_data.result_for_hour(Blackbeard.tz.now) }
+            }.to_not change{ metric_data.result_for_hour(tz.now) }
           end
         end
 
@@ -42,23 +41,23 @@ module Blackbeard
 
       describe "result_for_hour" do
         it "should return 0 if no metric has been recorded" do
-          metric_data.result_for_hour(Blackbeard.tz.now).should be_zero
+          metric_data.result_for_hour(tz.now).should be_zero
         end
 
         it "should return 1 if metric called once" do
           metric_data.add(uid)
-          metric_data.result_for_hour(Blackbeard.tz.now).should == 1
+          metric_data.result_for_hour(tz.now).should == 1
         end
 
         it "should return 1 if metric called more than once" do
           3.times{ metric_data.add(uid) }
-          metric_data.result_for_hour(Blackbeard.tz.now).should == 1
+          metric_data.result_for_hour(tz.now).should == 1
         end
 
         it "should return 2 if metric was called with 2 uniques" do
           metric_data.add(uid)
           metric_data.add(ouid)
-          metric_data.result_for_hour(Blackbeard.tz.now).should == 2
+          metric_data.result_for_hour(tz.now).should == 2
         end
 
       end

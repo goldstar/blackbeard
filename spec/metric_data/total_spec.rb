@@ -6,7 +6,6 @@ module Blackbeard
 
       let(:metric) { Blackbeard::Metric.new(:total, "page views") }
       let(:metric_data) { metric.metric_data }
-      let(:db) { metric.send(:db) }
       let(:uid) { "unique identifier" }
       let(:ouid) { "other unique identifier" }
 
@@ -14,41 +13,41 @@ module Blackbeard
         it "should increment the metric by the amount" do
           expect{
             metric_data.add(uid, 2)
-          }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.by(2)
+          }.to change{ metric_data.result_for_hour(tz.now) }.by(2)
         end
 
         it "should increment an existing amount" do
           metric_data.add(uid, 1)
           expect{
             metric_data.add(uid, 2)
-          }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.from(1).to(3)
+          }.to change{ metric_data.result_for_hour(tz.now) }.from(1).to(3)
         end
 
         it "should handle negatives ok" do
           metric_data.add(uid, 2)
           expect{
             metric_data.add(uid, -1)
-          }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.from(2).to(1)
+          }.to change{ metric_data.result_for_hour(tz.now) }.from(2).to(1)
         end
 
         it "should handle floats" do
           metric_data.add(uid, 2.5)
           expect{
             metric_data.add(uid, 1.25)
-          }.to change{ metric_data.result_for_hour(Blackbeard.tz.now) }.to(3.75)
+          }.to change{ metric_data.result_for_hour(tz.now) }.to(3.75)
         end
 
         context "with segment" do
           it "should increment the segment" do
             expect{
               metric_data.add(uid, 1, "segment")
-            }.to change{ metric_data.result_for_hour(Blackbeard.tz.now, "segment") }.by(1)
+            }.to change{ metric_data.result_for_hour(tz.now, "segment") }.by(1)
           end
 
           it "should not increment the global" do
             expect{
               metric_data.add(uid, 1, "segment")
-            }.to_not change{ metric_data.result_for_hour(Blackbeard.tz.now) }
+            }.to_not change{ metric_data.result_for_hour(tz.now) }
           end
         end
 
@@ -59,13 +58,13 @@ module Blackbeard
 
       describe "result_for_hour" do
         it "should return 0 if no metric has been recorded" do
-          metric_data.result_for_hour(Blackbeard.tz.now).should be_zero
+          metric_data.result_for_hour(tz.now).should be_zero
         end
 
         it "should return sum if metric called more than once" do
           metric_data.add(uid, 2)
           metric_data.add(uid, 4)
-          metric_data.result_for_hour(Blackbeard.tz.now).should == 6
+          metric_data.result_for_hour(tz.now).should == 6
         end
       end
 

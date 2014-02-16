@@ -1,25 +1,23 @@
 module Blackbeard
   module ConfigurationMethods
     def self.included(base)
-      base.extend(ClassMethods)
+      base.extend(self)
     end
 
-    module ClassMethods
-      def db
-        Blackbeard.db
-      end
-
-      def tz
-        Blackbeard.tz
-      end
+    def config
+      Blackbeard.config
     end
 
     def db
-      self.class.db
+      config.db
     end
 
     def tz
-      self.class.tz
+      config.tz
+    end
+
+    def guest_method
+      config.guest_method
     end
 
   end

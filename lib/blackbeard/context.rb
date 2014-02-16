@@ -2,13 +2,12 @@ require 'blackbeard/selected_variation'
 
 module Blackbeard
   class Context
+    include ConfigurationMethods
 
     def initialize(pirate, user, request = nil)
       @pirate = pirate
       @request = request
       @user = user
-
-      guest_method = Blackbeard.guest_method
 
       if (@user == false) || (@user && guest_method && @user.send(guest_method) == false)
         @user = nil

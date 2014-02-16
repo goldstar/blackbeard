@@ -10,13 +10,13 @@ describe Blackbeard::Test do
 
     context "when they all already exist" do
       it "should not add any" do
-        Blackbeard.db.should_not_receive(:set_add_members)
+        db.should_not_receive(:set_add_members)
         test.add_variations('hello', 'goodbye')
       end
     end
 
     it "should only add new ones" do
-      Blackbeard.db.should_receive(:set_add_members).with(test.send(:variations_set_key), ['world'])
+      db.should_receive(:set_add_members).with(test.send(:variations_set_key), ['world'])
       test.add_variations('goodbye', 'world')
     end
 
@@ -33,9 +33,9 @@ describe Blackbeard::Test do
       test.variations.should include('hello','goodbye')
     end
     it "should memoize the result" do
-      Blackbeard.db.should_receive(:set_members).with(test.send(:variations_set_key)).and_return(['hello','goodbye'])
+      db.should_receive(:set_members).with(test.send(:variations_set_key)).and_return(['hello','goodbye'])
       test.variations.should include('hello','goodbye')
-      Blackbeard.db.should_not_receive(:set_members)
+      db.should_not_receive(:set_members)
       test.variations.should include('hello','goodbye')
     end
   end

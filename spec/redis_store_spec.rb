@@ -2,7 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 module Blackbeard
   describe RedisStore do
-    let(:db){ Blackbeard.db }
 
     it "should keep keys" do
       db.set("hello", "world")

@@ -62,7 +62,7 @@ module Blackbeard
         date_key = key_for_date(date)
         hours_keys = hour_keys_for_day(date)
         result = merge_results(hours_keys)
-        db.set(date_key, result) unless date == Blackbeard.tz.now.to_date
+        db.set(date_key, result) unless date == tz.now.to_date
         result
       end
 
