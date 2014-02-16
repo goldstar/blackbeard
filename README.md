@@ -1,5 +1,7 @@
 # Blackbeard
 
+[![Code Climate](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/badges/b912a89a38a56f61398a/gpa.png)](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/feed)
+
 Blackbeard is a Redis backed metrics collection system with a Rack dashboard.
 
 ## Installation
