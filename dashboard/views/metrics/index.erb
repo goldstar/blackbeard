@@ -1,13 +1,21 @@
 <div class="page-header">
   <h1>Metrics</h1>
+  <p>Metrics are the events that you want to track in your app.</p>
 </div>
 
+
 <% if @metrics.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Metrics</h3>
+  </div>
   <ul class="list-group">
   <% @metrics.each do |metric| %>
-  <li><a href="<%= url("metrics/#{metric.type}/#{metric.type_id}") %>"><%= metric.name %> - <%= metric.type %></a></li>
+  <li class="list-group-item"><a href="<%= url("metrics/#{metric.type}/#{metric.type_id}") %>"><%= metric.name %> - <%= metric.type %></a></li>
   <% end %>
   </ul>
+</div>
+
 <% else %>
   <div class="alert alert-danger">
     <strong>No Metrics recorded!</strong> Something may be wrong or you may just need to define some metrics.

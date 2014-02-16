@@ -1,13 +1,19 @@
 <div class="page-header">
   <h1>Tests</h1>
+  <p>Tests are elements or features that you can change or turn off.</p>
 </div>
 
 <% if @tests.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Tests</h3>
+  </div>
   <ul class="list-group">
   <% @tests.each do |test| %>
-  <li><a href="<%= url("tests/#{test.id}") %>"><%= test.name %></a></li>
+  <li class="list-group-item"><a href="<%= url("tests/#{test.id}") %>"><%= test.name %></a></li>
   <% end %>
   </ul>
+</div>
 <% else %>
   <div class="alert alert-danger">
     <strong>No tests!</strong> Something may be wrong or you may just need to define some metrics.

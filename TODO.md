@@ -16,6 +16,10 @@
       * by defined segments (e.g. staff?)
       * by user_id (e.g. rollout like)
 
+### Documentation
+
+### API and javascript $pirate
+
 ### Funnels - collection of metrics
 
 hour: hash each "uid->from->to" => segment

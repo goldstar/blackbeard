@@ -1,16 +1,58 @@
 <div class="page-header">
-  <h1><%= @group.name %></h1>
+  <h1><span id="editable-name"><%= @group.name %></span></h1>
+  <p id="editable-description"><%= @group.description %></p>
 </div>
 
-<table>
-  <tr>
-    <th>Segments</th>
-  </tr>
-
+<% if @group.segments.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Segments</h3>
+  </div>
+  <ul class="list-group">
   <% @group.segments.each do |segment| %>
-  <tr>
-    <td><%= segment %></td>
-  </tr>
+  <li class="list-group-item"><%= segment %></li>
   <% end %>
+  </ul>
+</div>
 
-</table>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>No segments!</strong> Something may be wrong or maybe this group not been called yet.
+  </div>
+<% end %>
+
+<!--Load the AJAX API-->
+<script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
+<script src="<%= url('javascripts/bootstrap.min.js') %>"></script>
+<script src="<%= url('bootstrap3-editable/js/bootstrap-editable.min.js') %>"></script>
+<script type="text/javascript">
+  //turn to inline mode
+  $.fn.editable.defaults.send = 'always';
+  $.fn.editable.defaults.params = function(params) {
+        var obj = {};
+        obj[params.name] = params.value;
+        return obj;
+  }
+
+  $(document).ready(function() {
+    $('#editable-name').editable({
+      placement: 'right',
+      type: 'text',
+      url: '<%= url("groups/#{@group.id}") %>',
+      name: 'name',
+      title: 'Edit group name',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+    $('#editable-description').editable({
+      placement: 'bottom',
+      type: 'textarea',
+      url: '<%= url("metrics/#{@group.id}") %>',
+      name: 'description',
+      title: 'Edit metric description'
+    });
+  });
+</script>

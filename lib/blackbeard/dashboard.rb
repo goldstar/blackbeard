@@ -26,6 +26,12 @@ module Blackbeard
       erb 'groups/show'.to_sym
     end
 
+    post "/groups/:id" do
+      @group = Group.new(params[:id])
+      @group.update_attributes(params)
+      "OK"
+    end
+
     get '/metrics' do
       @metrics = Metric.all
       erb 'metrics/index'.to_sym
@@ -51,6 +57,13 @@ module Blackbeard
       @test = Test.new(params[:id])
       erb 'tests/show'.to_sym
     end
+
+    post "/tests/:id" do
+      @test = Test.new(params[:id])
+      @test.update_attributes(params)
+      "OK"
+    end
+
 
   end
 end

@@ -36,6 +36,16 @@ module Blackbeard
       end
     end
 
+    describe "post /groups/:id" do
+      it "should update the group" do
+        group = Group.new("jostling")
+        post "/groups/#{group.id}", :name => 'hello'
+
+        last_response.should be_ok
+        Group.new("jostling").name.should == 'hello'
+      end
+    end
+
     describe "get /metrics" do
       it "should list all the metrics" do
         Metric.new("total", "jostling")
@@ -62,7 +72,37 @@ module Blackbeard
         post "/metrics/#{metric.type}/#{metric.type_id}", :name => 'hello'
 
         last_response.should be_ok
-        reloaded_metric = Metric.new(:total, "jostling").name.should == 'hello'
+        Metric.new(:total, "jostling").name.should == 'hello'
+      end
+    end
+
+    describe "get /tests" do
+      it "should list all the test" do
+        Test.new("jostling")
+        get "/tests"
+
+        last_response.should be_ok
+        last_response.body.should include('jostling')
+      end
+    end
+
+    describe "get /tests/:id" do
+      it "should show a test" do
+        test = Test.new("jostling")
+        get "/tests/#{test.id}"
+
+        last_response.should be_ok
+        last_response.body.should include("jostling")
+      end
+    end
+
+    describe "post /tests/:id" do
+      it "should update the test" do
+        test = Test.new("jostling")
+        post "/tests/#{test.id}", :name => 'hello'
+
+        last_response.should be_ok
+        Test.new("jostling").name.should == 'hello'
       end
     end
 

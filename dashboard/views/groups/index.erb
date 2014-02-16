@@ -1,13 +1,20 @@
 <div class="page-header">
   <h1>Groups</h1>
+  <p>Groups are a way of classifying your users into segments.</p>
 </div>
 
 <% if @groups.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Groups</h3>
+  </div>
   <ul class="list-group">
   <% @groups.each do |group| %>
-  <li><a href="<%= url("groups/#{group.id}") %>"><%= group.name %></a></li>
+  <li class="list-group-item"><a href="<%= url("groups/#{group.id}") %>"><%= group.name %></a></li>
   <% end %>
   </ul>
+</div>
+
 <% else %>
   <div class="alert alert-danger">
     <strong>No groups!</strong> Something may be wrong or you may just need to define some groups.

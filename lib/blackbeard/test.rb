@@ -3,7 +3,7 @@ require 'blackbeard/storable'
 module Blackbeard
   class Test < Storable
     set_master_key :tests
-    string_attributes :name
+    string_attributes :name, :description
 
 
     def add_variation(variation)
@@ -28,7 +28,7 @@ module Blackbeard
     end
 
     def name
-      storable_attributes_hash[:name] || id
+      storable_attributes_hash['name'] || id
     end
 
   private
