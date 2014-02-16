@@ -7,6 +7,7 @@ module Blackbeard
     attr_reader :type, :type_id
     set_master_key :metrics
     string_attributes :name, :description
+    has_many :groups => Group
 
     def initialize(type, type_id)
       @type = type
@@ -51,41 +52,10 @@ module Blackbeard
       storable_attributes_hash['name'] || type_id
     end
 
-    def has_group?(group)
-      group_ids.include?(group.id)
-    end
-
-    def add_group(group)
-      db.set_add_member(groups_set_key, group.key) unless has_group?(group)
-      @groups = nil
-    end
-
-    def remove_group(group)
-      db.set_remove_member(groups_set_key, group.key)
-      @groups = nil
-    end
-
-    def groups
-      @groups ||= Group.new_from_keys(group_keys)
-    end
-
-    def group_ids
-      groups.map{ |g| g.id }
-    end
-
     def addable_groups
       Group.all.reject{ |g| group_ids.include?(g.id) }
     end
 
-private
-
-    def group_keys
-      db.set_members(groups_set_key)
-    end
-
-    def groups_set_key
-      "#{key}::groups"
-    end
 
   end
 end

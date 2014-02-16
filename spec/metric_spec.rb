@@ -42,35 +42,6 @@ module Blackbeard
       end
     end
 
-    describe "groups" do
-      it "should return an empty array for no groups" do
-        metric.groups.should == []
-      end
-
-      it "should return the groups when there are groups" do
-        metric.add_group(group)
-        metric.groups.map{|g| g.id}.should == [group.id]
-      end
-    end
-
-    describe "add_group" do
-      it "should add the group to the metric" do
-        expect{
-          metric.add_group(group)
-          }.to change{ metric.groups.count }.by(1)
-      end
-    end
-
-    describe "remove_group" do
-      it "should remove the group from the metric" do
-        metric.add_group(group)
-        expect{
-          metric.remove_group(group)
-        }.to change{ metric.groups.count }.by(-1)
-      end
-      it "should remove all the group metric data"
-    end
-
     describe "addable_groups" do
       it "should include the groups not added" do
         group # to initialize it
@@ -80,15 +51,6 @@ module Blackbeard
       it "should not include the group added" do
         metric.add_group(group)
         metric.addable_groups.map{|g| g.id }.should_not include(group.id)
-      end
-    end
-
-
-    describe "has_group?" do
-      it "should return true if metric has group" do
-        expect{
-          metric.add_group(group)
-        }.to change{ metric.has_group?(group) }.from(false).to(true)
       end
     end
 
