@@ -4,6 +4,8 @@ module Blackbeard
   describe Metric do
     let(:metric) { Metric.new(:total, "one-total") }
     let(:group) { Group.new(:example) }
+    let(:metric_data) { metric.metric_data }
+    let(:group_metric_data) { metric.metric_data(group) }
 
     describe "self.all" do
       before :each do
@@ -17,9 +19,26 @@ module Blackbeard
     end
 
     describe "add" do
+      let(:context) { double(:unique_identifier => 'uid', :request => double, :user => double) }
+      before :each do
+        metric.stub(:groups).and_return([group])
+      end
+
       it "should increment metric data" do
-        metric.metric_data.should_receive(:add).with("uid",1)
-        metric.add("uid", 1)
+        metric_data.should_receive(:add).with("uid",1)
+        metric.add(context, 1)
+      end
+
+      it "should increment metric data for each group" do
+        group.stub(:segment).and_return("segment")
+        group_metric_data.should_receive(:add).with("uid", 1, "segment" )
+        metric.add(context, 1)
+      end
+
+      it "should not increment nil segments" do
+        group.stub(:segment).and_return(nil)
+        group_metric_data.should_not_receive(:add)
+        metric.add(context, 1)
       end
     end
 

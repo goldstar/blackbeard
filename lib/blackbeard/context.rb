@@ -15,12 +15,12 @@ module Blackbeard
     end
 
     def add_total(id, amount = 1)
-      @pirate.metric(:total, id.to_s).add(unique_identifier, amount)
+      @pirate.metric(:total, id.to_s).add(self, amount)
       self
     end
 
     def add_unique(id)
-      @pirate.metric(:unique, id.to_s).add(unique_identifier)
+      @pirate.metric(:unique, id.to_s).add(self, 1)
       self
     end
 

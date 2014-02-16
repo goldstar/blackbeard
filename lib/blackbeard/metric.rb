@@ -31,8 +31,13 @@ module Blackbeard
       metric_data.recent_days
     end
 
-    def add(uid, amount)
+    def add(context, amount)
+      uid = context.unique_identifier
       metric_data.add(uid, amount)
+      groups.each do |group|
+        segment = group.segment(context)
+        metric_data(group).add(uid, amount, segment) unless segment.nil?
+      end
     end
 
     def metric_data(group = nil)

@@ -13,7 +13,7 @@ module Blackbeard
     describe "#add_total" do
       it "should call add on the total metric" do
         pirate.should_receive(:metric).with(:total, total_metric.id){ total_metric }
-        total_metric.should_receive(:add).with(uid, 3)
+        total_metric.should_receive(:add).with(context, 3)
         context.add_total( total_metric.id, 3 )
       end
     end
@@ -21,7 +21,7 @@ module Blackbeard
     describe "#add_unique" do
       it "should call add on the unique metric" do
         pirate.should_receive(:metric).with(:unique, unique_metric.id){ unique_metric }
-        unique_metric.should_receive(:add).with(uid)
+        unique_metric.should_receive(:add).with(context, 1)
         context.add_unique( unique_metric.id )
       end
     end
