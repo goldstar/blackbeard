@@ -1,6 +1,6 @@
 # Blackbeard
 
-[![Gem Version](https://badge.fury.io/rb/blackbeard.png)](http://badge.fury.io/rb/blackbeard) [![Code Climate](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/badges/b912a89a38a56f61398a/gpa.png)](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/feed) [![Build Status](https://travis-ci.org/goldstar/blackbeard.png?branch=master)](https://travis-ci.org/goldstar/blackbeard)
+[![Gem Version](https://badge.fury.io/rb/blackbeard.png)](http://badge.fury.io/rb/blackbeard) [![Code Climate](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/badges/b912a89a38a56f61398a/gpa.png)](https://codeclimate.com/repos/5300f44be30ba0790d01b5a7/feed) [![Build Status](https://travis-ci.org/goldstar/blackbeard.png?branch=master)](https://travis-ci.org/goldstar/blackbeard) [![Coverage Status](https://coveralls.io/repos/goldstar/blackbeard/badge.png)](https://coveralls.io/r/goldstar/blackbeard)
 
 Blackbeard is a Redis backed metrics collection system with a Rack dashboard.
 
