@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rack-test', '~> 0.6'
   spec.add_development_dependency 'guard-rspec', '~> 4.2.5'
   spec.add_development_dependency 'terminal-notifier-guard'
+  spec.add_development_dependency 'codeclimate-test-reporter'
 
   spec.add_runtime_dependency "sinatra-base", "~> 1.4"
   spec.add_runtime_dependency "tzinfo", "~> 0.3"
