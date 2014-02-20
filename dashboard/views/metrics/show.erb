@@ -2,7 +2,7 @@
   <h1><span id="editable-name"><%= @metric.name %></span> <small><%= @metric.type %></small></h1>
 <p id="editable-description"><%= @metric.description %></p>
 </div>
-<form id="add_group" action="<%= url("/metrics/#{@metric.type}/#{@metric.type_id}/groups") %>" method="post"><input type="hidden" name="group_id"></form>
+<form id="add_group" action="<%= url("/metrics/#{@metric.type}/#{@metric.type_id}/groups") %>" method="post"><input id="add_group_input" type="hidden" name="group_id"></form>
 <ul class="nav nav-tabs">
   <li class="active"><a href="#">Home</a></li>
   <% @metric.groups.each do |group| %>
@@ -12,7 +12,7 @@
      <a id="drop5" role="button" data-toggle="dropdown" href="#">Segment by Group <b class="caret"></b></a>
         <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
           <% @metric.addable_groups.each do |group| %>
-          <li role="presentation" id="add-group-<%= group.id %>"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
+          <li role="presentation" data-group-id="<%= group.id %>" class="add-group"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
           <% end %>
         </ul>
   </li>
@@ -27,14 +27,12 @@
 <script src="<%= url('bootstrap3-editable/js/bootstrap-editable.min.js') %>"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-  <% @metric.addable_groups.each do |group| %>
-    $('#add-group-<%= group.id %> a').click(function (e) {
-      e.preventDefault();
-      alert($('#add_group')["group_id"]);
-      $('#add_group')["group_id"].value = '<%= group.id %>';
-      $('#add_group').submit();
-    })
-  <% end %>
+  $('ul.nav-tabs').on("click", ".add-group", function (e) {
+    e.preventDefault();
+    var groupId = $(this).data("group-id");
+    $('#add_group_input').val(groupId)
+    $('#add_group').submit();
+  });
 
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1.0', {'packages':['corechart']});
