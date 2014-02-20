@@ -19,17 +19,17 @@ module Blackbeard
       end
     end
 
-    describe "get /metrics/:type/:id" do
+    describe "get /metrics/:type/:type_id" do
       it "should show a metric" do
         metric = Metric.new("total", "jostling")
-        get "/metrics/#{metric.type}/#{metric.id}"
+        get "/metrics/#{metric.type}/#{metric.type_id}"
 
         last_response.should be_ok
         last_response.body.should include("jostling")
       end
     end
 
-    describe "post /metrics/:type/:id" do
+    describe "post /metrics/:type/:type_id" do
       it "should update the metric" do
         metric = Metric.new("total", "jostling")
         post "/metrics/#{metric.type}/#{metric.type_id}", :name => 'hello'
@@ -38,6 +38,20 @@ module Blackbeard
         Metric.new(:total, "jostling").name.should == 'hello'
       end
     end
+
+    describe "post /metrics/:type/:type_id/groups" do
+      it "should add a group to the metric" do
+        metric = Metric.new("total", "jostling")
+        group = Group.new("admin")
+        post "/metrics/#{metric.type}/#{metric.type_id}/groups", :group_id => group.id
+
+        last_response.should be_redirect
+        follow_redirect!
+        last_request.url.should == "http://example.org/metrics/#{metric.type}/#{metric.type_id}?group_id=#{group.id}"
+        metric.has_group?(group).should be_true
+      end
+    end
+
 
   end
 end

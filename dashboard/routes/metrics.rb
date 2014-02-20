@@ -1,7 +1,6 @@
 module Blackbeard
   module DashboardRoutes
     class Metrics < Base
-
       get '/metrics' do
         @metrics = Metric.all
         erb 'metrics/index'.to_sym
@@ -9,6 +8,7 @@ module Blackbeard
 
       get "/metrics/:type/:type_id" do
         @metric = Metric.new(params[:type], params[:type_id])
+        @group = Group.new(params[:group_id]) if params[:group_id]
         erb 'metrics/show'.to_sym
       end
 
@@ -16,6 +16,13 @@ module Blackbeard
         @metric = Metric.new(params[:type], params[:type_id])
         @metric.update_attributes(params)
         "OK"
+      end
+
+      post "/metrics/:type/:type_id/groups" do
+        @metric = Metric.new(params[:type], params[:type_id])
+        @group = Group.new(params[:group_id])
+        @metric.add_group(@group)
+        redirect "/metrics/#{@metric.type}/#{@metric.type_id}?group_id=#{@group.id}"
       end
 
     end
