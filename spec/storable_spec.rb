@@ -22,4 +22,12 @@ describe Blackbeard::Storable do
     end
   end
 
+  describe "==" do
+    it "should match class and id" do
+      (ExampleStorable.new("thing") == ExampleStorable.new("thing")).should be_true
+      (ExampleStorable.new("thing") == ExampleStorable.new("thing2")).should be_false
+      (ExampleStorable.new("thing") == AnotherStorable.new("thing")).should be_false
+    end
+  end
+
 end

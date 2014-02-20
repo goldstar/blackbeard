@@ -53,6 +53,10 @@ module Blackbeard
       all_keys.map{ |key| new_from_key(key) }
     end
 
+    def ==(o)
+      o.class == self.class && o.id == self.id
+    end
+
     def key
       "#{master_key}::#{ id }"
     end
