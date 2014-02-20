@@ -14,6 +14,17 @@ module Blackbeard
         db.hash_get('a_hash', 'hello').should == 'world'
       end
 
+      it "should multi set" do
+        db.hash_multi_set('a_hash', {:one => 'two', :three => 'four'})
+        db.hash_get('a_hash','three').should == 'four'
+      end
+
+      it "should not raise error on multi set with empty hash" do
+        expect{
+          db.hash_multi_set('a_hash', {})
+        }.to_not raise_error
+      end
+
       it "should set if field does not exist" do
         db.hash_set('a_hash', 'hello', 'world')
         db.hash_key_set_if_not_exists('a_hash', 'hello', 'bar')

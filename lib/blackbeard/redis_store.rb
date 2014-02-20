@@ -24,6 +24,10 @@ module Blackbeard
       redis.hset(hash_key, field, value)
     end
 
+    def hash_multi_set(hash_key, hash)
+      redis.mapped_hmset(hash_key, hash) unless hash.empty?
+    end
+
     def hash_length(hash_key)
       redis.hlen(hash_key)
     end
