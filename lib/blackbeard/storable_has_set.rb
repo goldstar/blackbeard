@@ -31,6 +31,12 @@ module Blackbeard
               \@#{plural} = nil
             end
 
+            def add_#{plural}(*args)
+              args.flatten.reject!{|o| has_#{singular}?(o) }
+              db.set_add_members(#{plural}_key, args) unless args.empty?
+              \@#{plural} = nil
+            end
+
             def remove_#{singular}(o)
               db.set_remove_member(#{plural}_key, o)
               \@#{plural} = nil

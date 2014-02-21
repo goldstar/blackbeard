@@ -18,6 +18,12 @@ module Blackbeard
       }.to change{ example.has_thing?(thing) }.from(true).to(false)
     end
 
+    it "should add many things at once" do
+      expect{
+        example.add_things("thing1", "thing2")
+      }.to change{ example.things.count }.by(2)
+    end
+
     it "should has_thing?" do
       example.add_thing(thing)
       example.has_thing?(thing).should be_true
