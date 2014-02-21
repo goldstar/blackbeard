@@ -28,7 +28,8 @@ module Blackbeard
     def ab_test(id, options = nil)
       test = @pirate.test(id.to_s)
       if options.is_a? Hash
-        variation = test.add_variations(options.keys).select_variation
+        test.add_variations(options.keys)
+        variation = test.select_variation
         options[variation.to_sym]
       else
         variation = test.select_variation
