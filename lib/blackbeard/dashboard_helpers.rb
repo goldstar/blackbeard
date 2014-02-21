@@ -13,17 +13,17 @@ module Blackbeard
     end
 
     def js_metric_date(segments, d)
-      row = [js_date(d.date)]
-      segments.each{|s| row.push d.result[s].to_f }
-      "[" + row.join(',') + "]"
+      [js_date(d.date)] + _js_metric_date_results(segments, d.result)
     end
 
     def js_metric_hour(segments, h)
-      row = [js_hour(h.hour)]
-      segments.each{|s| row.push h.result[s].to_f }
-      "[" + row.join(',') + "]"
+      row = [js_hour(h.hour)] + _js_metric_date_results(segments, h.result)
     end
 
+    def _js_metric_date_results(segments, result)
+      segments.each{|s| row.push result[s].to_f }
+      "[" + row.join(',') + "]"
+    end
   end
 end
 
