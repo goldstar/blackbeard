@@ -14,41 +14,35 @@ module Blackbeard
         it "should increment the metric by the amount" do
           expect{
             metric_data.add(uid, 2)
-          }.to change{ metric_data.result_for_hour(tz.now) }.by(2)
+          }.to change{ metric_data.result_for_hour(tz.now)["total"] }.from(nil).to(2)
         end
 
         it "should increment an existing amount" do
           metric_data.add(uid, 1)
           expect{
             metric_data.add(uid, 2)
-          }.to change{ metric_data.result_for_hour(tz.now) }.from(1).to(3)
+          }.to change{ metric_data.result_for_hour(tz.now)["total"] }.from(1).to(3)
         end
 
         it "should handle negatives ok" do
           metric_data.add(uid, 2)
           expect{
             metric_data.add(uid, -1)
-          }.to change{ metric_data.result_for_hour(tz.now) }.from(2).to(1)
+          }.to change{ metric_data.result_for_hour(tz.now)["total"] }.from(2).to(1)
         end
 
         it "should handle floats" do
           metric_data.add(uid, 2.5)
           expect{
             metric_data.add(uid, 1.25)
-          }.to change{ metric_data.result_for_hour(tz.now) }.to(3.75)
+          }.to change{ metric_data.result_for_hour(tz.now)["total"] }.to(3.75)
         end
 
         context "with segment" do
           it "should increment the segment" do
             expect{
               metric_data.add(uid, 1, "segment")
-            }.to change{ metric_data.result_for_hour(tz.now, "segment") }.by(1)
-          end
-
-          it "should not increment the global" do
-            expect{
-              metric_data.add(uid, 1, "segment")
-            }.to_not change{ metric_data.result_for_hour(tz.now) }
+            }.to change{ metric_data.result_for_hour(tz.now)["segment"] }.from(nil).to(1)
           end
         end
 
@@ -59,13 +53,13 @@ module Blackbeard
 
       describe "result_for_hour" do
         it "should return 0 if no metric has been recorded" do
-          metric_data.result_for_hour(tz.now).should be_zero
+          metric_data.result_for_hour(tz.now).should be_empty
         end
 
         it "should return sum if metric called more than once" do
           metric_data.add(uid, 2)
           metric_data.add(uid, 4)
-          metric_data.result_for_hour(tz.now).should == 6
+          metric_data.result_for_hour(tz.now).should == {"total"=>6.0}
         end
       end
 
@@ -74,10 +68,10 @@ module Blackbeard
         context "result in db" do
           before :each do
             day_key = metric_data.send(:key_for_date, date)
-            db.set(day_key, 4)
+            db.hash_set(day_key, "total", 4)
           end
           it "should return the result from db" do
-            metric_data.result_for_day(date).should == 4.0
+            metric_data.result_for_day(date).should == {"total"=>4.0}
           end
           it "should not remerge the results" do
             metric_data.should_not_receive(:generate_result_for_day).with(date)
@@ -85,10 +79,10 @@ module Blackbeard
           end
         end
 
-        context "result in not in db" do
+        context "result not in db" do
           it "should merge hours" do
-            metric_data.should_receive(:generate_result_for_day).with(date).and_return(2.0)
-            metric_data.result_for_day(date).should == 2.0
+            metric_data.should_receive(:generate_result_for_day).with(date).and_return({"total" => "2"})
+            metric_data.result_for_day(date).should == {"total" => 2.0 }
           end
         end
       end
@@ -97,19 +91,22 @@ module Blackbeard
       describe "generate_result_for_day" do
         let(:date) { Date.new(2014,1,1) }
         before :each do
-          key_for_1am = metric_data.send(:key_for_hour, Time.new(2014,1,1,1))
-          db.set(key_for_1am, 2)
-          key_for_2pm = metric_data.send(:key_for_hour, Time.new(2014,1,1,14))
-          db.set(key_for_2pm, 3)
+          at_1am = Time.new(2014,1,1,1)
+          metric_data.add_at(at_1am, '1' )
+          metric_data.add_at(at_1am, '2' )
+          at_2pm = Time.new(2014,1,1,14)
+          metric_data.add_at(at_2pm, '2' )
+          metric_data.add_at(at_2pm, '3' )
+          metric_data.add_at(at_2pm, '4' )
         end
 
         it "should sum the hours" do
-          metric_data.send(:generate_result_for_day, date).should == 5.0
+          metric_data.send(:generate_result_for_day, date).should == {"total" => 5.0}
         end
 
         it "should store the result if it's not today's result" do
           day_key = metric_data.send(:key_for_date, date)
-          db.should_receive(:set).with(day_key, 5.0)
+          db.should_receive(:hash_multi_set).with(day_key, {"total" => 5})
           metric_data.send(:generate_result_for_day, date)
         end
 

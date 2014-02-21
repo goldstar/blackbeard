@@ -36,8 +36,10 @@ module Blackbeard
 
       def result_for_day(date)
         key = key_for_date(date)
-        result = db.get(key) || generate_result_for_day(date)
-        result.to_f
+        result = db.hash_get_all(key)
+        result = generate_result_for_day(date) if result.empty?
+        result.each { |k,v| result[k] = v.to_f }
+        result
       end
 
       def key
@@ -56,13 +58,20 @@ module Blackbeard
         end
       end
 
+      def segments
+        if group && group.segments.any?
+          group.segments
+        else
+          [self.class::DEFAULT_SEGMENT]
+        end
+      end
     private
 
       def generate_result_for_day(date)
         date_key = key_for_date(date)
         hours_keys = hour_keys_for_day(date)
         result = merge_results(hours_keys)
-        db.set(date_key, result) unless date == tz.now.to_date
+        db.hash_multi_set(date_key, result) unless date == tz.now.to_date
         result
       end
 

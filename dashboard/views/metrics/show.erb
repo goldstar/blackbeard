@@ -4,22 +4,21 @@
 </div>
 <form id="add_group" action="<%= url("/metrics/#{@metric.type}/#{@metric.type_id}/groups") %>" method="post"><input id="add_group_input" type="hidden" name="group_id"></form>
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#">Home</a></li>
+  <% if @group.nil? %><li class="active"><% else %><li><% end %><a href="?">All</a></li>
   <% @metric.groups.each do |group| %>
-  <li><a href="#"><%= group.name %></a></li>
+    <% if @group == group %><li class="active"><% else %><li><% end %><a href="?group_id=<%= group.id %>"><%= group.name %></a></li>
   <% end %>
+  <% if @metric.addable_groups.any? %>
   <li class="dropdown">
      <a id="drop5" role="button" data-toggle="dropdown" href="#">Segment by Group <b class="caret"></b></a>
         <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
           <% @metric.addable_groups.each do |group| %>
-          <li role="presentation" data-group-id="<%= group.id %>" class="add-group"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
+          <li role="presentation" data-group-id="<%= group.id %>" data-group-name="<%= group.name %>" class="add-group"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
           <% end %>
         </ul>
   </li>
+  <% end %>
 </ul>
-
-<div id="recent_hours_chart_div"></div>
-<div id="recent_days_chart_div"></div>
 
 <!--Load the AJAX API-->
 <script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
@@ -30,61 +29,15 @@
   $('ul.nav-tabs').on("click", ".add-group", function (e) {
     e.preventDefault();
     var groupId = $(this).data("group-id");
-    $('#add_group_input').val(groupId)
-    $('#add_group').submit();
+    var groupName = $(this).data("group-name");
+
+    if(confirm("Start collecting data by group "+groupName+"?")) {
+      $('#add_group_input').val(groupId);
+      $('#add_group').submit();
+    }
   });
 
-  // Load the Visualization API and the piechart package.
-  google.load('visualization', '1.0', {'packages':['corechart']});
-
-  // Set a callback to run when the Google Visualization API is loaded.
-  google.setOnLoadCallback(drawHoursChart);
-  google.setOnLoadCallback(drawDaysChart);
-
-  // Callback that creates and populates a data table,
-  // instantiates the pie chart, passes in the data and
-  // draws it.
-  function drawHoursChart() {
-
-    // Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('datetime', 'Hour');
-    data.addColumn('number', 'Result');
-    data.addRows([
-    <%= @metric.recent_hours.map{|h| "[#{js_hour(h.hour)}, #{h.result}]" }.join(',') %>
-    ]);
-
-    // Set chart options
-    var options = {'title':'Last 24 Hours',
-                   // 'width':900,
-                   'height':300};
-
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.LineChart(document.getElementById('recent_hours_chart_div'));
-    chart.draw(data, options);
-  }
-
-  function drawDaysChart() {
-
-    // Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Day');
-    data.addColumn('number', 'Result');
-    data.addRows([
-    <%= @metric.recent_days.map{|d| "[#{js_date(d.date)}, #{d.result}]" }.join(',') %>
-    ]);
-
-    // Set chart options
-    var options = {'title':'Last 28 Days',
-                   // 'width':900,
-                   'height':300};
-
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.LineChart(document.getElementById('recent_days_chart_div'));
-    chart.draw(data, options);
-  }
-
-  //turn to inline mode
+    //turn to inline mode
   $.fn.editable.defaults.send = 'always';
   $.fn.editable.defaults.params = function(params) {
         var obj = {};
@@ -114,4 +67,7 @@
     });
   });
 </script>
+<%= partial :'metrics/metric_data', :locals => {:metric_data => @metric.metric_data(@group) } %>
+
+
 

@@ -44,7 +44,7 @@ module Blackbeard
     def metric_data(group = nil)
       @metric_data[group] ||= begin
         raise GroupNotInMetric unless group.nil? || has_group?(group)
-        MetricData.const_get(type.capitalize).new(self)
+        MetricData.const_get(type.capitalize).new(self, group)
       end
     end
 

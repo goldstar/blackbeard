@@ -1,12 +1,14 @@
 require 'blackbeard'
 require 'redis'
 require "codeclimate-test-reporter"
+require 'byebug'
 
 CodeClimate::TestReporter.start
 
 RSpec.configure do |config|
   config.before do
     redis = Blackbeard.config.db
+    namespace = "BlackbeardTests"
     keys = redis.keys
     redis.del(keys) if keys.any?
   end

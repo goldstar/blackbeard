@@ -6,18 +6,28 @@ module Blackbeard
 
       DEFAULT_SEGMENT = 'uniques'
       def add(uid, amount = nil, segment = DEFAULT_SEGMENT)
-        key = key_for_hour(tz.now)
+        add_at(tz.now, uid, amount, segment)
+      end
+
+      def add_at(time, uid, amount = nil, segment = DEFAULT_SEGMENT)
+        key = key_for_hour(time)
         segment_key = segment_key(key, segment)
 
         db.set_add_member(hours_set_key, key)
         db.set_add_member(key, segment_key)
         db.set_add_member(segment_key, uid)
+        #TODO: if not today, blow away rollup keys
       end
 
-      def result_for_hour(time, segment = DEFAULT_SEGMENT)
+      def result_for_hour(time)
         key = key_for_hour(time)
-        segment_key = segment_key(key, segment)
-        db.set_count(segment_key)
+        segment_keys = db.set_members(key)
+        result = {}
+        segment_keys.each do |segment_key|
+          segment = segment_key.split(/::/).last
+          result[segment] = db.set_count(segment_key)
+        end
+        result
       end
 
       def segment_key(key, segment)
@@ -27,7 +37,20 @@ module Blackbeard
     private
 
       def merge_results(keys)
-        db.set_union_count(keys)
+        segments = {}
+        keys.each do |key|
+          segment_keys = db.set_members(key)
+          segment_keys.each do |segment_key|
+            segment = segment_key.split(/::/).last
+            segments[segment] ||= []
+            segments[segment].push(segment_key)
+          end
+        end
+        merged_results = {}
+        segments.each do |segment, segment_keys|
+          merged_results[segment] = db.set_union_count(segment_keys)
+        end
+        merged_results
       end
     end
   end

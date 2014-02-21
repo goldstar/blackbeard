@@ -23,7 +23,7 @@ module Blackbeard
         it "should return an array for each hour" do
           metric_data.add('user1', 1)
           key = metric_data.send(:key_for_hour, tz.now)
-          metric_data.send(:hour_keys).should == [key]
+          metric_data.send(:hour_keys).should have(1).key
         end
       end
 
@@ -38,7 +38,7 @@ module Blackbeard
       describe "recent_days" do
         let(:start_on) { Date.new(2014,1,3) }
 
-        it "shoud return results for recent days" do
+        it "should return results for recent days" do
           metric_data.recent_days(3, start_on).should have(3).metric_days
         end
       end

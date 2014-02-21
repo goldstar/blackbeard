@@ -22,7 +22,7 @@ module Blackbeard
         @metric = Metric.new(params[:type], params[:type_id])
         @group = Group.new(params[:group_id])
         @metric.add_group(@group)
-        redirect "/metrics/#{@metric.type}/#{@metric.type_id}?group_id=#{@group.id}"
+        redirect url("metrics/#{@metric.type}/#{@metric.type_id}?group_id=#{@group.id}")
       end
 
     end

@@ -3,6 +3,7 @@ require 'blackbeard/selected_variation'
 module Blackbeard
   class Context
     include ConfigurationMethods
+    attr_reader :request, :user
 
     def initialize(pirate, user, request = nil)
       @pirate = pirate

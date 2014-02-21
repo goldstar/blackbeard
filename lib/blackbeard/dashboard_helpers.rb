@@ -12,6 +12,18 @@ module Blackbeard
       "new Date(#{ hour.year}, #{hour.month - 1 }, #{hour.day}, #{hour.hour})"
     end
 
+    def js_metric_date(segments, d)
+      row = [js_date(d.date)]
+      segments.each{|s| row.push d.result[s].to_f }
+      "[" + row.join(',') + "]"
+    end
+
+    def js_metric_hour(segments, h)
+      row = [js_hour(h.hour)]
+      segments.each{|s| row.push h.result[s].to_f }
+      "[" + row.join(',') + "]"
+    end
+
   end
 end
 
