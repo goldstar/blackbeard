@@ -1,7 +1,6 @@
 require 'blackbeard'
 require 'redis'
 require "codeclimate-test-reporter"
-require 'byebug'
 
 CodeClimate::TestReporter.start
 
