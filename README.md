@@ -138,10 +138,10 @@ $pirate.add_total(:revenue, +119.95)              # can also accept floats
 Context methods that inrement metrics always return the context, so you can chain them together.
 
 ```ruby
-$pirate.set_context(:user_id => 1)
+$pirate.set_context(user)
 $pirate.add_total(:like, +1).add_unique(:likers)
 
-$pirate.context(:user_id => 2).add_total(:like, +1).add_unique(:likers)
+$pirate.context(user).add_total(:like, +1).add_unique(:likers)
 ```
 
 

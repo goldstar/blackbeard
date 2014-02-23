@@ -47,7 +47,8 @@ describe Blackbeard::Pirate do
 
     end
     context "with context set" do
-      let!(:set_context){ pirate.set_context(:user_id => 1) }
+      let(:user){ double }
+      let!(:set_context){ pirate.set_context(user) }
 
       it "should delegate #add_unique" do
         set_context.should_receive(:add_unique).with(:example_metric).and_return(set_context)
