@@ -58,7 +58,7 @@ class MySinatraApp < Sinatra::Base
   end
 
   before do
-    $pirate.set_context(current_user, request) unless robot?
+    $pirate.set_context(current_user, self) unless robot?
   end
 
   after do
@@ -97,8 +97,8 @@ Most of Blackbeard's calls are done via a context.
 In a web request, this is handled by a before filter:
 
 ```ruby
-before_filter { |c| $pirate.set_context(c.current_user, c.request) }, :unless => robot?
-after_filter { |c| $pirate.clear_context }
+before_filter { |controller| $pirate.set_context(controller.current_user, controller) }, :unless => robot?
+after_filter { |controller| $pirate.clear_context }
 ```
 
 Outside of a web request--or if you want to reference a user other than the one in the current request (e..g referrals)--you set the context before each call to `$pirate`.
@@ -107,7 +107,7 @@ Outside of a web request--or if you want to reference a user other than the one 
 $pirate.context(user).add_metric(:referral)
 ```
 
-If a contet does not exist, `$pirate` will silently ignore all actions. This is useful for dealing with bots.
+If a context does not exist, `$pirate` will silently ignore all actions. This is useful for dealing with bots.
 
 If the user is unidentied set user to nil or false. If your app can return a Guest object for unidentied users, see the guest configuration setting.
 

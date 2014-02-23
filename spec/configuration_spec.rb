@@ -5,7 +5,7 @@ module Blackbeard
     let(:config) { Configuration.new }
     describe "define_group" do
       it "should store the block in group_definiations" do
-        config.define_group(:hello) do |user,request|
+        config.define_group(:hello) do |user,controller|
           "world"
         end
         config.group_definitions[:hello].call.should == 'world'

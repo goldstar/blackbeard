@@ -12,7 +12,7 @@ module Blackbeard
 
     def segment_for(context)
       return nil unless definition
-      segment = definition.call(context.user, context.request)
+      segment = definition.call(context.user, context.controller)
       segment_id = case segment
       when  false
         nil

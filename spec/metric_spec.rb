@@ -19,7 +19,7 @@ module Blackbeard
     end
 
     describe "add" do
-      let(:context) { double(:unique_identifier => 'uid', :request => double, :user => double) }
+      let(:context) { double(:unique_identifier => 'uid', :controller => double, :user => double) }
       before :each do
         metric.stub(:groups).and_return([group])
       end

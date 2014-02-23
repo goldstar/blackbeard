@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Group do
   let(:group){ Blackbeard::Group.new('example') }
-  let(:context){ double(:request => double, :user => double) }
+  let(:context){ double(:controller => double, :user => double) }
   describe "segment" do
     context "with no code defined" do
       it "should return nil" do

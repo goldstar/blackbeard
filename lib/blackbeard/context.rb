@@ -3,11 +3,11 @@ require 'blackbeard/selected_variation'
 module Blackbeard
   class Context
     include ConfigurationMethods
-    attr_reader :request, :user
+    attr_reader :controller, :user
 
-    def initialize(pirate, user, request = nil)
+    def initialize(pirate, user, controller = nil)
       @pirate = pirate
-      @request = request
+      @controller = controller
       @user = user
 
       if (@user == false) || (@user && guest_method && @user.send(guest_method) == false)
@@ -48,12 +48,12 @@ module Blackbeard
 private
 
     def blackbeard_visitor_id
-      request.cookies[:bbd] ||= generate_blackbeard_visitor_id
+      controller.request.cookies[:bbd] ||= generate_blackbeard_visitor_id
     end
 
     def generate_blackbeard_visitor_id
       id = Blackbeard.db.increment("visitor_id")
-      request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
+      controller.request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id
     end
 
