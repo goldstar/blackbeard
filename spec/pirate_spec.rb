@@ -16,6 +16,10 @@ describe Blackbeard::Pirate do
       4.times{ pirate.test(name) }
     end
 
+    it "should get features once" do
+      Blackbeard::Feature.should_receive(:new).with(name).once.and_return(double)
+      4.times{ pirate.feature(name) }
+    end
 
   end
 
@@ -29,20 +33,20 @@ describe Blackbeard::Pirate do
 
   describe "set context delegations" do
     context "with no set context" do
-      it "add_unique should raise Blackbeard::MissingContextError" do
+      it "add_unique should not raise error" do
         expect{ pirate.add_unique(:example) }.to_not raise_error
       end
 
-      it "add_total should raise Blackbeard::MissingContextError" do
+      it "add_total should not raise error" do
         expect{ pirate.add_total(:example, 1) }.to_not raise_error
       end
 
-      it "ab_test should raise Blackbeard::MissingContextError" do
+      it "ab_test should not raise error" do
         expect{ pirate.ab_test(:example, :on => 1, :off => 2) }.to_not raise_error
       end
 
-      it "active? should raise Blackbeard::MissingContextError" do
-        expect{ pirate.active?(:example) }.to_not raise_error
+      it "active? should not raise error" do
+        expect{ pirate.feature_active?(:example) }.to_not raise_error
       end
 
     end
@@ -61,13 +65,13 @@ describe Blackbeard::Pirate do
       end
 
       it "should delegate #ab_test" do
-        set_context.should_receive(:ab_test).with(:example_metric, :on => 1, :off => 2).and_return(set_context)
-        pirate.ab_test(:example_metric, :on => 1, :off => 2)
+        set_context.should_receive(:ab_test).with(:example_test, :on => 1, :off => 2).and_return(set_context)
+        pirate.ab_test(:example_test, :on => 1, :off => 2)
       end
 
-      it "should delegate #active?" do
-        set_context.should_receive(:active?).with(:example_metric).and_return(false)
-        pirate.active?(:example_metric)
+      it "should delegate #feature_active?" do
+        set_context.should_receive(:feature_active?).with(:example_feature).and_return(false)
+        pirate.feature_active?(:example_feature)
       end
     end
   end

@@ -5,12 +5,14 @@ require "blackbeard/metric_data/total"
 require "blackbeard/test"
 require "blackbeard/errors"
 require "blackbeard/group"
+require "blackbeard/feature"
 
 module Blackbeard
   class Pirate
     def initialize
       @metrics = {}
       @tests = {}
+      @features = {}
     end
 
     def metric(type, type_id)
@@ -19,6 +21,10 @@ module Blackbeard
 
     def test(id)
       @tests[id] ||= Test.find_or_create(id)
+    end
+
+    def feature(id)
+      @features[id] ||= Feature.find_or_create(id)
     end
 
     def context(*args)
@@ -48,9 +54,9 @@ module Blackbeard
       @set_context.ab_test(id, options)
     end
 
-    def active?(id)
+    def feature_active?(id)
       return self unless @set_context
-      @set_context.active?(id)
+      @set_context.feature_active?(id)
     end
 
 

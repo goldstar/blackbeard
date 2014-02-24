@@ -145,9 +145,9 @@ $pirate.context(user).add_total(:like, +1).add_unique(:likers)
 ```
 
 
-### Defining Tests (changes or features)
+### Defining AB Tests
 
-Features are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
+AB tests are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
 
 
 In a view:
@@ -162,7 +162,7 @@ In a controller:
 @onboarding_path = $pirate.ab_test(:new_onboarding, :control => '/onboarding', :welcome_flow => '/welcome') %>
 ```
 
-You can call the feature multiple times with different variations:
+You can call the test multiple times with different variations:
 
 ```ruby
 @button_bg_color = $pirate.ab_test(:button_color, :control => "#FFF", :black => "#000")
@@ -183,13 +183,7 @@ if $pirate.ab_test(:join_form) == :long_version do
 end
 ```
 
-If you're simply rolling out a feature or want a feature flipper, you can:
-
-```ruby
-if $pirate.active?(:friend_feed){ ... }  # shorthand for test(:friend_feed) == :active
-```
-
-GOTCHA #1:  It's good to avoid elsif and case statements when testing for features. Blackbeard learns about the features and their variations dynamically. If you're not passing in your variations as a hash, but only using conditionals, you can ensure all your variations are available with:
+GOTCHA #1:  It's good to avoid elsif and case statements. Blackbeard learns about the tests and their variations dynamically. If you're not passing in your variations as a hash, but only using conditionals, you can ensure all your variations are available with:
 
 ```ruby
 $pirate.test(:friend_feed).add_variations(:variation_one, :variation_two, ...)
@@ -197,14 +191,26 @@ $pirate.test(:friend_feed).add_variations(:variation_one, :variation_two, ...)
 
 Look at the dashboard to see which variations are registered.
 
-Features do not turn on automatically. When you first deploy the feature will be set to `:inactive` or `:control`, `:off`, or `:default` if any of those variations are defined.
+Test do not turn on automatically. When you first deploy the test will be set to `:inactive` or `:control`, `:off`, or `:default` if any of those variations are defined.
 
 GOTCHA #2:  If you do not define the :inactive, :control, :off or :default variations, the result will be nil. This is the desired behavior but it may be confusing.
 
 ```ruby
 $pirate.ab_test(:new_onboarding, :one => 'one', :two => 'two') # is the same as the next line
-$pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when feature is inactive
-$pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when feature is inactive
+$pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when test is inactive
+$pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when test is inactive
+```
+
+### Features
+
+Features are very similar to AB Tests but they are only active or inactive. You can control how they are rolled out to groups and even individuals in the dashboard.
+
+```ruby
+# With the context set
+if $pirate.feature_active?(:friend_feed){ ... }
+
+# Or outside a web request
+if $pirate.context(user).feature_active?(:friend_feed){ ... }
 ```
 
 ### Defining groups

@@ -37,8 +37,8 @@ module Blackbeard
       end
     end
 
-    def active?(id)
-      ab_test(id) == :active
+    def feature_active?(id)
+      @pirate.feature(id.to_s).active?(self)
     end
 
     def unique_identifier

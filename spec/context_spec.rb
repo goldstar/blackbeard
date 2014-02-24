@@ -76,23 +76,23 @@ module Blackbeard
       end
     end
 
-    describe "#active?" do
-      let(:inactive_test) { Blackbeard::Test.create(:inactive_test) }
-      let(:active_test) { Blackbeard::Test.create(:active_test) }
+    describe "#feature_active?" do
+      let(:inactive_feature) { Blackbeard::Feature.create(:inactive_feature) }
+      let(:active_feature) { Blackbeard::Feature.create(:active_feature) }
 
       before :each do
-        pirate.stub(:test).with(active_test.id).and_return(active_test)
-        pirate.stub(:test).with(inactive_test.id).and_return(inactive_test)
+        pirate.stub(:feature).with(active_feature.id).and_return(active_feature)
+        pirate.stub(:feature).with(inactive_feature.id).and_return(inactive_feature)
       end
 
       it "should return true when active" do
-        active_test.should_receive(:select_variation).and_return('active')
-        context.active?(:active_test).should be_true
+        active_feature.should_receive(:active?).and_return(true)
+        context.feature_active?(:active_feature).should be_true
       end
 
       it "should return true when active" do
-        inactive_test.should_receive(:select_variation).and_return('inactive')
-        context.active?(:inactive_test).should be_false
+        inactive_feature.should_receive(:active?).and_return(false)
+        context.feature_active?(:inactive_feature).should be_false
       end
 
     end
