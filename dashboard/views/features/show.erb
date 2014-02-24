@@ -1,0 +1,40 @@
+<div class="page-header">
+  <h1><span id="editable-name"><%= @feature.name %></span></h1>
+  <p id="editable-description"><%= @feature.description %></p>
+</div>
+
+<!--Load the AJAX API-->
+<script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
+<script src="<%= url('javascripts/bootstrap.min.js') %>"></script>
+<script src="<%= url('bootstrap3-editable/js/bootstrap-editable.min.js') %>"></script>
+<script type="text/javascript">
+  //turn to inline mode
+  $.fn.editable.defaults.send = 'always';
+  $.fn.editable.defaults.params = function(params) {
+        var obj = {};
+        obj[params.name] = params.value;
+        return obj;
+  }
+
+  $(document).ready(function() {
+    $('#editable-name').editable({
+      placement: 'right',
+      type: 'text',
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'name',
+      title: 'Edit feature name',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+    $('#editable-description').editable({
+      placement: 'bottom',
+      type: 'textarea',
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'description',
+      title: 'Edit feature description'
+    });
+  });
+</script>

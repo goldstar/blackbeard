@@ -1,0 +1,21 @@
+<div class="page-header">
+  <h1>Features</h1>
+  <p>Features are large pieces of functionality where you want to control their availability either for the purpose of testing or rolling out.</p>
+</div>
+
+<% if @features.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Known Features</h3>
+  </div>
+  <ul class="list-group">
+  <% @features.each do |feature| %>
+  <li class="list-group-item"><a href="<%= url("features/#{feature.id}") %>"><%= feature.name %></a></li>
+  <% end %>
+  </ul>
+</div>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>No features!</strong> Something may be wrong or you may just need to define some features.
+  </div>
+<% end %>
