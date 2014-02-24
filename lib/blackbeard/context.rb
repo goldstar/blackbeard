@@ -52,7 +52,7 @@ private
     end
 
     def generate_blackbeard_visitor_id
-      id = Blackbeard.db.increment("visitor_id")
+      id = db.increment("visitor_id")
       controller.request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id
     end

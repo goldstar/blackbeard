@@ -65,6 +65,17 @@ module Blackbeard
 
     end
 
+    describe "unique_identifier" do
+      it "should work with users" do
+        Context.new(pirate, user, nil).unique_identifier.should == "a1"
+      end
+      it "should work without users" do
+        request = double(:cookies => {})
+        controller = double(:request => request)
+        Context.new(pirate, nil, controller).unique_identifier.should == "b1"
+      end
+    end
+
     describe "#active?" do
       let(:inactive_test) { Blackbeard::Test.new(:inactive_test) }
       let(:active_test) { Blackbeard::Test.new(:active_test) }
