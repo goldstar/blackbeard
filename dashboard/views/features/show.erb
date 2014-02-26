@@ -2,6 +2,11 @@
   <h1><span id="editable-name"><%= @feature.name %></span></h1>
   <p id="editable-description"><%= @feature.description %></p>
 </div>
+<div id="status-buttons-group" class="btn-group" data-current-status="<%= @feature.status %>">
+  <button type="button" class="btn" value="active" data-selected-class="btn-success">Active</button>
+  <button type="button" class="btn" value="rollout" data-selected-class="btn-warning">Roll Out</button>
+  <button type="button" class="btn" value="inactive" data-selected-class="btn-danger">Inactive</button>
+</div>
 
 <!--Load the AJAX API-->
 <script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
@@ -15,6 +20,23 @@
         obj[params.name] = params.value;
         return obj;
   }
+
+  $("#status-buttons-group").on("click", ":button", function (e) {
+    e.preventDefault();
+    var status = $(this).val();
+    $('#status-buttons-group').data("current-status", status);
+    $.post( "<%= url("features/#{@feature.id}") %>", { status: status } , updateButtonStates);
+  });
+
+  function updateButtonStates(){
+    var v = $('#status-buttons-group').data("current-status");
+    $( "#status-buttons-group :button" ).removeClass();
+    $( "#status-buttons-group :button" ).addClass("btn");
+    var selectedClass = $( "#status-buttons-group :button[value='"+v+"']" ).data("selected-class");
+    $( "#status-buttons-group :button[value='"+v+"']" ).addClass( selectedClass );
+  }
+
+  $(document).ready(updateButtonStates);
 
   $(document).ready(function() {
     $('#editable-name').editable({

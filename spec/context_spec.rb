@@ -86,12 +86,12 @@ module Blackbeard
       end
 
       it "should return true when active" do
-        active_feature.should_receive(:active?).and_return(true)
+        active_feature.should_receive(:active_for?).with(context).and_return(true)
         context.feature_active?(:active_feature).should be_true
       end
 
       it "should return true when active" do
-        inactive_feature.should_receive(:active?).and_return(false)
+        inactive_feature.should_receive(:active_for?).with(context).and_return(false)
         context.feature_active?(:inactive_feature).should be_false
       end
 
