@@ -9,6 +9,7 @@ module Blackbeard
 
       get "/features/:id" do
         @feature = Feature.new(params[:id])
+        @groups = Group.all
         erb 'features/show'.to_sym
       end
 

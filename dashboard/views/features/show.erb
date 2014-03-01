@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1><span id="editable-name"><%= @feature.name %></span></h1>
+  <h1><span id="editable-name"><%= @feature.name %></span> <small>Feature</small></h1>
   <p id="editable-description"><%= @feature.description %></p>
 </div>
 <div id="status-buttons-group" class="btn-group" data-current-status="<%= @feature.status %>">
@@ -7,6 +7,28 @@
   <button type="button" class="btn" value="rollout" data-selected-class="btn-warning">Roll Out</button>
   <button type="button" class="btn" value="inactive" data-selected-class="btn-danger">Inactive</button>
 </div>
+
+<% if @groups.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Rollout to Groups Segments</h3>
+  </div>
+  <table class="table">
+  <thead>
+    <tr>
+      <th>Group</th>
+      <th>Active Segments</th>
+    </tr>
+  </thead>
+  <% @groups.each do |group| %>
+    <tr>
+      <td><%= group.name %></td>
+      <td><a href="#" class="group-segments" data-type="checklist" data-title="Select segments"></a></td>
+    </tr>
+  <% end %>
+  </table>
+</div>
+<% end %>
 
 <!--Load the AJAX API-->
 <script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
