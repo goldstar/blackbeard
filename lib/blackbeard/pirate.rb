@@ -14,11 +14,11 @@ module Blackbeard
     end
 
     def metric(type, type_id)
-      @metrics["#{type}::#{type_id}"] ||= Metric.new(type, type_id)
+      @metrics["#{type}::#{type_id}"] ||= Metric.find_or_create(type, type_id)
     end
 
     def test(id)
-      @tests[id] ||= Test.new(id)
+      @tests[id] ||= Test.find_or_create(id)
     end
 
     def context(*args)

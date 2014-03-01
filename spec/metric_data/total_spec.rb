@@ -5,7 +5,7 @@ module Blackbeard
 
     describe Total do
 
-      let(:metric) { Blackbeard::Metric.new(:total, "page views") }
+      let(:metric) { Blackbeard::Metric.create(:total, "page views") }
       let(:metric_data) { metric.metric_data }
       let(:uid) { "unique identifier" }
       let(:ouid) { "other unique identifier" }

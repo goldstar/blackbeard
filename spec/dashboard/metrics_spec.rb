@@ -11,7 +11,7 @@ module Blackbeard
 
     describe "get /metrics" do
       it "should list all the metrics" do
-        Metric.new("total", "jostling")
+        Metric.create("total", "jostling")
         get "/metrics"
 
         last_response.should be_ok
@@ -21,7 +21,7 @@ module Blackbeard
 
     describe "get /metrics/:type/:type_id" do
       it "should show a metric" do
-        metric = Metric.new("total", "jostling")
+        metric = Metric.create("total", "jostling")
         get "/metrics/#{metric.type}/#{metric.type_id}"
 
         last_response.should be_ok
@@ -31,18 +31,18 @@ module Blackbeard
 
     describe "post /metrics/:type/:type_id" do
       it "should update the metric" do
-        metric = Metric.new("total", "jostling")
+        metric = Metric.create("total", "jostling")
         post "/metrics/#{metric.type}/#{metric.type_id}", :name => 'hello'
 
         last_response.should be_ok
-        Metric.new(:total, "jostling").name.should == 'hello'
+        Metric.find(:total, "jostling").name.should == 'hello'
       end
     end
 
     describe "post /metrics/:type/:type_id/groups" do
       it "should add a group to the metric" do
-        metric = Metric.new("total", "jostling")
-        group = Group.new("admin")
+        metric = Metric.create("total", "jostling")
+        group = Group.create("admin")
         post "/metrics/#{metric.type}/#{metric.type_id}/groups", :group_id => group.id
 
         last_response.should be_redirect

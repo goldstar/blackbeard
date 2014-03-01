@@ -11,7 +11,7 @@ module Blackbeard
 
     describe "get /tests" do
       it "should list all the test" do
-        Test.new("jostling")
+        Test.create("jostling")
         get "/tests"
 
         last_response.should be_ok
@@ -21,7 +21,7 @@ module Blackbeard
 
     describe "get /tests/:id" do
       it "should show a test" do
-        test = Test.new("jostling")
+        test = Test.create("jostling")
         get "/tests/#{test.id}"
 
         last_response.should be_ok
@@ -31,11 +31,11 @@ module Blackbeard
 
     describe "post /tests/:id" do
       it "should update the test" do
-        test = Test.new("jostling")
+        test = Test.create("jostling")
         post "/tests/#{test.id}", :name => 'hello'
 
         last_response.should be_ok
-        Test.new("jostling").name.should == 'hello'
+        test.reload.name.should == 'hello'
       end
     end
 

@@ -4,7 +4,7 @@ module Blackbeard
   module MetricData
     describe Unique do
 
-      let(:metric) { Blackbeard::Metric.new(:unique, "join") }
+      let(:metric) { Blackbeard::Metric.create(:unique, "join") }
       let(:metric_data) { metric.metric_data }
       let(:uid) { "unique identifier" }
       let(:ouid) { "other unique identifier" }

@@ -12,8 +12,8 @@ module Blackbeard
   end
 
   describe StorableHasMany do
-    let(:example){ HasManyExample.new(:example) }
-    let(:thing){ Thing.new(:foo) }
+    let(:example){ HasManyExample.create(:example) }
+    let(:thing){ Thing.create(:foo) }
 
     it "should add and remove things" do
       example.add_thing(thing)

@@ -49,6 +49,7 @@ module Blackbeard
             end
 
             def #{plural}_set_key
+              raise StorableNotSaved if new_record?
               key+"::#{plural}"
             end
         END_OF_RUBY

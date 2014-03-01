@@ -16,17 +16,26 @@ describe Blackbeard::Storable do
       example.name.should == "Some name"
     end
 
-    it "should persist" do
+    it "should not persist if not saved" do
       example = ExampleStorableAttr.new("id")
       example.name = "Some name"
 
       example_reloaded = ExampleStorableAttr.new("id")
+      example_reloaded.name.should_not == "Some name"
+    end
+
+    it "should persist when saved" do
+      example = ExampleStorableAttr.new("id")
+      example.name = "Some name"
+      example.save
+
+      example_reloaded = ExampleStorableAttr.find("id")
       example_reloaded.name.should == "Some name"
     end
   end
 
   describe "update_attributes" do
-    let(:storable){ ExampleStorableAttr.new("id") }
+    let(:storable){ ExampleStorableAttr.create("id") }
     it "should not raise raise_error with non-attributes" do
       expect{
         storable.update_attributes(:name => 'hello')
@@ -42,6 +51,10 @@ describe Blackbeard::Storable do
       expect{
         storable.update_attributes("name" => 'hello')
       }.to change{ storable.name }.from(nil).to('hello')
+    end
+    it "should persist the changes" do
+      storable.update_attributes("name" => 'hello')
+      storable.reload.name.should == 'hello'
     end
   end
 end

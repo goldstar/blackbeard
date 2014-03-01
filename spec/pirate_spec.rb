@@ -7,12 +7,12 @@ describe Blackbeard::Pirate do
     let(:name){ "bond" }
 
     it "should get metrics once" do
-      Blackbeard::Metric.should_receive(:new).with(:total, name).once.and_return(double)
+      Blackbeard::Metric.should_receive(:find_or_create).with(:total, name).once.and_return(double)
       4.times{ pirate.metric(:total, name) }
     end
 
     it "should get test once" do
-      Blackbeard::Test.should_receive(:new).with(name).once.and_return(double)
+      Blackbeard::Test.should_receive(:find_or_create).with(name).once.and_return(double)
       4.times{ pirate.test(name) }
     end
 

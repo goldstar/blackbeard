@@ -2,16 +2,16 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 module Blackbeard
   describe Metric do
-    let(:metric) { Metric.new(:total, "one-total") }
-    let(:group) { Group.new(:example) }
+    let(:metric) { Metric.create(:total, "one-total") }
+    let(:group) { Group.create(:example) }
     let(:metric_data) { metric.metric_data }
     let(:group_metric_data) { metric.metric_data(group) }
 
     describe "self.all" do
       before :each do
-        Metric.new(:total, "one-total")
-        Metric.new(:total, "two-total")
-        Metric.new(:unique, "one-unique")
+        Metric.create(:total, "one-total")
+        Metric.create(:total, "two-total")
+        Metric.create(:unique, "one-unique")
       end
       it "should return a Metric Object for each Metric created" do
         Metric.all.should have(3).metrics

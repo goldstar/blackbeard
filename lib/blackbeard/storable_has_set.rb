@@ -47,6 +47,7 @@ module Blackbeard
             end
 
             def #{plural}_key
+              raise StorableNotSaved if new_record?
               key+"::#{plural}"
             end
 

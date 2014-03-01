@@ -9,11 +9,28 @@ module Blackbeard
     string_attributes :name, :description
     has_many :groups => Group
 
-    def initialize(type, type_id)
-      @type = type
-      @type_id = type_id
-      @metric_data = {}
+    def self.create(type, type_id, options = {})
+      super("#{type}::#{type_id}", options)
+    end
+
+    def self.find(type, type_id)
       super("#{type}::#{type_id}")
+    end
+
+    def self.find_or_create(type, type_id)
+      super("#{type}::#{type_id}")
+    end
+
+    def initialize(*args)
+      if args.size == 1 && args[0] =~ /::/
+        @type, @type_id = args[0].split(/::/)
+      elsif args.size == 2
+        @type = args[0]
+        @type_id = args[1]
+      else
+        raise ArgumentError
+      end
+      super("#{@type}::#{@type_id}")
     end
 
     def self.new_from_key(key)
@@ -42,6 +59,7 @@ module Blackbeard
     end
 
     def metric_data(group = nil)
+      @metric_data ||= {}
       @metric_data[group] ||= begin
         raise GroupNotInMetric unless group.nil? || has_group?(group)
         MetricData.const_get(type.capitalize).new(self, group)

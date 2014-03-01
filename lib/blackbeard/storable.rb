@@ -6,9 +6,6 @@ require 'blackbeard/storable_has_set'
 module Blackbeard
   class Storable
     include ConfigurationMethods
-    include StorableHasMany
-    include StorableHasSet
-    include StorableAttributes
 
     class << self
       def set_master_key(master_key)
@@ -20,13 +17,50 @@ module Blackbeard
         return self.superclass.master_key if self.superclass.respond_to?(:master_key)
         raise StorableMasterKeyUndefined, "define master key in the class that inherits from storable"
       end
+
+      def on_save(method)
+        on_save_methods.push(method)
+      end
+
+      def on_save_methods
+        @on_save_methods ||= self.superclass.on_save_methods.dup if self.superclass.respond_to?(:on_save_methods)
+        @on_save_methods ||= []
+      end
     end
 
+    include StorableHasMany
+    include StorableHasSet
+    include StorableAttributes
+
     attr_reader :id
+    attr_accessor :new_record
 
     def initialize(id)
       @id = id.to_s.downcase
-      db.hash_key_set_if_not_exists(master_key, key, tz.now.to_date)
+      @new_record = true
+    end
+
+    def self.find(id)
+      key = key_for(id)
+      raise StorableNotFound unless db.hash_field_exists(master_key, key)
+      storable = new(id)
+      storable.new_record = false
+      storable
+    end
+
+    def self.create(id, attributes = {})
+      key = key_for(id)
+      raise StorableDuplicateKey if db.hash_field_exists(master_key, key)
+      storable = new(id)
+      storable.save
+      storable.update_attributes(attributes) unless attributes.empty?
+      storable
+    end
+
+    def self.find_or_create(id)
+      storable = new(id)
+      storable.save
+      storable
     end
 
     def self.all_keys
@@ -43,7 +77,9 @@ module Blackbeard
 
     def self.new_from_key(key)
       if key =~ /^#{master_key}::(.+)$/
-        new($1)
+        storable = new($1)
+        storable.new_record = false
+        storable
       else
         nil
       end
@@ -53,12 +89,32 @@ module Blackbeard
       all_keys.map{ |key| new_from_key(key) }
     end
 
+    def save
+      if new_record?
+        db.hash_key_set_if_not_exists(master_key, key, tz.now.to_date)
+        @new_record = false
+      end
+      self.class.on_save_methods.each{ |m| self.send(m) }
+    end
+
+    def reload
+      self.class.find(id)
+    end
+
+    def new_record?
+      @new_record
+    end
+
     def ==(o)
       o.class == self.class && o.id == self.id
     end
 
+    def self.key_for(id)
+      "#{master_key}::#{ id.to_s.downcase }"
+    end
+
     def key
-      "#{master_key}::#{ id }"
+      self.class.key_for(id)
     end
 
     def master_key

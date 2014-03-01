@@ -6,9 +6,9 @@ module Blackbeard
     let(:user) { double(:id => 1) }
     let(:context) { Context.new(pirate, user) }
     let(:uid) { context.unique_identifier }
-    let(:total_metric) { Metric.new(:total, :things) }
-    let(:unique_metric) { Metric.new(:unique, :things) }
-    let(:test) { Test.new(:example_test) }
+    let(:total_metric) { Metric.create(:total, :things) }
+    let(:unique_metric) { Metric.create(:unique, :things) }
+    let(:test) { Test.create(:example_test) }
 
     describe "#add_total" do
       it "should call add on the total metric" do
@@ -77,8 +77,8 @@ module Blackbeard
     end
 
     describe "#active?" do
-      let(:inactive_test) { Blackbeard::Test.new(:inactive_test) }
-      let(:active_test) { Blackbeard::Test.new(:active_test) }
+      let(:inactive_test) { Blackbeard::Test.create(:inactive_test) }
+      let(:active_test) { Blackbeard::Test.create(:active_test) }
 
       before :each do
         pirate.stub(:test).with(active_test.id).and_return(active_test)

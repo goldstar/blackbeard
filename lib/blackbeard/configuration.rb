@@ -24,7 +24,7 @@ module Blackbeard
 
     def define_group(id, &block)
       @group_definitions[id.to_sym] = block
-      Group.new(id)
+      Group.find_or_create(id)
     end
   end
 end

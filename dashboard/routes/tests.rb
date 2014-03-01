@@ -8,12 +8,12 @@ module Blackbeard
       end
 
       get "/tests/:id" do
-        @test = Test.new(params[:id])
+        @test = Test.find(params[:id])
         erb 'tests/show'.to_sym
       end
 
       post "/tests/:id" do
-        @test = Test.new(params[:id])
+        @test = Test.find(params[:id])
         @test.update_attributes(params)
         "OK"
       end

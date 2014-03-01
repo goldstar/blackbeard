@@ -1,8 +1,9 @@
 module Blackbeard
   module StorableAttributes
     def self.included(base)
-      base.send :include, InstanceMethods
       base.extend ClassMethods
+      base.send :include, InstanceMethods
+      base.send :on_save, :save_storable_attributes
     end
 
     module ClassMethods
@@ -24,8 +25,8 @@ module Blackbeard
             storable_attributes_hash[method_name.to_s]
           end
           send :define_method, "#{method_name}=".to_sym do |value|
-            db.hash_set(attributes_hash_key, method_name, value)
             storable_attributes_hash[method_name.to_s] = value
+            @storable_attributes_dirty = true
           end
         end
       end
@@ -37,6 +38,15 @@ module Blackbeard
         safe_attributes = tainted_params.keys.select{ |k| attributes.include?(k.to_sym) }
         safe_attributes.each do |attribute|
           self.send("#{attribute}=".to_sym, tainted_params[attribute])
+        end
+        save_storable_attributes
+      end
+
+      def save_storable_attributes
+        raise StorableNotSaved if new_record?
+        if @storable_attributes_dirty
+          db.hash_multi_set(attributes_hash_key, storable_attributes_hash)
+          @storable_attributes_dirty = false
         end
       end
 

@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Test do
-  let(:test){ Blackbeard::Test.new('example') }
+  let(:test){ Blackbeard::Test.create('example') }
 
   describe "#select_variation" do
     # '*' - experimenting

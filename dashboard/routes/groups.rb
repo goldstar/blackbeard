@@ -7,12 +7,12 @@ module Blackbeard
       end
 
       get '/groups/:id' do
-        @group = Group.new(params[:id])
+        @group = Group.find(params[:id])
         erb 'groups/show'.to_sym
       end
 
       post "/groups/:id" do
-        @group = Group.new(params[:id])
+        @group = Group.find(params[:id])
         @group.update_attributes(params)
         "OK"
       end

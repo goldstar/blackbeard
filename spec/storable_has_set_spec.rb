@@ -8,7 +8,7 @@ module Blackbeard
   end
 
   describe StorableHasMany do
-    let(:example){ HasSetExample.new(:example) }
+    let(:example){ HasSetExample.create(:example) }
     let(:thing) { "foo" }
 
     it "should add and remove things" do

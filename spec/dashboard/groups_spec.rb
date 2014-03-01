@@ -18,7 +18,7 @@ module Blackbeard
 
     describe "get /groups" do
       it "should list all the groups" do
-        Group.new("jostling")
+        Group.create("jostling")
         get "/groups"
 
         last_response.should be_ok
@@ -28,7 +28,7 @@ module Blackbeard
 
     describe "get /groups/:id" do
       it "should show a metric" do
-        group = Group.new("jostling")
+        group = Group.create("jostling")
         get "/groups/#{group.id}"
 
         last_response.should be_ok
@@ -38,11 +38,11 @@ module Blackbeard
 
     describe "post /groups/:id" do
       it "should update the group" do
-        group = Group.new("jostling")
+        group = Group.create("jostling")
         post "/groups/#{group.id}", :name => 'hello'
 
         last_response.should be_ok
-        Group.new("jostling").name.should == 'hello'
+        Group.find("jostling").name.should == 'hello'
       end
     end
 
