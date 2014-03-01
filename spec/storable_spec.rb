@@ -29,10 +29,8 @@ module Blackbeard
         example = ExampleStorable.create(:some_id)
         ExampleStorable.find(:some_id)
       end
-      it "should raise NotFound if the key does not exist" do
-        expect{
-          ExampleStorable.find(:some_id)
-        }.to raise_error(StorableNotFound)
+      it "should return nil if the key does not exist" do
+        ExampleStorable.find(:some_id).should be_nil
       end
     end
 

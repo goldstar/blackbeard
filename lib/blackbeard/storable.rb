@@ -42,7 +42,7 @@ module Blackbeard
 
     def self.find(id)
       key = key_for(id)
-      raise StorableNotFound unless db.hash_field_exists(master_key, key)
+      return nil unless db.hash_field_exists(master_key, key)
       storable = new(id)
       storable.new_record = false
       storable
