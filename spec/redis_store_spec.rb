@@ -51,6 +51,12 @@ module Blackbeard
         db.hash_increment_by_float('a_hash', 'field', 2.5)
         db.hash_get('a_hash', 'field').should == "3.5"
       end
+
+      it "should determine if key exists" do
+        expect{
+          db.hash_set('a_hash', 'field', 'exists')
+        }.to change{db.hash_field_exists('a_hash', 'field')}.from(false).to(true)
+      end
     end
 
     describe "sets" do

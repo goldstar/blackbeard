@@ -48,6 +48,10 @@ module Blackbeard
       redis.hincrbyfloat(hash_key, field, float)
     end
 
+    def hash_field_exists(hash_key, field)
+      redis.hexists(hash_key, field)
+    end
+
     # Set commands
     def set_members(set_key)
       redis.smembers(set_key)
