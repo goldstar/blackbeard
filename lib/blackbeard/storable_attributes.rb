@@ -25,7 +25,7 @@ module Blackbeard
             storable_attributes_hash[method_name.to_s]
           end
           send :define_method, "#{method_name}=".to_sym do |value|
-            storable_attributes_hash[method_name.to_s] = value
+            storable_attributes_hash[method_name.to_s] = value.to_s
             @storable_attributes_dirty = true
           end
         end

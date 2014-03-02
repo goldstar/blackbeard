@@ -8,13 +8,13 @@ module Blackbeard
       end
 
       get "/features/:id" do
-        @feature = Feature.new(params[:id])
+        @feature = Feature.find(params[:id]) or pass
         @groups = Group.all
         erb 'features/show'.to_sym
       end
 
       post "/features/:id" do
-        @feature = Feature.new(params[:id])
+        @feature = Feature.find(params[:id]) or pass
         @feature.update_attributes(params)
         "OK"
       end

@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Feature do
-  let(:feature){ Blackbeard::Feature.new('example') }
+  let(:feature){ Blackbeard::Feature.create('example') }
 
   describe "#active_for?" do
     let(:context){ double }

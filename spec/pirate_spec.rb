@@ -17,7 +17,7 @@ describe Blackbeard::Pirate do
     end
 
     it "should get features once" do
-      Blackbeard::Feature.should_receive(:new).with(name).once.and_return(double)
+      Blackbeard::Feature.should_receive(:find_or_create).with(name).once.and_return(double)
       4.times{ pirate.feature(name) }
     end
 

@@ -11,7 +11,7 @@ module Blackbeard
 
     describe "get /features" do
       it "should list all the features" do
-        Feature.new("jostling")
+        Feature.create("jostling")
         get "/features"
 
         last_response.should be_ok
@@ -21,7 +21,7 @@ module Blackbeard
 
     describe "get /features/:id" do
       it "should show a feature" do
-        feature = Feature.new("jostling")
+        feature = Feature.create("jostling")
         get "/features/#{feature.id}"
 
         last_response.should be_ok
@@ -31,11 +31,11 @@ module Blackbeard
 
     describe "post /features/:id" do
       it "should update the feature" do
-        feature = Feature.new("jostling")
+        feature = Feature.create("jostling")
         post "/features/#{feature.id}", :name => 'hello'
 
         last_response.should be_ok
-        Feature.new("jostling").name.should == 'hello'
+        feature.reload.name.should == 'hello'
       end
     end
 
