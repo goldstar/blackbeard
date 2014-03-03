@@ -10,6 +10,12 @@ module Blackbeard
         end
         config.group_definitions[:hello].call.should == 'world'
       end
+      it "should add segments if any" do
+        config.define_group(:hello, ["world"]) do |user,controller|
+          "world"
+        end
+        Group.find(:hello).segments.should include("world")
+      end
     end
   end
 end

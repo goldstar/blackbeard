@@ -220,10 +220,6 @@ $pirate.define_group(:admin) do |user, context|
   user.admin? # true, false
 end
 
-$pirate.define_group(:medalist) do |user, context|
-  user.engagement_level # nil, :bronze, :silver, :gold
-end
-
 $pirate.define_group(:seo_traffic) do |user, context|
   context.session.refer =~ /google.com/ # remember to store refer in sessions
 end
@@ -237,6 +233,16 @@ $pirate.define_group(:purchasers) do |user, context|
 end
 ```
 
+If your group is segments, include a list possible segments.
+
+```ruby
+$pirate.define_group(:medalist, [:bronze, :silver, :gold]) do |user, context|
+  user.engagement_level # nil, :bronze, :silver, :gold
+end
+```
+
+If your group definition block returns an uninitialized segment, it wil be initialized automatically.
+
 ## Contributing
 
 1. Fork it
@@ -244,4 +250,3 @@ end
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-

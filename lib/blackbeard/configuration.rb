@@ -22,9 +22,10 @@ module Blackbeard
       @tz ||= TZInfo::Timezone.get(@timezone)
     end
 
-    def define_group(id, &block)
+    def define_group(id, segments = nil, &block)
+      group = Group.find_or_create(id)
+      group.add_segments(segments || id)
       @group_definitions[id.to_sym] = block
-      Group.find_or_create(id)
     end
   end
 end
