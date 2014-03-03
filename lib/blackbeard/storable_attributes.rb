@@ -6,6 +6,7 @@ module Blackbeard
       base.extend ClassMethods
       base.send :include, InstanceMethods
       base.send :on_save, :save_storable_attributes
+      base.send :on_reload, :reload_storable_attributes
     end
 
     module ClassMethods
@@ -79,6 +80,11 @@ module Blackbeard
           db.hash_multi_set(attributes_hash_key, storable_attributes_hash)
           @storable_attributes_dirty = false
         end
+      end
+
+      def reload_storable_attributes
+        @storable_attributes = nil
+        @storable_attributes_dirty = false
       end
 
       def storable_attributes_hash

@@ -26,6 +26,15 @@ module Blackbeard
         @on_save_methods ||= self.superclass.on_save_methods.dup if self.superclass.respond_to?(:on_save_methods)
         @on_save_methods ||= []
       end
+
+      def on_reload(method)
+        on_reload_methods.push(method)
+      end
+
+      def on_reload_methods
+        @on_reload_methods ||= self.superclass.on_reload_methods.dup if self.superclass.respond_to?(:on_reload_methods)
+        @on_reload_methods ||= []
+      end
     end
 
     include StorableHasMany
@@ -98,7 +107,8 @@ module Blackbeard
     end
 
     def reload
-      self.class.find(id)
+      self.class.on_reload_methods.each{ |m| self.send(m) }
+      self
     end
 
     def new_record?

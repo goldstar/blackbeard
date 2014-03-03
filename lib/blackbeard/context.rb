@@ -38,7 +38,7 @@ module Blackbeard
     end
 
     def feature_active?(id)
-      @pirate.feature(id.to_s).active_for?(self)
+      @pirate.feature(id.to_s).reload.active_for?(self)
     end
 
     def unique_identifier

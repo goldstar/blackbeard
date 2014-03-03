@@ -55,7 +55,7 @@ module Blackbeard
     end
 
     def feature_active?(id)
-      return self unless @set_context
+      return false unless @set_context
       @set_context.feature_active?(id)
     end
 
