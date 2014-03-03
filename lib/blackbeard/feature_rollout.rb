@@ -34,7 +34,11 @@ module Blackbeard
       if id.kind_of?(Integer)
         id
       elsif id.kind_of?(String)
-        id.bytes.last(8).inject { |sum, n| sum * n }
+        bytes = id.bytes
+        if bytes.count > 8
+          bytes = bytes[-8..-1]
+        end
+        bytes.inject { |sum, n| sum * n }
       else
         raise UserIdNotDivisable
       end
