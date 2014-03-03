@@ -2,6 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Storable do
   class ExampleStorableAttrBase < Blackbeard::Storable
+    integer_attributes :number
     string_attributes :name
     json_attributes :list
   end
@@ -34,6 +35,25 @@ describe Blackbeard::Storable do
     end
   end
 
+  describe "integer_attributes" do
+    it "should be read and write" do
+      example.number = 3
+      example.number.should == 3
+    end
+
+    it "should not persist if not saved" do
+      example.number = 4
+      example.reload.number.should_not == 4
+    end
+
+    it "should persist when saved" do
+      example.number = 5
+      example.save
+
+      example.reload.number.should == 5
+    end
+  end
+
   describe "string_attributes" do
     it "should be read and write" do
       example.name = "Some name"
@@ -49,8 +69,7 @@ describe Blackbeard::Storable do
       example.name = "Some name"
       example.save
 
-      example_reloaded = ExampleStorableAttr.find("id")
-      example_reloaded.name.should == "Some name"
+      example.reload.name.should == "Some name"
     end
   end
 

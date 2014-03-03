@@ -19,6 +19,20 @@ module Blackbeard
         []
       end
 
+      def integer_attributes(*attributes)
+        self.storable_attributes += attributes
+        attributes.each do |method_name|
+          method_name = method_name.to_sym
+          send :define_method, method_name do
+            storable_attributes_hash[method_name.to_s].to_i
+          end
+          send :define_method, "#{method_name}=".to_sym do |value|
+            storable_attributes_hash[method_name.to_s] = value.to_i.to_s
+            @storable_attributes_dirty = true
+          end
+        end
+      end
+
       def json_attributes(*attributes)
         self.storable_attributes += attributes
         attributes.each do |method_name|
