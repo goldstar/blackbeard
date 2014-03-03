@@ -145,6 +145,8 @@ $pirate.context(user).add_total(:like, +1).add_unique(:likers)
 ```
 
 
+<!--( Not ready for prime time
+
 ### Defining AB Tests
 
 AB tests are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
@@ -200,6 +202,7 @@ $pirate.ab_test(:new_onboarding, :one => 'one', :two => 'two') # is the same as 
 $pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when test is inactive
 $pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when test is inactive
 ```
+)-->
 
 ### Features
 
