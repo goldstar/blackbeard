@@ -105,7 +105,7 @@
         if (value < 10) {
           color = "#000";
         }
-        $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of visitors").width(value+'%').css('color', color);
+        $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of users").width(value+'%').css('color', color);
       },
       url: '<%= url("features/#{@feature.id}") %>',
       name: 'users_rate',
