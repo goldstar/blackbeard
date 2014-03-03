@@ -72,8 +72,14 @@ module Blackbeard
     end
 
     describe "active_visitor?" do
-      it "should be false if rate is 0"
-      it "should be true if rate is 100"
+      it "should be false if rate is 0" do
+        feature.visitors_rate = 0
+        feature.active_visitor?(context).should be_false
+      end
+      it "should be true if rate is 100" do
+        feature.visitors_rate = 100
+        feature.active_visitor?(context).should be_true
+      end
 
       describe "by visitor_id modulus" do
         [212,201,1,113,1008].each do |i|

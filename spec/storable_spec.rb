@@ -4,6 +4,7 @@ module Blackbeard
   describe Storable do
     class ExampleStorable < Storable
       set_master_key :example
+      string_attributes :name
     end
 
     class AnotherStorable < Storable
@@ -46,7 +47,10 @@ module Blackbeard
         expect{ ExampleStorable.create(:this_id) }.to change{ExampleStorable.count}.by(1)
       end
 
-      it "should update attributes"
+      it "should update attributes" do
+        storable = ExampleStorable.create(:some_id, {:name => 'hello world'})
+        storable.reload.name.should == 'hello world'
+      end
     end
 
     describe "self.find_or_create" do
