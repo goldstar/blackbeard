@@ -42,16 +42,20 @@ module Blackbeard
     end
 
     def unique_identifier
-      @user.nil? ? "b#{blackbeard_visitor_id}" : "a#{@user.id}"
+      @user.nil? ? "b#{visitor_id}" : "a#{@user.id}"
+    end
+
+    def user_id
+      @user.id
+    end
+
+    def visitor_id
+      controller.request.cookies[:bbd] ||= generate_visitor_id
     end
 
 private
 
-    def blackbeard_visitor_id
-      controller.request.cookies[:bbd] ||= generate_blackbeard_visitor_id
-    end
-
-    def generate_blackbeard_visitor_id
+    def generate_visitor_id
       id = db.increment("visitor_id")
       controller.request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id

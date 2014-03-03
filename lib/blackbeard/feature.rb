@@ -1,7 +1,9 @@
 require 'blackbeard/storable'
-
+require 'blackbeard/feature_rollout'
 module Blackbeard
   class Feature < Storable
+    include FeatureRollout
+
     set_master_key :features
     string_attributes :name, :description, :status
     integer_attributes :visitors_rate, :users_rate
@@ -23,22 +25,10 @@ module Blackbeard
       when 'active'
         true
       when 'rollout'
-        active_user?(context) || active_visitor?(context) || in_active_segment?(context)
+        rollout?(context)
       else
         false
       end
-    end
-
-    def inactive_segment?(context)
-      false
-    end
-
-    def active_user?(context)
-      false
-    end
-
-    def active_visitor?(context)
-      false
     end
 
     def status
