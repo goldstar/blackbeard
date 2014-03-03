@@ -26,3 +26,7 @@ body {
 .editable-click:hover {
   background-color: #EEE;
 }
+
+.editable-empty {
+  color: #999;
+}

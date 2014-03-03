@@ -4,6 +4,7 @@ module Blackbeard
   class Feature < Storable
     set_master_key :features
     string_attributes :name, :description, :status
+    integer_attributes :visitors_rate, :users_rate
     json_attributes :group_segments
 
     def segments_for(group_id)
@@ -22,7 +23,7 @@ module Blackbeard
       when 'active'
         true
       when 'rollout'
-        in_active_segment?(context) || active_user?(context) || active_visitor?(context)
+        active_user?(context) || active_visitor?(context) || in_active_segment?(context)
       else
         false
       end
