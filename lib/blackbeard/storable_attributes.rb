@@ -1,3 +1,5 @@
+require 'json'
+
 module Blackbeard
   module StorableAttributes
     def self.included(base)
@@ -15,6 +17,21 @@ module Blackbeard
         return @storable_attributes if defined? @storable_attributes
         return self.superclass.storable_attributes if self.superclass.respond_to?(:storable_attributes)
         []
+      end
+
+      def json_attributes(*attributes)
+        self.storable_attributes += attributes
+        attributes.each do |method_name|
+          method_name = method_name.to_sym
+          send :define_method, method_name do
+            return nil if storable_attributes_hash[method_name.to_s].nil?
+            JSON.parse(storable_attributes_hash[method_name.to_s])
+          end
+          send :define_method, "#{method_name}=".to_sym do |value|
+            storable_attributes_hash[method_name.to_s] =  JSON.generate(value)
+            @storable_attributes_dirty = true
+          end
+        end
       end
 
       def string_attributes(*attributes)
