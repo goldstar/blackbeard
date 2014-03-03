@@ -135,22 +135,20 @@ $pirate.add_total(:revenue, +119.95)              # can also accept floats
 
 ### Chaining Metrics
 
-Context methods that inrement metrics always return the context, so you can chain them together.
+Context methods that increment metrics always return the context, so you can chain them together.
 
 ```ruby
 $pirate.set_context(user)
 $pirate.add_total(:like, +1).add_unique(:likers)
-
 $pirate.context(user).add_total(:like, +1).add_unique(:likers)
 ```
 
-
-<!--( Not ready for prime time
 
 ### Defining AB Tests
 
 AB tests are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
 
+**_Note that ab_tests are implmented, but experiments to control them is not. AB tests and experiments are in active development._**
 
 In a view:
 
@@ -202,7 +200,6 @@ $pirate.ab_test(:new_onboarding, :one => 'one', :two => 'two') # is the same as 
 $pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when test is inactive
 $pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when test is inactive
 ```
-)-->
 
 ### Features
 
