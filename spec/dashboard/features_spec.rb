@@ -39,5 +39,14 @@ module Blackbeard
       end
     end
 
+    describe "post /features/:id/groups/:group_id" do
+      it "should update the features segments" do
+        feature = Feature.create("jostling")
+        post "/features/#{feature.id}/groups/hello", :segments => ["world","goodbye"]
+
+        last_response.should be_ok
+        feature.reload.segments_for(:hello).should include("world", "goodbye")
+      end
+    end
   end
 end
