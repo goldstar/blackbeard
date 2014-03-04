@@ -48,9 +48,11 @@ $pirate.funnel(:checkout, 'Confirm')          # User reached step 3 of funnel (C
 ```
 
 
+```ruby
 $pirate.define_group(:achieve_pirate_style) do |user, context|
   $pirate.metric(:pirate_style).achieved?
 end
+```
 
 
-http://blog.sourcing.io/structuring-sinatra?utm_content=buffer1955d&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer
+[Structuring Sinatra applications](http://blog.sourcing.io/structuring-sinatra)
