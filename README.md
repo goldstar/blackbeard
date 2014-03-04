@@ -109,7 +109,7 @@ $pirate.context(user).add_metric(:referral)
 
 If a context does not exist, `$pirate` will silently ignore all actions. This is useful for dealing with bots.
 
-If the user is unidentied set user to nil or false. If your app can return a Guest object for unidentied users, see the guest configuration setting.
+If the user is unidentified set user to nil or false. If your app can return a Guest object for unidentified users, see the guest configuration setting.
 
 ### Collecting Metrics
 
