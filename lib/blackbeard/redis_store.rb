@@ -16,6 +16,7 @@ module Blackbeard
 
 
     # Hash commands
+    # TODO: rename to hash_set_if_not_exisits
     def hash_key_set_if_not_exists(hash_key, field, value)
       redis.hsetnx(hash_key, field, value)
     end
@@ -44,8 +45,12 @@ module Blackbeard
       redis.hgetall(hash_key)
     end
 
+    def hash_increment_by(hash_key, field, int)
+      redis.hincrby(hash_key, field, int.to_i)
+    end
+
     def hash_increment_by_float(hash_key, field, float)
-      redis.hincrbyfloat(hash_key, field, float)
+      redis.hincrbyfloat(hash_key, field, float.to_f)
     end
 
     def hash_field_exists(hash_key, field)

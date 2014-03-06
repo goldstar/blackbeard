@@ -52,6 +52,12 @@ module Blackbeard
         db.hash_get('a_hash', 'field').should == "3.5"
       end
 
+      it "should increment by int" do
+        db.hash_increment_by('a_hash', 'field', 1)
+        db.hash_increment_by('a_hash', 'field', 2.5)
+        db.hash_get('a_hash', 'field').should == "3"
+      end
+
       it "should determine if key exists" do
         expect{
           db.hash_set('a_hash', 'field', 'exists')
