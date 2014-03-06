@@ -21,6 +21,11 @@ describe Blackbeard::Pirate do
       4.times{ pirate.feature(name) }
     end
 
+    it "should get cohorts once" do
+      Blackbeard::Cohort.should_receive(:find_or_create).with(name).once.and_return(double)
+      4.times{ pirate.cohort(name) }
+    end
+
   end
 
   describe "#context" do
@@ -45,8 +50,12 @@ describe Blackbeard::Pirate do
         expect{ pirate.ab_test(:example, :on => 1, :off => 2) }.to_not raise_error
       end
 
-      it "active? should not raise error" do
+      it "feature_active? should not raise error" do
         expect{ pirate.feature_active?(:example) }.to_not raise_error
+      end
+
+      it "add_to_cohort should not raise error" do
+        expect{ pirate.add_to_cohort(:example) }.to_not raise_error
       end
 
     end
@@ -72,6 +81,18 @@ describe Blackbeard::Pirate do
       it "should delegate #feature_active?" do
         set_context.should_receive(:feature_active?).with(:example_feature).and_return(false)
         pirate.feature_active?(:example_feature)
+      end
+
+      it "should delegate add_to_cohort" do
+        timestamp = double
+        set_context.should_receive(:add_to_cohort).with(:example, timestamp).and_return(true)
+        pirate.add_to_cohort(:example, timestamp)
+      end
+
+      it "should delegate add_to_cohort!" do
+        timestamp = double
+        set_context.should_receive(:add_to_cohort!).with(:example, timestamp).and_return(true)
+        pirate.add_to_cohort!(:example, timestamp)
       end
     end
   end

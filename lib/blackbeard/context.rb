@@ -6,6 +6,7 @@ module Blackbeard
     attr_reader :controller, :user
 
     def initialize(pirate, user, controller = nil)
+      # TODO: remove pirate. access cache via separate cache class
       @pirate = pirate
       @controller = controller
       @user = user
@@ -35,6 +36,14 @@ module Blackbeard
         variation = test.select_variation
         SelectedVariation.new(test, variation)
       end
+    end
+
+    def add_to_cohort(id, timestamp = nil, force = false)
+      @pirate.cohort(id.to_s).add(self, timestamp, force)
+    end
+
+    def add_to_cohort!(id, timestamp = nil)
+      add_to_cohort(id, timestamp, true)
     end
 
     def feature_active?(id)

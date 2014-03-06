@@ -11,10 +11,11 @@ module Blackbeard
       end
 
       def add_at(time, uid, amount = 1, segment = DEFAULT_SEGMENT)
+        # TODO: ensure time is in correct timezone
         key = key_for_hour(time)
         db.set_add_member(hours_set_key, key)
         db.hash_increment_by_float(key, segment, amount.to_f)
-        #TODO: if not today, blow away rollup keys
+        # TODO: if not today, blow away rollup keys
       end
 
       def result_for_hour(time)

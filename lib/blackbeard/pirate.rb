@@ -6,6 +6,7 @@ require "blackbeard/test"
 require "blackbeard/errors"
 require "blackbeard/group"
 require "blackbeard/feature"
+require "blackbeard/cohort"
 
 module Blackbeard
   class Pirate
@@ -13,14 +14,20 @@ module Blackbeard
       @metrics = {}
       @tests = {}
       @features = {}
+      @cohorts = {}
     end
 
     def metric(type, type_id)
       @metrics["#{type}::#{type_id}"] ||= Metric.find_or_create(type, type_id)
     end
 
+    # TODO: abstract out memoization to a cache class
     def test(id)
       @tests[id] ||= Test.find_or_create(id)
+    end
+
+    def cohort(id)
+      @cohorts[id] ||= Cohort.find_or_create(id)
     end
 
     def feature(id)
@@ -39,6 +46,7 @@ module Blackbeard
       @set_context = nil
     end
 
+    # TODO: metaprogram all the context delegators
     def add_unique(id)
       return self unless @set_context
       @set_context.add_unique(id)
@@ -47,6 +55,16 @@ module Blackbeard
     def add_total(id, amount)
       return self unless @set_context
       @set_context.add_total(id, amount)
+    end
+
+    def add_to_cohort(id, timestamp = nil)
+      return self unless @set_context
+      @set_context.add_to_cohort(id, timestamp)
+    end
+
+    def add_to_cohort!(id, timestamp = nil)
+      return self unless @set_context
+      @set_context.add_to_cohort!(id, timestamp)
     end
 
     def ab_test(id, options)
