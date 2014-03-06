@@ -9,33 +9,33 @@ module Blackbeard
 
     let(:app) { Dashboard }
 
-    describe "get /groups" do
+    describe "get /cohorts" do
       it "should list all the groups" do
-        Group.create("jostling")
-        get "/groups"
+        Cohort.create("jostling")
+        get "/cohorts"
 
         last_response.should be_ok
-        last_response.body.should include('jostling')
+        last_response.body.should include('cohorts')
       end
     end
 
-    describe "get /groups/:id" do
+    describe "get /cohorts/:id" do
       it "should show a metric" do
-        group = Group.create("jostling")
-        get "/groups/#{group.id}"
+        cohort = Cohort.create("jostling")
+        get "/cohorts/#{cohort.id}"
 
         last_response.should be_ok
         last_response.body.should include("jostling")
       end
     end
 
-    describe "post /groups/:id" do
-      it "should update the group" do
-        group = Group.create("jostling")
-        post "/groups/#{group.id}", :name => 'hello'
+    describe "post /cohorts/:id" do
+      it "should update the cohort" do
+        cohort = Cohort.create("jostling")
+        post "/cohorts/#{cohort.id}", :name => 'hello'
 
         last_response.should be_ok
-        Group.find("jostling").name.should == 'hello'
+        Cohort.find("jostling").name.should == 'hello'
       end
     end
 

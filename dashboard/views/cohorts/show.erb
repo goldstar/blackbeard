@@ -1,25 +1,7 @@
 <div class="page-header">
-  <h1><span id="editable-name"><%= @group.name %></span> <small>Group</small></h1>
-  <p id="editable-description"><%= @group.description %></p>
+  <h1><span id="editable-name"><%= @cohort.name %></span> <small>Group</small></h1>
+  <p id="editable-description"><%= @cohort.description %></p>
 </div>
-
-<% if @group.segments.any? %>
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title">Active Segments</h3>
-  </div>
-  <ul class="list-group">
-  <% @group.segments.each do |segment| %>
-  <li class="list-group-item"><%= segment %></li>
-  <% end %>
-  </ul>
-</div>
-
-<% else %>
-  <div class="alert alert-danger">
-    <strong>No segments!</strong> Something may be wrong or maybe this group not been called yet.
-  </div>
-<% end %>
 
 <!--Load the AJAX API-->
 <script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
@@ -38,9 +20,9 @@
     $('#editable-name').editable({
       placement: 'right',
       type: 'text',
-      url: '<%= url("groups/#{@group.id}") %>',
+      url: '<%= url("groups/#{@cohort.id}") %>',
       name: 'name',
-      title: 'Edit group name',
+      title: 'Edit cohort name',
       validate: function(value) {
          if($.trim(value) == '') {
           return 'This field is required';
@@ -50,9 +32,9 @@
     $('#editable-description').editable({
       placement: 'bottom',
       type: 'textarea',
-      url: '<%= url("groups/#{@group.id}") %>',
+      url: '<%= url("metrics/#{@cohort.id}") %>',
       name: 'description',
-      title: 'Edit group description'
+      title: 'Edit cohort description'
     });
   });
 </script>

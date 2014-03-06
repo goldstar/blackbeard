@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1>Cohorts</h1>
+  <p>Are groupings of visitors that experience a certain event at the same time.</p>
+</div>
+
+<% if @cohorts.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Active Cohorts</h3>
+  </div>
+  <ul class="list-group">
+  <% @cohorts.each do |cohort| %>
+  <li class="list-group-item"><a href="<%= url("cohorts/#{cohort.id}") %>"><%= cohort.name %></a></li>
+  <% end %>
+  </ul>
+</div>
+
+<% else %>
+  <div class="alert alert-danger">
+    <strong>No cohorts!</strong> Something may be wrong or you may just need to define some cohorts.
+  </div>
+<% end %>
