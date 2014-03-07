@@ -14,9 +14,9 @@ module Blackbeard
         db.hash_get('a_hash', 'hello').should == 'world'
       end
 
-      it "should multi set" do
+      it "should multi set and get" do
         db.hash_multi_set('a_hash', {:one => 'two', :three => 'four'})
-        db.hash_get('a_hash','three').should == 'four'
+        db.hash_multi_get('a_hash',['three','one']).should == ['four','two']
       end
 
       it "should not raise error on multi set with empty hash" do
