@@ -2,6 +2,7 @@ require 'blackbeard/metric_hour'
 require 'blackbeard/metric_date'
 require 'date'
 require 'blackbeard/chart'
+require 'blackbeard/metric_data/uid_generator'
 
 module Blackbeard
   module MetricData
@@ -50,24 +51,7 @@ module Blackbeard
       end
 
       def uid
-        db.hash_get(lookup_hash, lookup_field) || generate_uid
-      end
-
-      def lookup_hash
-        "metric_data_keys"
-      end
-
-      def lookup_field
-        lookup_field = "metric-#{metric.id}"
-        lookup_field += "::group-#{group.id}" if group
-        lookup_field
-      end
-
-      def generate_uid
-        uid = db.increment("metric_data_next_uid")
-        # write and read to avoid race conditional writes
-        db.hash_key_set_if_not_exists(lookup_hash, lookup_field, uid)
-        db.hash_get(lookup_hash, lookup_field)
+        uid = UidGenerator.new(self).uid
       end
 
       def segments
@@ -86,7 +70,6 @@ module Blackbeard
         db.hash_multi_set(date_key, result) unless date == tz.now.to_date
         result
       end
-
 
       def hour_keys
         db.set_members(hours_set_key)
