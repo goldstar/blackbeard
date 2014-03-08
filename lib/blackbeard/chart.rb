@@ -1,9 +1,9 @@
 module Blackbeard
   class Chart
-    attr_reader :id
+    attr_reader :dom_id
 
     def initialize(options)
-      [:id, :height, :title].each{|m| instance_variable_set("@#{m}", options[m]) }
+      [:dom_id, :height, :title].each{|m| instance_variable_set("@#{m}", options[m]) }
       [:rows, :columns].each{|m| instance_variable_set("@#{m}", options[m] || []) }
     end
 

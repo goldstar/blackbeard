@@ -61,6 +61,27 @@ module Blackbeard
           [self.class::DEFAULT_SEGMENT]
         end
       end
+
+      def recent_hours_chart(count = 24, starting_at = tz.now)
+        data = recent_hours(count, starting_at)
+        Chart.new(
+          :dom_id => 'recent_hour_chart',
+          :title => "Last #{count} Hours / #{ group.nil? ? 'All' : group.name }",
+          :columns => ['Hour']+segments,
+          :rows => data.map{ |metric_hour| metric_hour.result_rows(segments) }
+        )
+      end
+
+      def recent_days_chart(count = 28, starting_on = tz.now.to_date)
+        data = recent_days(count, starting_on)
+        Chart.new(
+          :dom_id => 'recent_days_chart',
+          :title => "Last #{count} Days / #{ group.nil? ? 'All' : group.name }",
+          :columns => ['Day']+segments,
+          :rows => data.map{ |metric_date| metric_date.result_rows(segments) }
+        )
+      end
+
     private
 
       def generate_result_for_day(date)

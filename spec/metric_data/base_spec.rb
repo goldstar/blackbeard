@@ -43,6 +43,19 @@ module Blackbeard
         end
       end
 
+      describe "recent_hours_chart" do
+        it "should return a chart obj" do
+          metric_data.recent_hours_chart.should be_a(Chart)
+        end
+      end
+
+      describe "recent_days_chart" do
+        it "should return a chart obj" do
+          metric_data.recent_days_chart.should be_a(Chart)
+        end
+      end
+
+
       describe "hour_keys_for_day" do
         it "should return 1 key for every hour from morning to night" do
             keys_for_day = metric_data.hour_keys_for_day(Date.new(2014,1,1))
