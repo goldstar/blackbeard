@@ -1,6 +1,7 @@
 require 'blackbeard/metric_hour'
 require 'blackbeard/metric_date'
 require 'date'
+require 'blackbeard/chart'
 
 module Blackbeard
   module MetricData
