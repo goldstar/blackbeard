@@ -108,6 +108,9 @@ module Blackbeard
             new_record.save
           }.to change{ new_record.new_record }.from(true).to(false)
       end
+      it "should return true" do
+        new_record.save.should be_true
+      end
     end
 
     describe "master_key" do
