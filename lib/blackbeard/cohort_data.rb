@@ -16,7 +16,14 @@ module Blackbeard
     def participants_for_hour(time)
       db.hash_get(hours_hash_key, hour_id(time)).to_i
     end
-    alias_method :result_for_hour, :participants_for_hour
+
+    def result_for_hour(time)
+      {"participants" => participants_for_hour(time)}
+    end
+
+    def result_for_day(date)
+      {"participants" => participants_for_day(date)}
+    end
 
     def segments
       ["participants"]
@@ -26,9 +33,8 @@ module Blackbeard
       start_of_day = date.to_time
       hours_in_day = Array(0..23).map{|x| start_of_day + (3600 * x) }
       participants_by_hour = participants_for_hours(hours_in_day)
-      participants_by_hour.inject{|s,n| s += n.to_i} # sum
+      participants_by_hour.reduce(:+)
     end
-    alias_method :result_for_day, :participants_for_day
 
     def participants_for_hours(hours)
       hour_ids = hours.map{ |hour| hour_id(hour) }
