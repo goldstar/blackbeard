@@ -41,14 +41,6 @@ module Blackbeard
       end
     end
 
-    def recent_hours
-      metric_data.recent_hours
-    end
-
-    def recent_days
-      metric_data.recent_days
-    end
-
     def add(context, amount)
       uid = context.unique_identifier
       metric_data.add(uid, amount)

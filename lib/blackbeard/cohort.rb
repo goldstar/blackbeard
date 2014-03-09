@@ -3,6 +3,8 @@ require 'date'
 
 module Blackbeard
   class Cohort < Storable
+    include Chartable
+
     set_master_key :cohorts
     string_attributes :name, :description
 
@@ -25,6 +27,11 @@ module Blackbeard
     def participants_for_hour(time)
       db.hash_get(hours_hash_key, hour_id(time)).to_i
     end
+    alias_method :result_for_hour, :participants_for_hour
+
+    def segments
+      ["participants"]
+    end
 
     def participants_for_day(date)
       start_of_day = date.to_time
@@ -32,27 +39,13 @@ module Blackbeard
       participants_by_hour = participants_for_hours(hours_in_day)
       participants_by_hour.inject{|s,n| s += n.to_i} # sum
     end
+    alias_method :result_for_day, :participants_for_day
 
     def participants_for_hours(hours)
       hour_ids = hours.map{ |hour| hour_id(hour) }
       db.hash_multi_get(hours_hash_key, *hour_ids).map{|s| s.to_i }
     end
 
-    def recent_days(count=28, starting_on = tz.now.to_date)
-      Array(0..count-1).map do |offset|
-        date = starting_on - offset
-        result = participants_for_day(date)
-        Blackbeard::MetricDate.new(date, result)
-      end
-    end
-
-    def recent_hours(count = 24, starting_at = tz.now)
-      Array(0..count-1).map do |offset|
-        hour = starting_at - (offset * 3600)
-        result = participants_for_hour(hour)
-        Blackbeard::MetricHour.new(hour, result)
-      end
-    end
 
   private
 

@@ -3,32 +3,19 @@ require 'blackbeard/metric_date'
 require 'date'
 require 'blackbeard/chart'
 require 'blackbeard/metric_data/uid_generator'
+require 'blackbeard/chartable'
 
 module Blackbeard
   module MetricData
     class Base
       include ConfigurationMethods
+      include Chartable
+
       attr_reader :metric, :group
 
       def initialize(metric, group = nil)
         @metric = metric
         @group = group
-      end
-
-      def recent_days(count=28, starting_on = tz.now.to_date)
-        Array(0..count-1).map do |offset|
-          date = starting_on - offset
-          result = result_for_day(date)
-          Blackbeard::MetricDate.new(date, result)
-        end
-      end
-
-      def recent_hours(count = 24, starting_at = tz.now)
-        Array(0..count-1).map do |offset|
-          hour = starting_at - (offset * 3600)
-          result = result_for_hour(hour)
-          Blackbeard::MetricHour.new(hour, result)
-        end
       end
 
       def hour_keys_for_day(date)
@@ -60,26 +47,6 @@ module Blackbeard
         else
           [self.class::DEFAULT_SEGMENT]
         end
-      end
-
-      def recent_hours_chart(count = 24, starting_at = tz.now)
-        data = recent_hours(count, starting_at)
-        Chart.new(
-          :dom_id => 'recent_hour_chart',
-          :title => "Last #{count} Hours / #{ group.nil? ? 'All' : group.name }",
-          :columns => ['Hour']+segments,
-          :rows => data.map{ |metric_hour| metric_hour.result_rows(segments) }
-        )
-      end
-
-      def recent_days_chart(count = 28, starting_on = tz.now.to_date)
-        data = recent_days(count, starting_on)
-        Chart.new(
-          :dom_id => 'recent_days_chart',
-          :title => "Last #{count} Days / #{ group.nil? ? 'All' : group.name }",
-          :columns => ['Day']+segments,
-          :rows => data.map{ |metric_date| metric_date.result_rows(segments) }
-        )
       end
 
     private
