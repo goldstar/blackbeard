@@ -78,7 +78,10 @@ module Blackbeard
       end
 
       def key_for_hour(time)
-        "#{key}::#{ time.strftime("%Y%m%d%H") }"
+        if time.kind_of?(Time)
+          time = time.strftime("%Y%m%d%H")
+        end
+        "#{key}::#{ time }"
       end
 
     end
