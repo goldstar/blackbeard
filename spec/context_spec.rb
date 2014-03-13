@@ -9,6 +9,7 @@ module Blackbeard
     let(:total_metric) { Metric.create(:total, :things) }
     let(:unique_metric) { Metric.create(:unique, :things) }
     let(:test) { Test.create(:example_test) }
+    let(:cohort) { Cohort.create(:joined) }
 
     describe "#add_total" do
       it "should call add on the total metric" do
@@ -23,6 +24,14 @@ module Blackbeard
         pirate.should_receive(:metric).with(:unique, unique_metric.id){ unique_metric }
         unique_metric.should_receive(:add).with(context, 1)
         context.add_unique( unique_metric.id )
+      end
+    end
+
+    describe "#add_to_cohort" do
+      it "should call add on the cohort" do
+        pirate.should_receive(:cohort).with("joined"){ cohort }
+        cohort.should_receive(:add).with(context, nil, false)
+        context.add_to_cohort(:joined)
       end
     end
 
@@ -94,7 +103,6 @@ module Blackbeard
         inactive_feature.should_receive(:active_for?).with(context).and_return(false)
         context.feature_active?(:inactive_feature).should be_false
       end
-
     end
 
   end

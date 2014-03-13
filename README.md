@@ -215,33 +215,61 @@ if $pirate.context(user).feature_active?(:friend_feed){ ... }
 
 ### Defining groups
 
+Group definitions are part of the configuration and should be defined
+in an initializer.
+
 ```ruby
-$pirate.define_group(:admin) do |user, context|
-  user.admin? # true, false
-end
+$pirate = Blackbeard.pirate do |config|
+  config.define_group(:admin) do |user, controller|
+    user && user.admin? # true, false
+  end
 
-$pirate.define_group(:seo_traffic) do |user, context|
-  context.session.refer =~ /google.com/ # remember to store refer in sessions
-end
+  config.define_group(:seo_traffic) do |user, controller|
+    controller && controller.session.refer =~ /google.com/ # remember to store refer in sessions
+  end
 
-$pirate.define_group(:seo_traffic) do |user, context|
-  context.session.refer =~ /google.com/ # remember to store refer in sessions
-end
+  config.define_group(:seo_traffic) do |user, controller|
+    controller && controller.session.refer =~ /google.com/ # remember to store refer in sessions
+  end
 
-$pirate.define_group(:purchasers) do |user, context|
-  user.purchases.any?
+  config.define_group(:purchasers) do |user, controller|
+    users && user.purchases.any?
+  end
+end
+```
+The user will be nil for non-logged in visitors.  The controller
+will be nil if not defined by the context (e.g. outside a web context).
+
+If your group is segmented (doesn't return true or false), include a list possible segments.
+
+```ruby
+$pirate = Blackbeard.pirate do |config|
+  ...
+  config.define_group(:medalist, [:bronze, :silver, :gold]) do |user, context|
+    user.engagement_level # nil, :bronze, :silver, :gold
+  end
 end
 ```
 
-If your group is segments, include a list possible segments.
+If your group definition block returns an uninitialized segment, it wil
+be initialized automatically.
+
+### Defining Cohorts
+
+Groups and cohorts in the dictionary sense are identical.  For our purposes,
+cohorts are participants that experienced something at the same time.  A participant
+can only be in one cohort at a time, but can switch cohorts.
+
+This will add the current user/visitor and current timestamp to the cohort.
 
 ```ruby
-$pirate.define_group(:medalist, [:bronze, :silver, :gold]) do |user, context|
-  user.engagement_level # nil, :bronze, :silver, :gold
-end
+  $pirate.add_to_cohort(:joined_at) # returns false if already in cohort, otherwise true
+  $pirate.add_to_cohort!(:bought_at) # always returns true. If user is already in a cohort, the timestamp is updated.
+  $pirate.add_to_cohort(:joined_at, user.created_at) # You can optional pass in the timestamp
 ```
 
-If your group definition block returns an uninitialized segment, it wil be initialized automatically.
+You'll can add cohorts to metrics compare how members who joined one day against
+members who joined another day.
 
 ## Contributing
 

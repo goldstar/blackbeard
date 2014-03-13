@@ -1,6 +1,10 @@
 require "blackbeard/storable"
 require 'blackbeard/metric_data/total'
 require 'blackbeard/metric_data/unique'
+require 'blackbeard/cohort'
+require 'blackbeard/group'
+require 'blackbeard/group_metric'
+require 'blackbeard/cohort_metric'
 
 module Blackbeard
   class Metric < Storable
@@ -8,6 +12,7 @@ module Blackbeard
     set_master_key :metrics
     string_attributes :name, :description
     has_many :groups => Group
+    has_many :cohorts => Cohort
 
     def self.create(type, type_id, options = {})
       super("#{type}::#{type_id}", options)
@@ -41,29 +46,23 @@ module Blackbeard
       end
     end
 
-    def recent_hours
-      metric_data.recent_hours
+    def group_metrics
+      groups.map{ |g| GroupMetric.new(g, self) }
     end
 
-    def recent_days
-      metric_data.recent_days
+    def cohort_metrics
+      cohorts.map{ |c| CohortMetric.new(c, self) }
     end
 
     def add(context, amount)
       uid = context.unique_identifier
       metric_data.add(uid, amount)
-      groups.each do |group|
-        segment = group.segment_for(context)
-        metric_data(group).add(uid, amount, segment) unless segment.nil?
-      end
+      group_metrics.each { |gm| gm.add(context, amount) }
+      cohort_metrics.each { |cm| cm.add(context, amount) }
     end
 
-    def metric_data(group = nil)
-      @metric_data ||= {}
-      @metric_data[group] ||= begin
-        raise GroupNotInMetric unless group.nil? || has_group?(group)
-        MetricData.const_get(type.capitalize).new(self, group)
-      end
+    def metric_data
+      @metric_data ||= MetricData.const_get(type.capitalize).new(self, nil, nil)
     end
 
     def name
@@ -74,6 +73,9 @@ module Blackbeard
       Group.all.reject{ |g| group_ids.include?(g.id) }
     end
 
+    def addable_cohorts
+      Cohort.all.reject{ |c| cohort_ids.include?(c.id) }
+    end
 
   end
 end

@@ -9,6 +9,7 @@ require 'routes/groups'
 require 'routes/metrics'
 require 'routes/tests'
 require 'routes/features'
+require 'routes/cohorts'
 
 module Blackbeard
   class Dashboard < Sinatra::Base
@@ -21,8 +22,6 @@ module Blackbeard
     use DashboardRoutes::Tests
     use DashboardRoutes::Groups
     use DashboardRoutes::Features
+    use DashboardRoutes::Cohorts
   end
 end
-
-
-

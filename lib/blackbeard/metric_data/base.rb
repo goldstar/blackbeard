@@ -1,32 +1,23 @@
 require 'blackbeard/metric_hour'
 require 'blackbeard/metric_date'
 require 'date'
+require 'blackbeard/chart'
+require 'blackbeard/metric_data/uid_generator'
+require 'blackbeard/chartable'
 
 module Blackbeard
   module MetricData
     class Base
       include ConfigurationMethods
-      attr_reader :metric, :group
+      include Chartable
 
-      def initialize(metric, group = nil)
+      attr_reader :metric, :group, :cohort
+
+      # TODO: refactor so you pass group and cohort in as options
+      def initialize(metric, group = nil, cohort = nil)
         @metric = metric
         @group = group
-      end
-
-      def recent_days(count=28, starting_on = tz.now.to_date)
-        Array(0..count-1).map do |offset|
-          date = starting_on - offset
-          result = result_for_day(date)
-          Blackbeard::MetricDate.new(date, result)
-        end
-      end
-
-      def recent_hours(count = 24, starting_at = tz.now)
-        Array(0..count-1).map do |offset|
-          hour = starting_at - (offset * 3600)
-          result = result_for_hour(hour)
-          Blackbeard::MetricHour.new(hour, result)
-        end
+        @cohort = cohort
       end
 
       def hour_keys_for_day(date)
@@ -44,18 +35,12 @@ module Blackbeard
 
       def key
         @key ||= begin
-          lookup_hash = "metric_data_keys"
-          lookup_field = "metric-#{metric.id}"
-          lookup_field += "::group-#{group.id}" if group
-          uid = db.hash_get(lookup_hash, lookup_field)
-          if uid.nil?
-            uid = db.increment("metric_data_next_uid")
-            # write and read to avoid race conditional writes
-            db.hash_key_set_if_not_exists(lookup_hash, lookup_field, uid)
-            uid = db.hash_get(lookup_hash, lookup_field)
-          end
           "data::#{uid}"
         end
+      end
+
+      def uid
+        uid = UidGenerator.new(self).uid
       end
 
       def segments
@@ -65,6 +50,7 @@ module Blackbeard
           [self.class::DEFAULT_SEGMENT]
         end
       end
+
     private
 
       def generate_result_for_day(date)
@@ -74,7 +60,6 @@ module Blackbeard
         db.hash_multi_set(date_key, result) unless date == tz.now.to_date
         result
       end
-
 
       def hour_keys
         db.set_members(hours_set_key)
@@ -93,7 +78,10 @@ module Blackbeard
       end
 
       def key_for_hour(time)
-        "#{key}::#{ time.strftime("%Y%m%d%H") }"
+        if time.kind_of?(Time)
+          time = time.strftime("%Y%m%d%H")
+        end
+        "#{key}::#{ time }"
       end
 
     end

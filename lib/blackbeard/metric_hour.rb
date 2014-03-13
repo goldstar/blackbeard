@@ -7,6 +7,14 @@ module Blackbeard
       @result = result
     end
 
+    def results_for(segments)
+      segments.map{|s| result[s].to_f }
+    end
+
+    def result_rows(segments)
+      [@hours] + results_for(segments)
+    end
+
   private
 
     def round_to_beginning_of_hour(t)

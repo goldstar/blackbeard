@@ -14,9 +14,9 @@ module Blackbeard
         db.hash_get('a_hash', 'hello').should == 'world'
       end
 
-      it "should multi set" do
+      it "should multi set and get" do
         db.hash_multi_set('a_hash', {:one => 'two', :three => 'four'})
-        db.hash_get('a_hash','three').should == 'four'
+        db.hash_multi_get('a_hash',['three','one']).should == ['four','two']
       end
 
       it "should not raise error on multi set with empty hash" do
@@ -50,6 +50,12 @@ module Blackbeard
         db.hash_increment_by_float('a_hash', 'field', 1)
         db.hash_increment_by_float('a_hash', 'field', 2.5)
         db.hash_get('a_hash', 'field').should == "3.5"
+      end
+
+      it "should increment by int" do
+        db.hash_increment_by('a_hash', 'field', 1)
+        db.hash_increment_by('a_hash', 'field', 2.5)
+        db.hash_get('a_hash', 'field').should == "3"
       end
 
       it "should determine if key exists" do

@@ -104,6 +104,7 @@ module Blackbeard
         @new_record = false
       end
       self.class.on_save_methods.each{ |m| self.send(m) }
+      true
     end
 
     def reload

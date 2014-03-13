@@ -10,6 +10,7 @@ module Blackbeard
       end
 
       def add_at(time, uid, amount = nil, segment = DEFAULT_SEGMENT)
+        #TODO: unsure time is in proper timezone
         key = key_for_hour(time)
         segment_key = segment_key(key, segment)
 
@@ -55,4 +56,3 @@ module Blackbeard
     end
   end
 end
-
