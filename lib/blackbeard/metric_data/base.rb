@@ -11,11 +11,13 @@ module Blackbeard
       include ConfigurationMethods
       include Chartable
 
-      attr_reader :metric, :group
+      attr_reader :metric, :group, :cohort
 
-      def initialize(metric, group = nil)
+      # TODO: refactor so you pass group and cohort in as options
+      def initialize(metric, group = nil, cohort = nil)
         @metric = metric
         @group = group
+        @cohort = cohort
       end
 
       def hour_keys_for_day(date)

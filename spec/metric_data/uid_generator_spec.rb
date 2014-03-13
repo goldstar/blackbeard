@@ -20,6 +20,19 @@ module Blackbeard
           UidGenerator.new(metric_data2).uid.to_i.should == uid.to_i + 1
         end
       end
+
+      describe "lookup field" do
+        context "with a cohort" do
+          it "should return the field unique to cohort" do
+            metric.save
+            cohort = Cohort.create(:example_cohort)
+            metric.add_cohort(cohort)
+            gen1 = UidGenerator.new(metric.metric_data(cohort))
+            gen2 = UidGenerator.new(metric.metric_data)
+            gen1.send(:lookup_field).should_not == gen2.send(:lookup_field)
+          end
+        end
+      end
     end
 
   end
