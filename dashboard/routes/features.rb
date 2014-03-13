@@ -8,22 +8,25 @@ module Blackbeard
       end
 
       get "/features/:id" do
-        @feature = Feature.find(params[:id]) or pass
+        ensure_feature
         @groups = Group.all
         erb 'features/show'.to_sym
       end
 
       post "/features/:id" do
-        @feature = Feature.find(params[:id]) or pass
-        @feature.update_attributes(params)
+        ensure_feature.update_attributes(params)
         "OK"
       end
 
       post "/features/:id/groups/:group_id" do
-        @feature = Feature.find(params[:id]) or pass
+        ensure_feature
         @feature.set_segments_for(params[:group_id], params[:segments])
         @feature.save
         "OK"
+      end
+
+      def ensure_feature
+        @feature = Feature.find(params[:id]) or pass
       end
 
     end

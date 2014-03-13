@@ -8,14 +8,17 @@ module Blackbeard
       end
 
       get "/tests/:id" do
-        @test = Test.find(params[:id]) or pass
+        ensure_test
         erb 'tests/show'.to_sym
       end
 
       post "/tests/:id" do
-        @test = Test.find(params[:id]) or pass
-        @test.update_attributes(params)
+        ensure_test.update_attributes(params)
         "OK"
+      end
+
+      def ensure_test
+        @test = Test.find(params[:id]) or pass
       end
 
     end

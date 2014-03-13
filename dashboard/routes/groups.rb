@@ -7,14 +7,17 @@ module Blackbeard
       end
 
       get '/groups/:id' do
-        @group = Group.find(params[:id]) or pass
+        ensure_group
         erb 'groups/show'.to_sym
       end
 
       post "/groups/:id" do
-        @group = Group.find(params[:id]) or pass
-        @group.update_attributes(params)
+        ensure_group.update_attributes(params)
         "OK"
+      end
+
+      def ensure_group
+        @group = Group.find(params[:id]) or pass
       end
 
     end
