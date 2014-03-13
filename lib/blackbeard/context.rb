@@ -51,7 +51,7 @@ module Blackbeard
     end
 
     def unique_identifier
-      @user.nil? ? "b#{visitor_id}" : "a#{@user.id}"
+      @unique_identifier ||= @user.nil? ? "b#{visitor_id}" : "a#{@user.id}"
     end
 
     def user_id
@@ -59,7 +59,7 @@ module Blackbeard
     end
 
     def visitor_id
-      controller.request.cookies[:bbd] ||= generate_visitor_id
+      @visitor_id ||= controller.request.cookies[:bbd] ||= generate_visitor_id
     end
 
 private

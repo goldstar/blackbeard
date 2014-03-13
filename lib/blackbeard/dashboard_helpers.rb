@@ -24,6 +24,13 @@ module Blackbeard
       "[" + row.join(',') + "]"
     end
 
+    def metric_data(metric, group_or_cohort)
+      if group_or_cohort.nil?
+        metric.metric_data
+      else
+        group_or_chort.metric_data(metric)
+      end
+    end
+
   end
 end
-

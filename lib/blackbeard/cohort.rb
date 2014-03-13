@@ -22,5 +22,13 @@ module Blackbeard
       storable_attributes_hash['name'] || id
     end
 
+    def metric_data(metric)
+      CohortMetric.new(self,metric).metric_data
+    end
+
+    def hour_id_for_participant(uid)
+      data.hour_id_for_participant(uid)
+    end
+
   end
 end

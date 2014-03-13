@@ -26,8 +26,9 @@ module Blackbeard
           it "should return the field unique to cohort" do
             metric.save
             cohort = Cohort.create(:example_cohort)
+            cohort_metric = CohortMetric.new(cohort, metric)
             metric.add_cohort(cohort)
-            gen1 = UidGenerator.new(metric.metric_data(cohort))
+            gen1 = UidGenerator.new(cohort_metric.metric_data)
             gen2 = UidGenerator.new(metric.metric_data)
             gen1.send(:lookup_field).should_not == gen2.send(:lookup_field)
           end

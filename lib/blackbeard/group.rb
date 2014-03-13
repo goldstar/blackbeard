@@ -31,5 +31,8 @@ module Blackbeard
       config.group_definitions[self.id.to_sym]
     end
 
+    def metric_data(metric)
+      GroupMetric.new(self,metric).metric_data
+    end
   end
 end

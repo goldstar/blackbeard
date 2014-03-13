@@ -3,6 +3,8 @@ require 'blackbeard/metric_data/total'
 require 'blackbeard/metric_data/unique'
 require 'blackbeard/cohort'
 require 'blackbeard/group'
+require 'blackbeard/group_metric'
+require 'blackbeard/cohort_metric'
 
 module Blackbeard
   class Metric < Storable
@@ -44,36 +46,23 @@ module Blackbeard
       end
     end
 
+    def group_metrics
+      groups.map{ |g| GroupMetric.new(g, self) }
+    end
+
+    def cohort_metrics
+      cohorts.map{ |c| CohortMetric.new(c, self) }
+    end
+
     def add(context, amount)
       uid = context.unique_identifier
       metric_data.add(uid, amount)
-      groups.each do |group|
-        segment = group.segment_for(context)
-        metric_data(group).add(uid, amount, segment) unless segment.nil?
-      end
-      cohorts.each do |cohort|
-        hour_id = cohort.data.hour_id_for_participant(uid)
-        metric_data(cohort).add_at(hour_id, uid, amount) unless hour_id.nil?
-      end
+      group_metrics.each { |gm| gm.add(context, amount) }
+      cohort_metrics.each { |cm| cm.add(context, amount) }
     end
 
-    def metric_data(group_or_cohort = nil)
-      @metric_data ||= {}
-      @metric_data[group_or_cohort && group_or_cohort.key] ||= begin
-        if group_or_cohort.nil?
-          MetricData.const_get(type.capitalize).new(self, nil, nil)
-        elsif group_or_cohort.kind_of?(Group)
-          group = group_or_cohort
-          raise GroupNotInMetric unless has_group?(group)
-          MetricData.const_get(type.capitalize).new(self, group, nil)
-        elsif group_or_cohort.kind_of?(Cohort)
-          cohort = group_or_cohort
-          raise CohortNotInMetric unless has_cohort?(cohort)
-          MetricData.const_get(type.capitalize).new(self, nil, cohort)
-        else
-          raise InvalidMetricData
-        end
-      end
+    def metric_data
+      @metric_data ||= MetricData.const_get(type.capitalize).new(self, nil, nil)
     end
 
     def name

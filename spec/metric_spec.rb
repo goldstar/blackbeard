@@ -3,9 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 module Blackbeard
   describe Metric do
     let(:metric) { Metric.create(:total, "one-total") }
-    let(:group) { Group.create(:example) }
     let(:metric_data) { metric.metric_data }
-    let(:group_metric_data) { metric.metric_data(group) }
 
     describe "self.all" do
       before :each do
@@ -20,37 +18,50 @@ module Blackbeard
 
     describe "add" do
       let(:context) { double(:unique_identifier => 'uid', :controller => double, :user => double) }
-      before :each do
-        metric.stub(:groups).and_return([group])
-      end
 
       it "should increment metric data" do
         metric_data.should_receive(:add).with("uid",1)
         metric.add(context, 1)
       end
 
-      it "should increment metric data for each group" do
-        group.stub(:segment_for).and_return("segment")
-        group_metric_data.should_receive(:add).with("uid", 1, "segment" )
+      it "should call add on all group metrics" do
+        group_metric = double
+        metric.should_receive(:group_metrics).and_return([group_metric])
+        group_metric.should_receive(:add).with(context, 1)
         metric.add(context, 1)
       end
 
-      it "should not increment nil segments" do
-        group.stub(:segment_for).and_return(nil)
-        group_metric_data.should_not_receive(:add)
+      it "should call add on all cohort metrics" do
+        cohort_metric = double
+        metric.should_receive(:cohort_metrics).and_return([cohort_metric])
+        cohort_metric.should_receive(:add).with(context, 1)
         metric.add(context, 1)
       end
+
     end
 
     describe "addable_groups" do
+      let!(:group) { Group.create(:example) }
       it "should include the groups not added" do
-        group # to initialize it
         metric.addable_groups.map{|g| g.id }.should include(group.id)
       end
 
       it "should not include the group added" do
         metric.add_group(group)
         metric.addable_groups.map{|g| g.id }.should_not include(group.id)
+      end
+    end
+
+    describe "addable_cohorts" do
+      let!(:cohort){ Cohort.create(:example)}
+
+      it "should include the groups not added" do
+        metric.addable_cohorts.map{|g| g.id }.should include(cohort.id)
+      end
+
+      it "should not include the group added" do
+        metric.add_cohort(cohort)
+        metric.addable_cohorts.map{|c| c.id }.should_not include(cohort.id)
       end
     end
 
