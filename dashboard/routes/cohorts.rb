@@ -7,14 +7,17 @@ module Blackbeard
       end
 
       get '/cohorts/:id' do
-        @cohort = Cohort.find(params[:id]) or pass
+        ensure_cohort
         erb 'cohorts/show'.to_sym
       end
 
       post "/cohorts/:id" do
-        @cohort = Cohort.find(params[:id]) or pass
-        @cohort.update_attributes(params)
+        ensure_cohort.update_attributes(params)
         "OK"
+      end
+
+      def ensure_cohort
+        @cohort = Cohort.find(params[:id]) or pass
       end
 
     end
