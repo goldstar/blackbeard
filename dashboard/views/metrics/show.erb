@@ -3,21 +3,38 @@
 <p id="editable-description"><%= @metric.description %></p>
 </div>
 <form id="add_group" action="<%= url("/metrics/#{@metric.type}/#{@metric.type_id}/groups") %>" method="post"><input id="add_group_input" type="hidden" name="group_id"></form>
+<form id="add_cohort" action="<%= url("/metrics/#{@metric.type}/#{@metric.type_id}/cohorts") %>" method="post"><input id="add_cohort_input" type="hidden" name="cohort_id"></form>
 <ul class="nav nav-tabs">
-  <% if @group.nil? %><li class="active"><% else %><li><% end %><a href="?">All</a></li>
+  <% if @group.nil? && @cohort.nil? %><li class="active"><% else %><li><% end %><a href="?">All</a></li>
   <% @metric.groups.each do |group| %>
     <% if @group == group %><li class="active"><% else %><li><% end %><a href="?group_id=<%= group.id %>"><%= group.name %></a></li>
   <% end %>
-  <% if @metric.addable_groups.any? %>
+  <% @metric.cohorts.each do |cohort| %>
+    <% if @cohort == cohort %><li class="active"><% else %><li><% end %><a href="?cohort_id=<%= cohort.id %>"><%= cohort.name %></a></li>
+  <% end %>
+
   <li class="dropdown">
-     <a id="drop5" role="button" data-toggle="dropdown" href="#">Segment by Group <b class="caret"></b></a>
+     <a id="drop5" role="button" data-toggle="dropdown" href="#">Add <b class="caret"></b></a>
         <ul id="menu2" class="dropdown-menu" role="menu" aria-labelledby="drop5">
-          <% @metric.addable_groups.each do |group| %>
-          <li role="presentation" data-group-id="<%= group.id %>" data-group-name="<%= group.name %>" class="add-group"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
+          <% if @metric.addable_groups.any? %>
+            <li role="presentation" class="dropdown-header">Group Metrics</li>
+            <% @metric.addable_groups.each do |group| %>
+            <li role="presentation" data-group-id="<%= group.id %>" data-group-name="<%= group.name %>" class="add-group"><a role="menuitem" tabindex="-1" href="#"><%= group.name %></a></li>
+            <% end %>
+          <% else %>
+            <li role="presentation" class="dropdown-header">No Group Metrics</li>
+          <% end %>
+          <li role="presentation" class="divider"></li>
+          <% if @metric.addable_cohorts.any? %>
+            <li role="presentation" class="dropdown-header">Cohort Metrics</li>
+            <% @metric.addable_cohorts.each do |cohort| %>
+            <li role="presentation" data-cohort-id="<%= cohort.id %>" data-cohort-name="<%= cohort.name %>" class="add-cohort"><a role="menuitem" tabindex="-1" href="#"><%= cohort.name %></a></li>
+            <% end %>
+          <% else %>
+            <li role="presentation" class="dropdown-header">No Cohort Metrics</li>
           <% end %>
         </ul>
   </li>
-  <% end %>
 </ul>
 
 <!--Load the AJAX API-->
@@ -36,6 +53,19 @@
       $('#add_group').submit();
     }
   });
+
+  $('ul.nav-tabs').on("click", ".add-cohort", function (e) {
+    e.preventDefault();
+    var cohortId = $(this).data("cohort-id");
+    var cohortName = $(this).data("cohort-name");
+
+    if(confirm("Start collecting data by cohort "+cohortName+"?")) {
+      $('#add_cohort_input').val(cohortId);
+      $('#add_cohort').submit();
+    }
+  });
+
+
 
     //turn to inline mode
   $.fn.editable.defaults.send = 'always';
@@ -67,7 +97,4 @@
     });
   });
 </script>
-<%= partial :'metrics/metric_data', :locals => {:metric_data => @metric.metric_data(@group) } %>
-
-
-
+<%= partial :'metrics/metric_data', :locals => {:metric_data => @metric.metric_data(@group || @cohort) } %>
