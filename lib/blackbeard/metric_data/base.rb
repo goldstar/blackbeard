@@ -9,7 +9,6 @@ module Blackbeard
   module MetricData
     class Base
       include ConfigurationMethods
-      include Chartable
 
       attr_reader :metric, :group, :cohort
 
@@ -44,11 +43,7 @@ module Blackbeard
       end
 
       def segments
-        if group && group.segments.any?
-          group.segments
-        else
-          [self.class::DEFAULT_SEGMENT]
-        end
+        [self.class::DEFAULT_SEGMENT]
       end
 
     private

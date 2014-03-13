@@ -7,15 +7,15 @@ module Blackbeard
       class ExampleChartable
         include Chartable
 
-        def result_for_day(day)
+        def chartable_result_for_day(day)
           {'segment1' => 0}
         end
 
-        def result_for_hour(hour)
+        def chartable_result_for_hour(hour)
           {'segment1' => 0}
         end
 
-        def segments
+        def chartable_segments
           ['segment1']
         end
 

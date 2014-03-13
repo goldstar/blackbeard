@@ -3,6 +3,8 @@ require 'blackbeard/cohort_data'
 
 module Blackbeard
   class Cohort < Storable
+    include Chartable
+
     set_master_key :cohorts
     string_attributes :name, :description
 
@@ -28,6 +30,18 @@ module Blackbeard
 
     def hour_id_for_participant(uid)
       data.hour_id_for_participant(uid)
+    end
+
+    def chartable_segments
+      ['participants']
+    end
+
+    def chartable_result_for_hour(hour)
+      {'participants' => data.participants_for_hour(hour) }
+    end
+
+    def chartable_result_for_day(date)
+      {'participants' => data.participants_for_day(date) }
     end
 
   end

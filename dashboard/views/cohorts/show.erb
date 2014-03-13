@@ -38,4 +38,4 @@
     });
   });
 </script>
-<%= partial :'cohorts/data', :locals => { :data => @cohort.data } %>
+<%= partial :'shared/charts', :locals => {:charts => [@cohort.recent_hours_chart, @cohort.recent_days_chart]} %>

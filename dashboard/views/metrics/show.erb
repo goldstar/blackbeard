@@ -97,4 +97,4 @@
     });
   });
 </script>
-<%= partial :'metrics/metric_data', :locals => {:metric_data => metric_data(@metric, @group || @cohort) } %>
+<%= partial :'shared/charts', :locals => {:charts => @charts } %>

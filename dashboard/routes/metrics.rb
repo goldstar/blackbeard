@@ -7,7 +7,7 @@ module Blackbeard
       end
 
       get "/metrics/:type/:type_id" do
-        ensure_metric; find_group; find_cohort
+        ensure_metric; find_group; find_cohort; ensure_charts
         erb 'metrics/show'.to_sym
       end
 
@@ -39,6 +39,10 @@ module Blackbeard
 
       def find_cohort
         @cohort = Cohort.find(params[:cohort_id]) if params[:cohort_id]
+      end
+
+      def ensure_charts
+        @charts = []
       end
 
     end

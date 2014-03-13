@@ -8,6 +8,8 @@ require 'blackbeard/cohort_metric'
 
 module Blackbeard
   class Metric < Storable
+    include Chartable
+
     attr_reader :type, :type_id
     set_master_key :metrics
     string_attributes :name, :description
@@ -75,6 +77,18 @@ module Blackbeard
 
     def addable_cohorts
       Cohort.all.reject{ |c| cohort_ids.include?(c.id) }
+    end
+
+    def chartable_segments
+      metric_data.segments
+    end
+
+    def chartable_result_for_hour(hour)
+      metric_data.result_for_hour(hour)
+    end
+
+    def chartable_result_for_day(date)
+      metric_data.result_for_day(date)
     end
 
   end

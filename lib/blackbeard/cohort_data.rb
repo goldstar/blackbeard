@@ -2,7 +2,6 @@ require 'date'
 
 module Blackbeard
   class CohortData
-    include Chartable
     include ConfigurationMethods
 
     def initialize(cohort)
@@ -15,18 +14,6 @@ module Blackbeard
 
     def participants_for_hour(time)
       db.hash_get(hours_hash_key, hour_id(time)).to_i
-    end
-
-    def result_for_hour(time)
-      {"participants" => participants_for_hour(time)}
-    end
-
-    def result_for_day(date)
-      {"participants" => participants_for_day(date)}
-    end
-
-    def segments
-      ["participants"]
     end
 
     def participants_for_day(date)
