@@ -27,6 +27,27 @@ module Blackbeard
         last_response.should be_ok
         last_response.body.should include("jostling")
       end
+
+      it "should show a metric with a group" do
+        metric = Metric.create("total", "jostling")
+        group = Group.create(:example)
+        metric.add_group(group)
+        get "/metrics/#{metric.type}/#{metric.type_id}", :group_id => group.id
+
+        last_response.should be_ok
+        last_response.body.should include("jostling")
+      end
+
+      it "should show a metric with a cohort" do
+        metric = Metric.create("total", "jostling")
+        cohort = Cohort.create(:example)
+        metric.add_cohort(cohort)
+        get "/metrics/#{metric.type}/#{metric.type_id}", :cohort_id => cohort.id
+
+        last_response.should be_ok
+        last_response.body.should include("jostling")
+      end
+
     end
 
     describe "post /metrics/:type/:type_id" do
