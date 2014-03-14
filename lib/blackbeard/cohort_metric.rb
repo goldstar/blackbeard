@@ -40,7 +40,7 @@ module Blackbeard
 
     def result_per_participant(result, participants)
       participants = participants.to_f
-      result.keys.each{|k| result[k] = result[k].to_f / participants }
+      result.keys.each{|k| result["avg #{k}"] = result[k].to_f / participants }
       result
     end
 
