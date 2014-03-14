@@ -24,15 +24,23 @@ module Blackbeard
     end
 
     def chartable_segments
-      ["Average"]
+      metric_data.map{|s| "avg #{s}" }
     end
 
     def chartable_result_for_hour(hour)
-      metric_data.result_for_hour(hour)
+      participants = cohort.data.participants_for_hour(hour)
+      result_per_participant( metric_data.result_for_hour(hour), participants)
     end
 
     def chartable_result_for_day(date)
-      metric_data.result_for_day(date)
+      participants = cohort.data.participants_for_day(date)
+      result_per_participant( metric_data.result_for_day(date), participants)
+    end
+
+    def result_per_participant(result, participants)
+      participants = participants.to_f
+      result.keys.each{|k| result[k] = result[k].to_f / participants }
+      result
     end
 
   end
