@@ -13,7 +13,7 @@ module Blackbeard
     end
 
     def result_rows(segments)
-      [@date] + results_for(segments)
+      [@date.to_s] + results_for(segments)
     end
 
 

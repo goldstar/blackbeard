@@ -29,7 +29,7 @@ module Blackbeard
         :dom_id => 'recent_hour_chart',
         :title => title,
         :columns => ['Hour']+chartable_segments,
-        :rows => data.map{ |metric_hour| metric_hour.result_rows(chartable_segments) }
+        :rows => data.reverse.map{ |metric_hour| metric_hour.result_rows(chartable_segments) }
       )
     end
 
@@ -39,7 +39,7 @@ module Blackbeard
         :dom_id => 'recent_days_chart',
         :title => "Last #{count} Days",
         :columns => ['Day']+chartable_segments,
-        :rows => data.map{ |metric_date| metric_date.result_rows(chartable_segments) }
+        :rows => data.reverse.map{ |metric_date| metric_date.result_rows(chartable_segments) }
       )
     end
 

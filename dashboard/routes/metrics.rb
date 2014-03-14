@@ -42,7 +42,13 @@ module Blackbeard
       end
 
       def ensure_charts
-        @charts = []
+        @charts = [chartable.recent_hours_chart, chartable.recent_days_chart]
+      end
+
+      def chartable
+        return GroupMetric.new(@group, @metric) if @group
+        return CohortMetric.new(@cohort, @metric) if @cohort
+        return @metric
       end
 
     end

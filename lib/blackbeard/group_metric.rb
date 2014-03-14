@@ -1,5 +1,6 @@
 module Blackbeard
   class GroupMetric
+    include ConfigurationMethods
     include Chartable
 
     attr_reader :group, :metric

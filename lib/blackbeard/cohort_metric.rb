@@ -1,5 +1,6 @@
 module Blackbeard
   class CohortMetric
+    include ConfigurationMethods
     include Chartable
 
     attr_reader :cohort, :metric
@@ -24,7 +25,7 @@ module Blackbeard
     end
 
     def chartable_segments
-      metric_data.map{|s| "avg #{s}" }
+      metric_data.segments.map{|s| "avg #{s}" }
     end
 
     def chartable_result_for_hour(hour)

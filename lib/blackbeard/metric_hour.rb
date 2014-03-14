@@ -12,7 +12,7 @@ module Blackbeard
     end
 
     def result_rows(segments)
-      [@hours] + results_for(segments)
+      [@hour.strftime("%l%P")] + results_for(segments)
     end
 
   private
