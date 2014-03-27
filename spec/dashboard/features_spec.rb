@@ -45,7 +45,7 @@ module Blackbeard
         post "/features/#{feature.id}/groups/hello", :segments => ["world","goodbye"]
 
         last_response.should be_ok
-        feature.reload.segments_for(:hello).should include("world", "goodbye")
+        feature.reload.group_segments_for(:hello).should include("world", "goodbye")
       end
     end
   end

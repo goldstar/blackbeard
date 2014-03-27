@@ -20,7 +20,7 @@ module Blackbeard
 
       post "/features/:id/groups/:group_id" do
         ensure_feature
-        @feature.set_segments_for(params[:group_id], params[:segments])
+        @feature.set_group_segments_for(params[:group_id], params[:segments])
         @feature.save
         "OK"
       end

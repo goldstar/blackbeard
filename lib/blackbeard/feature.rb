@@ -9,11 +9,11 @@ module Blackbeard
     integer_attributes :visitors_rate, :users_rate
     json_attributes :group_segments
 
-    def segments_for(group_id)
+    def group_segments_for(group_id)
       (group_segments && group_segments[group_id.to_s]) || []
     end
 
-    def set_segments_for(group_id, *segments)
+    def set_group_segments_for(group_id, *segments)
       segments = Array(segments).flatten.compact.map{|a| a.to_s}
       grp_segments = self.group_segments || {}
       grp_segments[group_id.to_s] = segments
@@ -21,15 +21,12 @@ module Blackbeard
     end
 
     def active_for?(context)
-      case status
-      when 'active'
-        true
-      when 'rollout'
-        rollout?(context)
-      else
-        false
-      end
+      active = active?(context)
+      set_feature_segment(context.unique_identifier, active)
+      active
     end
+
+
 
     def status
       storable_attributes_hash['status'] || "inactive"
@@ -40,6 +37,18 @@ module Blackbeard
     end
 
   private
+
+    def active?(context)
+      case status
+      when 'active'
+        true
+      when 'rollout'
+        rollout?(context)
+      else
+        false
+      end
+    end
+
 
   end
 end

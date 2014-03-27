@@ -92,7 +92,7 @@
         title: "Select segments",
         url: '<%= url("features/#{@feature.id}/groups/#{group.id}")%>',
         name: 'segments',
-        value: [<%= @feature.segments_for(group.id).map{|s| "'#{s}'"}.join(',') %>],
+        value: [<%= @feature.group_segments_for(group.id).map{|s| "'#{s}'"}.join(',') %>],
         source: [<%= group.segments.map{|s| "{value: '#{s}', text: '#{s}'}"}.join(',') %>]
     });
     <% end %>

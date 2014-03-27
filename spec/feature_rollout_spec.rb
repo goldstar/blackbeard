@@ -108,8 +108,8 @@ module Blackbeard
         before :each do
           @group_a = Group.create(:a)
           @group_b = Group.create(:b)
-          feature.set_segments_for(:a, ["on"])
-          feature.set_segments_for(:b, ["monkey", "chimp"])
+          feature.set_group_segments_for(:a, ["on"])
+          feature.set_group_segments_for(:b, ["monkey", "chimp"])
           feature.save
           Group.stub(:find).with("a").and_return(@group_a)
           Group.stub(:find).with("b").and_return(@group_b)
