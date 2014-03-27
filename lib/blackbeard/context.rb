@@ -59,7 +59,7 @@ module Blackbeard
     end
 
     def visitor_id
-      @visitor_id ||= controller.request.cookies[:bbd] ||= generate_visitor_id
+      @visitor_id ||= controller.request.cookies[:bbd] || generate_visitor_id
     end
 
 private
