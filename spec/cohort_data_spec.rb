@@ -99,7 +99,7 @@ module Blackbeard
       end
     end
 
-    describe "countint participants" do
+    describe "counting participants" do
       let(:aug22) { Date.new(2003,8,22) }
       let(:aug22_1pm) { Time.new(2003,8,22,13) }
       let(:aug22_11am) { Time.new(2003,8,22,11) }

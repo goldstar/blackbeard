@@ -1,5 +1,7 @@
 require 'blackbeard/storable'
 require 'blackbeard/feature_rollout'
+require 'blackbeard/feature_participant_data'
+
 module Blackbeard
   class Feature < Storable
     include FeatureRollout
@@ -22,11 +24,18 @@ module Blackbeard
 
     def active_for?(context)
       active = active?(context)
-      set_feature_segment(context.unique_identifier, active)
+      participant_data = active ? active_participant_data : inactive_participant_data
+      participant_data.add(context.unique_identifier, tz.now)
       active
     end
 
+    def active_participant_data
+      @active_data ||= FeatureActiveParticipantData.new(self)
+    end
 
+    def inactive_participant_data
+      @inactive_data ||= FeatureInactiveParticipantData.new(self)
+    end
 
     def status
       storable_attributes_hash['status'] || "inactive"

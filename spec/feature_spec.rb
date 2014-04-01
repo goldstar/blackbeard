@@ -19,7 +19,7 @@ module Blackbeard
     end
 
     describe "#active_for?" do
-      let(:context){ double }
+      let(:context){ double :unique_identifier => 'bob' }
 
       context "when status is nil" do
         it "should be false" do
@@ -30,6 +30,7 @@ module Blackbeard
       context "when status is inactive" do
         it "should be false" do
           feature.status = :inactive
+          feature.inactive_participant_data.should_receive(:add).with('bob', anything)
           feature.active_for?(context).should be_false
         end
       end
@@ -37,6 +38,7 @@ module Blackbeard
       context "when status is active" do
         it "should be true" do
           feature.status = :active
+          feature.active_participant_data.should_receive(:add).with('bob', anything)
           feature.active_for?(context).should be_true
         end
       end
