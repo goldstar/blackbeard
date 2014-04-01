@@ -5,6 +5,7 @@ require 'blackbeard/feature_participant_data'
 module Blackbeard
   class Feature < Storable
     include FeatureRollout
+    include Chartable
 
     set_master_key :features
     string_attributes :name, :description, :status
@@ -43,6 +44,24 @@ module Blackbeard
 
     def name
       storable_attributes_hash['name'] || id
+    end
+
+    def chartable_segments
+      ['active_requests', 'inactive_requests']
+    end
+
+    def chartable_result_for_hour(hour)
+      {
+        'active_requests' => active_participant_data.participants_for_hour(hour),
+        'inactive_requests' => inactive_participant_data.participants_for_hour(hour)
+      }
+    end
+
+    def chartable_result_for_day(date)
+      {
+        'active_requests' => active_participant_data.participants_for_day(date),
+        'inactive_requests' => inactive_participant_data.participants_for_day(date)
+      }
     end
 
   private

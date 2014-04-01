@@ -51,6 +51,7 @@
     <div class="panel-footer">Note: 100% of visitors is the same as active. 50% of visitors &amp; 100% of logged in users will be more than 50% of all traffic.</div>
   </div>
 </div>
+<%= partial :'shared/charts', :locals => {:charts => [@feature.recent_hours_chart, @feature.recent_days_chart]} %>
 
 <!--Load the AJAX API-->
 <script src="<%= url('javascripts/jquery-1.10.2.min.js') %>"></script>
