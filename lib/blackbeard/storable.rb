@@ -100,7 +100,7 @@ module Blackbeard
 
     def save
       if new_record?
-        db.hash_key_set_if_not_exists(master_key, key, tz.now.to_date)
+        db.hash_set_if_not_exists(master_key, key, tz.now.to_date)
         @new_record = false
       end
       self.class.on_save_methods.each{ |m| self.send(m) }

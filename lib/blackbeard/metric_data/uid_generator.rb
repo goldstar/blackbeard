@@ -29,7 +29,7 @@ module Blackbeard
       def generate_uid
         uid = db.increment("metric_data_next_uid")
         # write and read to avoid race conditional writes
-        db.hash_key_set_if_not_exists(lookup_hash, lookup_field, uid)
+        db.hash_set_if_not_exists(lookup_hash, lookup_field, uid)
         db.hash_get(lookup_hash, lookup_field)
       end
 

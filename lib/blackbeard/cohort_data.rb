@@ -34,7 +34,7 @@ module Blackbeard
     def add_without_force(uid, hour)
       hour_id = hour_id(hour)
       # Check if uid is alreaty in cohort
-      return false unless db.hash_key_set_if_not_exists(participants_hash_key, uid, hour_id)
+      return false unless db.hash_set_if_not_exists(participants_hash_key, uid, hour_id)
       db.hash_increment_by(hours_hash_key, hour_id, 1)
       true
     end

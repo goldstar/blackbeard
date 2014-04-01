@@ -27,9 +27,9 @@ module Blackbeard
 
       it "should set if field does not exist" do
         db.hash_set('a_hash', 'hello', 'world')
-        db.hash_key_set_if_not_exists('a_hash', 'hello', 'bar')
+        db.hash_set_if_not_exists('a_hash', 'hello', 'bar')
         db.hash_get('a_hash', 'hello').should == 'world'
-        db.hash_key_set_if_not_exists('a_hash', 'foo', 'bar')
+        db.hash_set_if_not_exists('a_hash', 'foo', 'bar')
         db.hash_get('a_hash', 'foo').should == 'bar'
       end
 

@@ -14,10 +14,8 @@ module Blackbeard
       redis.keys
     end
 
-
     # Hash commands
-    # TODO: rename to hash_set_if_not_exisits
-    def hash_key_set_if_not_exists(hash_key, field, value)
+    def hash_set_if_not_exists(hash_key, field, value)
       redis.hsetnx(hash_key, field, value)
     end
 
