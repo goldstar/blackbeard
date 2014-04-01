@@ -1,3 +1,4 @@
+require 'pry'
 module Blackbeard
   module StorableHasMany
     def self.included(base)
@@ -6,9 +7,25 @@ module Blackbeard
     end
 
     module InstanceMethods
+
+      def _add_reciprocal(o)
+        singular = self.class._singular_from_klass(o)
+        self.send("add_#{singular}".to_sym, o, false) if singular
+      end
+
+      def _remove_reciprocal(o)
+        singular = self.class._singular_from_klass(o)
+        self.send("remove_#{singular}".to_sym, o, false) if singular
+      end
+
     end
 
     module ClassMethods
+      def _singular_from_klass(o)
+        @_has_many_lookup ||= {}
+        k = o.class.name.split('::').last
+        @_has_many_lookup[k]
+      end
 
       def has_many(options = {})
         options.each_pair do |plural, klass|
@@ -17,27 +34,33 @@ module Blackbeard
       end
 
       def _has_many(plural, klass)
+        @_has_many_lookup ||= {}
+
         plural = plural.to_s.downcase
-        singular = klass.name.split('::').last.downcase
+        klass_name = klass.is_a?(String) ? klass : klass.name.split('::').last
+        singular = plural.gsub(/e?s$/,'')
+
+        @_has_many_lookup[klass_name] = singular
 
         methods = <<-END_OF_RUBY
-
             def has_#{singular}?(o)
               #{singular}_ids.include?(o.id)
             end
 
-            def add_#{singular}(o)
+            def add_#{singular}(o, reciprocate = true)
               db.set_add_member(#{plural}_set_key, o.key) unless has_#{singular}?(o)
+              o._add_reciprocal(self) if reciprocate && o.respond_to?(:'_add_reciprocal')
               \@#{plural} = nil
             end
 
-            def remove_#{singular}(o)
+            def remove_#{singular}(o, reciprocate = true)
               db.set_remove_member(#{plural}_set_key, o.key)
+              o._remove_reciprocal(self) if reciprocate && o.respond_to?(:'_remove_reciprocal')
               \@#{plural} = nil
             end
 
             def #{plural}
-              \@#{plural} ||= #{klass.name}.new_from_keys(#{singular}_keys)
+              \@#{plural} ||= #{klass_name}.new_from_keys(#{singular}_keys)
             end
 
             def #{singular}_ids
