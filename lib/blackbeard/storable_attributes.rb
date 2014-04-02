@@ -1,5 +1,3 @@
-require 'json'
-
 module Blackbeard
   module StorableAttributes
     def self.included(base)

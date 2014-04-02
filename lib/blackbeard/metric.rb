@@ -1,11 +1,3 @@
-require "blackbeard/storable"
-require 'blackbeard/metric_data/total'
-require 'blackbeard/metric_data/unique'
-require 'blackbeard/cohort'
-require 'blackbeard/group'
-require 'blackbeard/group_metric'
-require 'blackbeard/cohort_metric'
-
 module Blackbeard
   class Metric < Storable
     include Chartable
@@ -13,8 +5,9 @@ module Blackbeard
     attr_reader :type, :type_id
     set_master_key :metrics
     string_attributes :name, :description
-    has_many :groups => Group
-    has_many :cohorts => Cohort
+    has_many :groups => 'Group'
+    has_many :cohorts => 'Cohort'
+    has_many :features => 'Feature'
 
     def self.create(type, type_id, options = {})
       super("#{type}::#{type_id}", options)

@@ -1,5 +1,3 @@
-require 'blackbeard/participant_methods'
-
 module Blackbeard
   class FeatureBaseParticipantData
     include ConfigurationMethods

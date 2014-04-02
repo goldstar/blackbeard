@@ -1,5 +1,3 @@
-require 'blackbeard/storable'
-
 module Blackbeard
   class Test < Storable
     set_master_key :tests

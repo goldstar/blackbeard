@@ -1,8 +1,3 @@
-require 'blackbeard/configuration_methods'
-require 'blackbeard/storable_attributes'
-require 'blackbeard/storable_has_many'
-require 'blackbeard/storable_has_set'
-
 module Blackbeard
   class Storable
     include ConfigurationMethods

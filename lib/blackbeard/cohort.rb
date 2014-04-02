@@ -1,6 +1,3 @@
-require 'blackbeard/storable'
-require 'blackbeard/cohort_data'
-
 module Blackbeard
   class Cohort < Storable
     include Chartable

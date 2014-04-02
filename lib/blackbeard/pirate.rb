@@ -1,13 +1,3 @@
-require "blackbeard/context"
-require "blackbeard/metric"
-require "blackbeard/metric_data/unique"
-require "blackbeard/metric_data/total"
-require "blackbeard/test"
-require "blackbeard/errors"
-require "blackbeard/group"
-require "blackbeard/feature"
-require "blackbeard/cohort"
-
 module Blackbeard
   class Pirate
     def initialize

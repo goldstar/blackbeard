@@ -1,7 +1,3 @@
-require 'blackbeard/storable'
-require 'blackbeard/feature_rollout'
-require 'blackbeard/feature_participant_data'
-
 module Blackbeard
   class Feature < Storable
     include FeatureRollout
@@ -11,6 +7,8 @@ module Blackbeard
     string_attributes :name, :description, :status
     integer_attributes :visitors_rate, :users_rate
     json_attributes :group_segments
+
+    has_many :metrics => 'Metric'
 
     def group_segments_for(group_id)
       (group_segments && group_segments[group_id.to_s]) || []

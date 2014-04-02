@@ -1,10 +1,3 @@
-require 'blackbeard/metric_hour'
-require 'blackbeard/metric_date'
-require 'date'
-require 'blackbeard/chart'
-require 'blackbeard/metric_data/uid_generator'
-require 'blackbeard/chartable'
-
 module Blackbeard
   module MetricData
     class Base

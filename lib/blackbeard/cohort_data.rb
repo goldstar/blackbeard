@@ -1,6 +1,3 @@
-require 'date'
-require 'blackbeard/participant_methods'
-
 module Blackbeard
   class CohortData
     include ConfigurationMethods

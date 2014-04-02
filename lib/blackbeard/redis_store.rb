@@ -1,6 +1,3 @@
-require 'redis'
-require 'redis-namespace'
-
 module Blackbeard
   class RedisStore
     attr_reader :redis

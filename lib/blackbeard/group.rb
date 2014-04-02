@@ -1,5 +1,3 @@
-require 'blackbeard/storable'
-
 module Blackbeard
   class Group < Storable
     set_master_key :groups

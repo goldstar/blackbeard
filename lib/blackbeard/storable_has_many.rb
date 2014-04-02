@@ -1,4 +1,3 @@
-require 'pry'
 module Blackbeard
   module StorableHasMany
     def self.included(base)

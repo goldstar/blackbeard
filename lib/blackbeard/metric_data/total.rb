@@ -1,5 +1,3 @@
-require 'blackbeard/metric_data/base'
-
 module Blackbeard
   module MetricData
     class Total < Base

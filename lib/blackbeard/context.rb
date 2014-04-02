@@ -1,5 +1,3 @@
-require 'blackbeard/selected_variation'
-
 module Blackbeard
   class Context
     include ConfigurationMethods

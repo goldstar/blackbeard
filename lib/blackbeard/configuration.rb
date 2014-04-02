@@ -1,7 +1,3 @@
-require 'tzinfo'
-require "blackbeard/redis_store"
-require "blackbeard/group"
-
 module Blackbeard
   class Configuration
     attr_accessor :timezone, :namespace, :redis, :guest_method
