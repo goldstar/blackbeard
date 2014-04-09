@@ -31,7 +31,7 @@
 </ul>
 
 <% if @metric %>
-  <% chartable = FeatureMetric.new(@feature, @metric) %>
+  <% chartable = Blackbeard::FeatureMetric.new(@feature, @metric) %>
   <%= partial :'shared/charts', :locals => {:charts => [chartable.recent_hours_chart, chartable.recent_days_chart]} %>
 <% elsif @params.key?('activity') %>
   <%= partial :'shared/charts', :locals => {:charts => [@feature.recent_hours_chart, @feature.recent_days_chart]} %>
