@@ -1,0 +1,133 @@
+
+<div id="active" class="feature-status-panel hidden">
+  <p>This feature is <em>active</em> for all users.</p>
+</div>
+
+<div id="inactive" class="feature-status-panel hidden">
+  <p>This feature is <em>inactive</em> for all users.</p>
+</div>
+
+<div id="rollout" class="feature-status-panel hidden">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Rollout Options</h3>
+    </div>
+    <div class="panel-body">
+    <p>Activate feature for all visitors:</p>
+    <div class="progress" id="editable-visitors-rate">
+      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; overflow: visible;">
+      </div>
+    </div>
+    <p>Activate feature for logged in users:</p>
+    <div class="progress" id="editable-users-rate">
+      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; overflow: visible;">
+      </div>
+    </div>
+    <p>Activate feature for group segments:</p>
+    <table class="table">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Active Segments</th>
+      </tr>
+    </thead>
+    <% @groups.each do |group| %>
+      <tr>
+        <td><%= group.name %></td>
+        <td><a href="#" id="editable-group-segments-<%= group.id %>"></a></td>
+      </tr>
+    <% end if @groups.any? %>
+    </table>
+    </div>
+    <div class="panel-footer">Note: 100% of visitors is the same as active. 50% of visitors &amp; 100% of logged in users will be more than 50% of all traffic.</div>
+  </div>
+</div>
+
+
+<script src="<%= url('bootstrap3-editable/js/bootstrap-editable.min.js') %>"></script>
+<script type="text/javascript">
+  //turn to inline mode
+  $.fn.editable.defaults.send = 'always';
+  $.fn.editable.defaults.params = function(params) {
+        var obj = {};
+        obj[params.name] = params.value;
+        return obj;
+  }
+
+  $(document).ready(function() {
+  <% @groups.each do |group| %>
+    $('#editable-group-segments-<%= group.id %>').editable({
+        type: 'checklist',
+        emptytext: 'No segments active',
+        title: "Select segments",
+        url: '<%= url("features/#{@feature.id}/groups/#{group.id}")%>',
+        name: 'segments',
+        value: [<%= @feature.group_segments_for(group.id).map{|s| "'#{s}'"}.join(',') %>],
+        source: [<%= group.segments.map{|s| "{value: '#{s}', text: '#{s}'}"}.join(',') %>]
+    });
+    <% end %>
+
+    $('#editable-users-rate').editable({
+      type: 'number',
+      value: <%= @feature.users_rate %>,
+      display: function(value, sourceData) {
+        var color = "#fff";
+        if (value < 10) {
+          color = "#000";
+        }
+        $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of users").width(value+'%').css('color', color);
+      },
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'users_rate',
+      title: '% of logged in users',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+
+
+    $('#editable-visitors-rate').editable({
+      type: 'number',
+      value: <%= @feature.visitors_rate %>,
+      display: function(value, sourceData) {
+        var color = "#fff";
+        if (value < 10) {
+          color = "#000";
+        }
+        $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of visitors").width(value+'%').css('color', color);
+      },
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'visitors_rate',
+      title: '% of all visitors',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+
+
+    $('#editable-name').editable({
+      placement: 'right',
+      type: 'text',
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'name',
+      title: 'Edit feature name',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+    $('#editable-description').editable({
+      placement: 'bottom',
+      emptytext: 'Give this feature a description',
+      type: 'textarea',
+      url: '<%= url("features/#{@feature.id}") %>',
+      name: 'description',
+      title: 'Edit feature description'
+    });
+  });
+</script>

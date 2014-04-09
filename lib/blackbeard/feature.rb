@@ -44,8 +44,16 @@ module Blackbeard
       storable_attributes_hash['name'] || id
     end
 
-    def chartable_segments
+    def segment_for(context)
+      active_for?(context) ? 'active_requests' : 'inactive_requests'
+    end
+
+    def segments
       ['active_requests', 'inactive_requests']
+    end
+
+    def chartable_segments
+      segments
     end
 
     def chartable_result_for_hour(hour)
@@ -60,6 +68,14 @@ module Blackbeard
         'active_requests' => active_participant_data.participants_for_day(date),
         'inactive_requests' => inactive_participant_data.participants_for_day(date)
       }
+    end
+
+    def addable_metrics
+      Metric.all.reject{ |m| metric_ids.include?(m.id) }
+    end
+
+    def metric_data(metric)
+      FeatureMetric.new(self,metric).metric_data
     end
 
   private

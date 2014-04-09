@@ -21,7 +21,7 @@ module Blackbeard
     end
 
     def metric_data
-      @metric_data ||= MetricData.const_get(type.capitalize).new(metric, nil, cohort)
+      @metric_data ||= MetricData.const_get(type.capitalize).new(metric, cohort)
     end
 
     def chartable_segments

@@ -5,8 +5,7 @@ module Blackbeard
 
       def initialize(metric_data)
         @metric = metric_data.metric
-        @group = metric_data.group
-        @cohort = metric_data.cohort
+        @metric_for = metric_data.metric_for
       end
 
       def uid
@@ -21,8 +20,7 @@ module Blackbeard
 
       def lookup_field
         lookup_field = "metric-#{@metric.id}"
-        lookup_field += "::group-#{@group.id}" if @group
-        lookup_field += "::group-#{@cohort.id}" if @cohort
+        lookup_field += "::#{@metric_for.class.name.split('::').last}-#{@metric_for.id}" if @metric_for
         lookup_field
       end
 

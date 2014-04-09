@@ -3,13 +3,11 @@ module Blackbeard
     class Base
       include ConfigurationMethods
 
-      attr_reader :metric, :group, :cohort
+      attr_reader :metric, :metric_for
 
-      # TODO: refactor so you pass group and cohort in as options
-      def initialize(metric, group = nil, cohort = nil)
+      def initialize(metric, metric_for = nil)
         @metric = metric
-        @group = group
-        @cohort = cohort
+        @metric_for = metric_for
       end
 
       def hour_keys_for_day(date)

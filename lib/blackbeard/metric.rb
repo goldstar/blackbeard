@@ -57,7 +57,7 @@ module Blackbeard
     end
 
     def metric_data
-      @metric_data ||= MetricData.const_get(type.capitalize).new(self, nil, nil)
+      @metric_data ||= MetricData.const_get(type.capitalize).new(self)
     end
 
     def name
