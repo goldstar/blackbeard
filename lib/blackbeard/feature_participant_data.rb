@@ -13,6 +13,10 @@ module Blackbeard
       db.hash_set(participants_hash_key, uid, status)
     end
 
+    def last_status_for(uid)
+      db.hash_get(participants_hash_key, uid)
+    end
+
   private
 
     def key

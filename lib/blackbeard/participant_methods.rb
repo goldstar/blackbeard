@@ -32,7 +32,7 @@ module Blackbeard
     end
 
     def participants_hash_key
-      @hours_hash_key ||= "#{key}::participants"
+      @participants_hash_key ||= "#{key}::participants"
     end
 
   end

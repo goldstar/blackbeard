@@ -45,15 +45,15 @@ module Blackbeard
     end
 
     def segment_for(context)
-      active_for?(context) ? 'active_requests' : 'inactive_requests'
+      active_participant_data.last_status_for(context.unique_identifier)
     end
 
     def segments
-      ['active_requests', 'inactive_requests']
+      ['active', 'inactive']  # used by feature metric charts
     end
 
     def chartable_segments
-      segments
+      ['active_requests', 'inactive_requests'] # used by participant charts
     end
 
     def chartable_result_for_hour(hour)

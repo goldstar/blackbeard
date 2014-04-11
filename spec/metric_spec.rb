@@ -38,6 +38,13 @@ module Blackbeard
         metric.add(context, 1)
       end
 
+      it "should call add on all the feature metrics" do
+        feature_metric = double
+        metric.should_receive(:feature_metrics).and_return([feature_metric])
+        feature_metric.should_receive(:add).with(context, 1)
+        metric.add(context, 1)
+      end
+
     end
 
     describe "addable_groups" do

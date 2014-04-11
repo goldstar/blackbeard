@@ -49,11 +49,19 @@ module Blackbeard
       cohorts.map{ |c| CohortMetric.new(c, self) }
     end
 
+    def feature_metrics
+      features.map{ |f| FeatureMetric.new(f, self) }
+    end
+
+    def submetrics
+      [group_metrics, cohort_metrics, feature_metrics].flatten
+    end
+
+
     def add(context, amount)
       uid = context.unique_identifier
       metric_data.add(uid, amount)
-      group_metrics.each { |gm| gm.add(context, amount) }
-      cohort_metrics.each { |cm| cm.add(context, amount) }
+      submetrics.each{ |submetric| submetric.add(context, amount) }
     end
 
     def metric_data

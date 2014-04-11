@@ -55,6 +55,35 @@ module Blackbeard
 
     end
 
+    describe "segment_for" do
+      let(:context){ double :unique_identifier => 'newbie' }
+
+      describe "when user has not encountered feature" do
+        it "should return nil" do
+          feature.segment_for(context).should be_nil
+        end
+      end
+
+      describe "when user saw active feature" do
+        before :each do
+          feature.active_participant_data.add(context.unique_identifier, Time.now)
+        end
+        it "should return active" do
+          feature.segment_for(context).should == "active"
+        end
+      end
+
+      describe "when user saw inactive feature" do
+        before :each do
+          feature.inactive_participant_data.add(context.unique_identifier, Time.now)
+        end
+        it "should return inactive" do
+          feature.segment_for(context).should == "inactive"
+        end
+      end
+
+    end
+
 
   end
 end
