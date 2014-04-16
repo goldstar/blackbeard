@@ -81,6 +81,31 @@ module Blackbeard
       redis.sunionstore('set_union_count', keys.flatten)
     end
 
+    # Sorted set
+    def sorted_set_add_member(set_key, score, member)
+      redis.zadd(set_key, score, member)
+    end
+
+    def sorted_set_range_by_score(set_key, options = {})
+      min, max, opts = sorted_set_range_by_score_options(options)
+      redis.zrangebyscore(set_key, min, max, opts)
+    end
+
+    def sorted_set_reverse_range_by_score(set_key, options = {})
+      min, max, opts = sorted_set_range_by_score_options(options)
+      redis.zrevrangebyscore(set_key, max, min, opts)
+    end
+
+    def sorted_set_range_by_score_options(options)
+      min = options[:min] ? options[:min].to_i : '-inf'
+      max = options[:max] ? options[:max].to_i : '+inf'
+      opts = {
+        :limit => options[:limit],
+        :with_scores => options[:with_scores]
+      }
+      [min, max, opts]
+    end
+
     # String commands
     def del(*keys)
       redis.del(*keys)

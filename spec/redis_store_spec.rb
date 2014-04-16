@@ -103,6 +103,53 @@ module Blackbeard
 
     end
 
+    describe "sorted set" do
+      it "should set the member" do
+        expect{
+          db.sorted_set_add_member('sorted', 9000, 'foo')
+        }.to change{ db.sorted_set_range_by_score('sorted').count }.by(1)
+      end
+
+      describe "ranges by score" do
+        before :each do
+          db.sorted_set_add_member('sorted', 1, 'one')
+          db.sorted_set_add_member('sorted', 2, 'two')
+          db.sorted_set_add_member('sorted', 3, 'three')
+        end
+
+        it "should return all with no limits" do
+          db.sorted_set_range_by_score('sorted').should == ['one','two','three']
+          db.sorted_set_reverse_range_by_score('sorted').should == ['three','two','one']
+        end
+
+        it "should respect min and max" do
+          db.sorted_set_range_by_score('sorted', :min => 2, :max => 2).should == ['two']
+          db.sorted_set_reverse_range_by_score('sorted', :min => 2, :max => 2).should == ['two']
+        end
+
+        it "should respect limit with count" do
+          db.sorted_set_range_by_score('sorted', :limit => [0, 2]).should == ['one','two']
+          db.sorted_set_reverse_range_by_score('sorted', :limit => [0,2]).should == ['three','two']
+        end
+
+        it "should respect limit with offset" do
+          db.sorted_set_range_by_score('sorted', :limit => [1,2]).should == ['two', 'three']
+          db.sorted_set_reverse_range_by_score('sorted', :limit => [1,2]).should == ['two', 'one']
+        end
+
+
+        it "should respect limit and offset" do
+          db.sorted_set_range_by_score('sorted', :limit => [1,1]).should == ['two']
+          db.sorted_set_reverse_range_by_score('sorted', :limit => [1,1]).should == ['two']
+        end
+
+        it "should return tuples with scores" do
+          db.sorted_set_range_by_score('sorted', :limit => [0,1], :with_scores => true).should == [['one', 1.0]]
+          db.sorted_set_reverse_range_by_score('sorted', :limit => [0,1], :with_scores => true).should == [['three',3.0]]
+        end
+      end
+    end
+
     describe "strings" do
       it "should get and set" do
         db.set('hello','world')
