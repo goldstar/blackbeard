@@ -10,8 +10,8 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.setOnLoadCallback(
       function(){
-        var data = new google.visualization.DataTable(jQuery.parseJSON('<%= chart.data.to_json %>'));
-        var options = jQuery.parseJSON('<%= chart.options.to_json %>');
+        var data = new google.visualization.DataTable(<%= chart.data.to_json %>);
+        var options = <%= chart.options.to_json %>;
         var div = document.getElementById('<%= chart.dom_id %>');
         new google.visualization.LineChart(div).draw(data, options);
     });
