@@ -65,7 +65,12 @@ module Blackbeard
       id = next_id
       change = new(id, log)
       change.save
+      change.announce
       change
+    end
+
+    def announce
+      config.announcer.call(self) if config.announcer
     end
 
     def self.next_id

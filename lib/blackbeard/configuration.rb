@@ -1,6 +1,6 @@
 module Blackbeard
   class Configuration
-    attr_accessor :timezone, :namespace, :redis, :guest_method
+    attr_accessor :timezone, :namespace, :redis, :guest_method, :announcer
     attr_reader :group_definitions
 
     def initialize
@@ -8,6 +8,7 @@ module Blackbeard
       @namespace = 'Blackbeard'
       @group_definitions = {}
       @redis = nil
+      @announcer = nil
     end
 
     def db
@@ -16,6 +17,10 @@ module Blackbeard
 
     def tz
       @tz ||= TZInfo::Timezone.get(@timezone)
+    end
+
+    def on_change(&block)
+      @announcer = block
     end
 
     def define_group(id, segments = nil, &block)
