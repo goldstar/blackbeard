@@ -9,7 +9,7 @@ module Blackbeard
     end
 
     def object
-      @object ||= self.class.const_get(log['storable_class']).find(log['storable_id'])
+      @object ||= Kernel.const_get(log['storable_class']).find(log['storable_id'])
     end
 
     def message
