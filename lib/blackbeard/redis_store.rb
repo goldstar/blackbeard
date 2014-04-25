@@ -25,7 +25,9 @@ module Blackbeard
     end
 
     def hash_multi_get(hash_key, *fields)
-      redis.hmget(hash_key, *fields) unless fields.empty?
+      fields = fields.flatten
+      return [] if fields.empty?
+      redis.hmget(hash_key, *fields) || []
     end
 
     def hash_length(hash_key)
@@ -99,6 +101,7 @@ module Blackbeard
     def sorted_set_range_by_score_options(options)
       min = options[:min] ? options[:min].to_i : '-inf'
       max = options[:max] ? options[:max].to_i : '+inf'
+      options[:limit] = [0, options[:limit]] if options[:limit].is_a? Integer
       opts = {
         :limit => options[:limit],
         :with_scores => options[:with_scores]

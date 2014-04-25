@@ -35,6 +35,7 @@ module Blackbeard
     include StorableHasMany
     include StorableHasSet
     include StorableAttributes
+    include StorableHasChanges
 
     attr_reader :id
     attr_accessor :new_record

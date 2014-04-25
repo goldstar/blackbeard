@@ -19,6 +19,10 @@ module Blackbeard
         db.hash_multi_get('a_hash',['three','one']).should == ['four','two']
       end
 
+      it "should return empty array on multi get with no values" do
+        db.hash_multi_get('a_hash', []).should == []
+      end
+
       it "should not raise error on multi set with empty hash" do
         expect{
           db.hash_multi_set('a_hash', {})
@@ -130,6 +134,11 @@ module Blackbeard
         it "should respect limit with count" do
           db.sorted_set_range_by_score('sorted', :limit => [0, 2]).should == ['one','two']
           db.sorted_set_reverse_range_by_score('sorted', :limit => [0,2]).should == ['three','two']
+        end
+
+        it "should work with limit as integer" do
+          db.sorted_set_range_by_score('sorted', :limit => 2).should == ['one','two']
+          db.sorted_set_reverse_range_by_score('sorted', :limit => 2).should == ['three','two']
         end
 
         it "should respect limit with offset" do

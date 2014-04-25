@@ -8,6 +8,14 @@ module Blackbeard
       @log = log_hash
     end
 
+    def object
+      self.class.const_get(log['storable_class']).find(log['storable_id'])
+    end
+
+    def message
+      log['message']
+    end
+
     def save
       log['timestamp'] = Time.now.to_i
       db.hash_set(hash_key, id, log.to_json)
@@ -34,10 +42,15 @@ module Blackbeard
       end.compact
     end
 
-    def self.last(count)
+    def self.count
+      db.hash_length(hash_key)
+    end
+
+    def self.last(count = 1)
       upto_id = last_id
       from_id = upto_id - count + 1
-      find_all(Array(from_id..upto_id)).reverse
+      changes = find_all(Array(from_id..upto_id)).reverse
+      count == 1 ? changes.first : changes
     end
 
     def self.log(log)
