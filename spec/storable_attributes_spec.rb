@@ -33,6 +33,13 @@ describe Blackbeard::Storable do
       example.save
       example.reload.list.should == ["hello", "world"]
     end
+
+    it "should create a change log" do
+      example.list = ["hello", "world"]
+      expect{
+        example.save
+      }.to change{ example.changes.count }.by(1)
+    end
   end
 
   describe "integer_attributes" do
@@ -52,6 +59,13 @@ describe Blackbeard::Storable do
 
       example.reload.number.should == 5
     end
+
+    it "should create a change log" do
+      example.number = 5
+      expect{
+        example.save
+      }.to change{ example.changes.count }.by(1)
+    end
   end
 
   describe "string_attributes" do
@@ -68,8 +82,14 @@ describe Blackbeard::Storable do
     it "should persist when saved" do
       example.name = "Some name"
       example.save
-
       example.reload.name.should == "Some name"
+    end
+
+    it "should create a change log" do
+      example.name = "some name"
+      expect{
+        example.save
+      }.to change{ example.changes.count }.by(1)
     end
   end
 
