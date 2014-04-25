@@ -9,11 +9,19 @@ module Blackbeard
     end
 
     def object
-      self.class.const_get(log['storable_class']).find(log['storable_id'])
+      @object ||= self.class.const_get(log['storable_class']).find(log['storable_id'])
     end
 
     def message
       log['message']
+    end
+
+    def created_at
+      Time.at(log['timestamp'].to_i)
+    end
+
+    def to_s
+      "#{object.type } #{object.name} #{message}"
     end
 
     def save

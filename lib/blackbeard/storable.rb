@@ -128,5 +128,13 @@ module Blackbeard
       self.class.master_key
     end
 
+    def type
+      self.class.name.split(/::/).last
+    end
+
+    def path
+      "#{self.class.master_key}/#{self.id}"
+    end
+
   end
 end
