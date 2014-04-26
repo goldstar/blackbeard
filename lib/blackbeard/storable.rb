@@ -128,7 +128,7 @@ module Blackbeard
       self.class.master_key
     end
 
-    def type
+    def storable_type
       self.class.name.split(/::/).last
     end
 

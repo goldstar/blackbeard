@@ -77,7 +77,7 @@
         }
         $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of users").width(value+'%').css('color', color);
       },
-      url: '<%= url("features/#{@feature.id}") %>',
+      url: '<%= url(@feature.path) %>',
       name: 'users_rate',
       title: '% of logged in users',
       validate: function(value) {
@@ -98,7 +98,7 @@
         }
         $(".progress-bar", this).attr("aria-valuenow", value).html(value + "% of visitors").width(value+'%').css('color', color);
       },
-      url: '<%= url("features/#{@feature.id}") %>',
+      url: '<%= url(@feature.path) %>',
       name: 'visitors_rate',
       title: '% of all visitors',
       validate: function(value) {
@@ -112,7 +112,7 @@
     $('#editable-name').editable({
       placement: 'right',
       type: 'text',
-      url: '<%= url("features/#{@feature.id}") %>',
+      url: '<%= url(@feature.path) %>',
       name: 'name',
       title: 'Edit feature name',
       validate: function(value) {
@@ -125,7 +125,7 @@
       placement: 'bottom',
       emptytext: 'Give this feature a description',
       type: 'textarea',
-      url: '<%= url("features/#{@feature.id}") %>',
+      url: '<%= url(@feature.path) %>',
       name: 'description',
       title: 'Edit feature description'
     });

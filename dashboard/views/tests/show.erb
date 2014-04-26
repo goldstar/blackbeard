@@ -38,7 +38,7 @@
     $('#editable-name').editable({
       placement: 'right',
       type: 'text',
-      url: '<%= url("tests/#{@test.id}") %>',
+      url: '<%= url(@test.path) %>',
       name: 'name',
       title: 'Edit test name',
       validate: function(value) {
@@ -50,7 +50,7 @@
     $('#editable-description').editable({
       placement: 'bottom',
       type: 'textarea',
-      url: '<%= url("tests/#{@test.id}") %>',
+      url: '<%= url(@test.path) %>',
       name: 'description',
       title: 'Edit test description'
     });

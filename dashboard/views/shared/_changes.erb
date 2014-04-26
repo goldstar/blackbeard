@@ -1,11 +1,11 @@
 <div class="panel panel-info">
-    <div class="panel-heading">
+  <div class="panel-heading">
     <h3 class="panel-title">Change Activity</h3>
   </div>
   <ul class="list-group">
     <% if changes.any? %>
       <% changes.each do |change| %>
-      <li class="list-group-item"><strong><a href="<%= url(change.object.path) %>"><%= change.object.type %> <%= change.object.name %></a></strong> <%= change.message %> <small class="text-muted"><%= change.created_at %></small></li>
+      <li class="list-group-item"><strong><a href="<%= url(change.object.path) %>"><%= change.object.storable_type %> <%= change.object.name %></a></strong> <%= change.message %> <small class="text-muted"><%= change.created_at %></small></li>
       <% end %>
     <% else %>
       <li class="list-group-item">No changes</li>

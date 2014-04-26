@@ -10,7 +10,7 @@
   </div>
   <ul class="list-group">
   <% @cohorts.each do |cohort| %>
-  <li class="list-group-item"><a href="<%= url("cohorts/#{cohort.id}") %>"><%= cohort.name %></a></li>
+  <li class="list-group-item"><a href="<%= url(cohort.path) %>"><%= cohort.name %></a></li>
   <% end %>
   </ul>
 </div>

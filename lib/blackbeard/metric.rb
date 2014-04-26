@@ -21,6 +21,10 @@ module Blackbeard
       super("#{type}::#{type_id}")
     end
 
+    def path
+      "#{self.class.master_key}/#{type}/#{type_id}"
+    end
+
     def initialize(*args)
       if args.size == 1 && args[0] =~ /::/
         @type, @type_id = args[0].split(/::/)

@@ -53,7 +53,7 @@
     e.preventDefault();
     var status = $(this).val();
     $('#status-buttons-group').data("current-status", status);
-    $.post( "<%= url("features/#{@feature.id}") %>", { status: status } , updateButtonStates);
+    $.post( "<%= url(@feature.path) %>", { status: status } , updateButtonStates);
   });
 
   function updateButtonStates(){
