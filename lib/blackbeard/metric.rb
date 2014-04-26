@@ -13,8 +13,12 @@ module Blackbeard
       super("#{type}::#{type_id}", options)
     end
 
-    def self.find(type, type_id)
-      super("#{type}::#{type_id}")
+    def self.find(type, type_id = nil)
+      if type_id.nil?
+        super(type)
+      else
+        super("#{type}::#{type_id}")
+      end
     end
 
     def self.find_or_create(type, type_id)
