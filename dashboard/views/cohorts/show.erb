@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1><span id="editable-name"><%= @cohort.name %></span> <small>Cohort</small></h1>
-  <p id="editable-description"><%= @cohort.description %></p>
+  <h1><span id="editable-name"><%= h @cohort.name %></span> <small>Cohort</small></h1>
+  <p id="editable-description"><%= h @cohort.description %></p>
 </div>
 
 <!--Load the AJAX API-->

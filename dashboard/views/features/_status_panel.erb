@@ -33,7 +33,7 @@
     </thead>
     <% @groups.each do |group| %>
       <tr>
-        <td><%= group.name %></td>
+        <td><%= h group.name %></td>
         <td><a href="#" id="editable-group-segments-<%= group.id %>"></a></td>
       </tr>
     <% end if @groups.any? %>

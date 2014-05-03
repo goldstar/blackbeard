@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1><span id="editable-name"><%= @test.name %></span></h1>
-  <p id="editable-description"><%= @test.description %></p>
+  <h1><span id="editable-name"><%= h @test.name %></span></h1>
+  <p id="editable-description"><%= h @test.description %></p>
 </div>
 
 <% if @test.variations.any? %>
@@ -10,7 +10,7 @@
   </div>
   <ul class="list-group">
   <% @test.variations.each do |variant| %>
-  <li class="list-group-item"><%= variant %></li>
+  <li class="list-group-item"><%= h variant %></li>
   <% end %>
   </ul>
 </div>

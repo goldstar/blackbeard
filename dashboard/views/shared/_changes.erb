@@ -5,7 +5,7 @@
   <ul class="list-group">
     <% if changes.any? %>
       <% changes.each do |change| %>
-      <li class="list-group-item"><strong><a href="<%= url(change.object.path) %>"><%= change.object.storable_type %> <%= change.object.name %></a></strong> <%= change.message %> <small class="text-muted"><%= change.created_at %></small></li>
+      <li class="list-group-item"><strong><a href="<%= url(change.object.path) %>"><%= change.object.storable_type %> <%= h change.object.name %></a></strong> <%= h change.message %> <small class="text-muted"><%= h change.created_at %></small></li>
       <% end %>
     <% else %>
       <li class="list-group-item">No changes</li>

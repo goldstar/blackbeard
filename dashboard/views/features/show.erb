@@ -4,8 +4,8 @@
     <button type="button" class="btn" value="rollout" data-selected-class="btn-warning">Roll Out</button>
     <button type="button" class="btn" value="inactive" data-selected-class="btn-danger">Inactive</button>
   </div>
-  <h1><span id="editable-name"><%= @feature.name %></span> <small>Feature</small></h1>
-  <p id="editable-description"><%= @feature.description %></p>
+  <h1><span id="editable-name"><%= h @feature.name %></span> <small>Feature</small></h1>
+  <p id="editable-description"><%= h @feature.description %></p>
 </div>
 
 <form id="add_metric" action="<%= url("/features/#{@feature.id}/metrics") %>" method="post"><input id="add_metric_type_input" type="hidden" name="metric_type"><input id="add_metric_type_id_input" type="hidden" name="metric_type_id"></form>
@@ -13,7 +13,7 @@
   <% if @metric.nil? && !@params.key?('activity') %><li class="active"><% else %><li><% end %><a href="?">Status</a></li>
   <% if @params.key?('activity') %><li class="active"><% else %><li><% end %><a href="?activity">Activity</a></li>
   <% @feature.metrics.each do |metric| %>
-    <% if @metric == metric %><li class="active"><% else %><li><% end %><a href="?metric_type=<%= metric.type %>&amp;metric_type_id=<%= metric.type_id %>"><%= metric.name %></a></li>
+    <% if @metric == metric %><li class="active"><% else %><li><% end %><a href="?metric_type=<%= metric.type %>&amp;metric_type_id=<%= metric.type_id %>"><%= h metric.name %></a></li>
   <% end %>
   <li class="dropdown">
     <a id="drop5" role="button" data-toggle="dropdown" href="#">Add <b class="caret"></b></a>
@@ -21,7 +21,7 @@
       <% if @feature.addable_metrics.any? %>
         <li role="presentation" class="dropdown-header">Metrics</li>
         <% @feature.addable_metrics.each do |metric| %>
-        <li role="presentation" data-metric-type-id="<%= metric.type_id %>" data-metric-type="<%= metric.type %>" data-metric-name="<%= metric.name %>" class="add-metric"><a role="menuitem" tabindex="-1" href="#"><%= metric.name %></a></li>
+        <li role="presentation" data-metric-type-id="<%= metric.type_id %>" data-metric-type="<%= metric.type %>" data-metric-name="<%= h metric.name %>" class="add-metric"><a role="menuitem" tabindex="-1" href="#"><%= h metric.name %></a></li>
         <% end %>
       <% else %>
         <li role="presentation" class="dropdown-header">No Metrics</li>
