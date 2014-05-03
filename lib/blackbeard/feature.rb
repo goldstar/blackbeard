@@ -21,11 +21,15 @@ module Blackbeard
       self.group_segments = grp_segments
     end
 
-    def active_for?(context)
+    def active_for?(context, count_participation = true)
       active = active?(context)
+      record_participant(active, context) if count_participation
+      active
+    end
+
+    def record_participant(active, context)
       participant_data = active ? active_participant_data : inactive_participant_data
       participant_data.add(context.unique_identifier, tz.now)
-      active
     end
 
     def active_participant_data

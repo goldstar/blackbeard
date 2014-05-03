@@ -79,7 +79,7 @@ describe Blackbeard::Pirate do
       end
 
       it "should delegate #feature_active?" do
-        set_context.should_receive(:feature_active?).with(:example_feature).and_return(false)
+        set_context.should_receive(:feature_active?).with(:example_feature, true).and_return(false)
         pirate.feature_active?(:example_feature)
       end
 

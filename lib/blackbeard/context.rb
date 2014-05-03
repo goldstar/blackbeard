@@ -44,8 +44,8 @@ module Blackbeard
       add_to_cohort(id, timestamp, true)
     end
 
-    def feature_active?(id)
-      @pirate.feature(id.to_s).reload.active_for?(self)
+    def feature_active?(id, count_participation = true)
+      @pirate.feature(id.to_s).reload.active_for?(self, count_participation)
     end
 
     def unique_identifier

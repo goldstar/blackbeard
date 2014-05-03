@@ -21,38 +21,62 @@ module Blackbeard
     describe "#active_for?" do
       let(:context){ double :unique_identifier => 'bob' }
 
-      context "when status is nil" do
-        it "should be false" do
-          feature.active_for?(context).should be_false
+      context "forgoing counting participation" do
+        before :each do
+          feature.should_not_receive(:record_participant)
         end
+
+        context "when status is inactive" do
+          it "should be false" do
+            feature.status = :inactive
+            feature.active_for?(context, false).should be_false
+          end
+        end
+
+        context "when status is active" do
+          it "should be true" do
+            feature.status = :active
+            feature.active_for?(context, false).should be_true
+          end
+        end
+
       end
 
-      context "when status is inactive" do
-        it "should be false" do
-          feature.status = :inactive
-          feature.inactive_participant_data.should_receive(:add).with('bob', anything)
-          feature.active_for?(context).should be_false
+      context "counting participation" do
+        before :each do
+          feature.should_receive(:record_participant).with(anything, context)
         end
-      end
 
-      context "when status is active" do
-        it "should be true" do
-          feature.status = :active
-          feature.active_participant_data.should_receive(:add).with('bob', anything)
-          feature.active_for?(context).should be_true
+        context "when status is nil" do
+          it "should be false" do
+            feature.active_for?(context).should be_false
+          end
         end
-      end
 
-      context "when status is 'rollout'" do
-        it "should defer to rollout?" do
-          rollout_result = double
-          feature.status = :rollout
-          feature.should_receive(:rollout?).with(context).and_return(rollout_result)
-          feature.active_for?(context).should be(rollout_result)
+        context "when status is inactive" do
+          it "should be false" do
+            feature.status = :inactive
+            feature.active_for?(context).should be_false
+          end
         end
+
+        context "when status is active" do
+          it "should be true" do
+            feature.status = :active
+            feature.active_for?(context).should be_true
+          end
+        end
+
+        context "when status is 'rollout'" do
+          it "should defer to rollout?" do
+            rollout_result = double
+            feature.status = :rollout
+            feature.should_receive(:rollout?).with(context).and_return(rollout_result)
+            feature.active_for?(context).should be(rollout_result)
+          end
+        end
+
       end
-
-
     end
 
     describe "segment_for" do

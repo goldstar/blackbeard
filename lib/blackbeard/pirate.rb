@@ -62,9 +62,9 @@ module Blackbeard
       @set_context.ab_test(id, options)
     end
 
-    def feature_active?(id)
+    def feature_active?(id, count_participation = true)
       return false unless @set_context
-      @set_context.feature_active?(id)
+      @set_context.feature_active?(id, count_participation = true)
     end
 
 
