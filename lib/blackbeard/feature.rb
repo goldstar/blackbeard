@@ -44,10 +44,6 @@ module Blackbeard
       storable_attributes_hash['status'] || "inactive"
     end
 
-    def name
-      storable_attributes_hash['name'] || id
-    end
-
     def segment_for(context)
       active_participant_data.last_status_for(context.unique_identifier)
     end

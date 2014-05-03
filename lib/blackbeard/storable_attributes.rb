@@ -60,6 +60,11 @@ module Blackbeard
     end
 
     module InstanceMethods
+
+      def name
+        storable_attributes_hash['name'] || id
+      end
+
       def __update_storable_attribute(attribute, value)
         original_value = storable_attributes_hash[attribute].to_s
         value = value.to_s

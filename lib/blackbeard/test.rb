@@ -9,10 +9,6 @@ module Blackbeard
       :off
     end
 
-    def name
-      storable_attributes_hash['name'] || id
-    end
-
   private
 
     end

@@ -32,13 +32,13 @@ module Blackbeard
       end
     end
 
+    attr_reader :id
+    attr_accessor :new_record
+    
     include StorableHasMany
     include StorableHasSet
     include StorableAttributes
     include StorableHasChanges
-
-    attr_reader :id
-    attr_accessor :new_record
 
     def initialize(id)
       @id = id.to_s.downcase

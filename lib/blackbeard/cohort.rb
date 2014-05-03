@@ -17,10 +17,6 @@ module Blackbeard
       @data ||= CohortData.new(self)
     end
 
-    def name
-      storable_attributes_hash['name'] || id
-    end
-
     def metric_data(metric)
       CohortMetric.new(self,metric).metric_data
     end

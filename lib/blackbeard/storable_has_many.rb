@@ -47,13 +47,19 @@ module Blackbeard
             end
 
             def add_#{singular}(o, reciprocate = true)
-              db.set_add_member(#{plural}_set_key, o.key) unless has_#{singular}?(o)
+              unless has_#{singular}?(o)
+                db.set_add_member(#{plural}_set_key, o.key)
+                log_change("#{plural} added \#{o.name}(\#{o.id})")
+              end
               o._add_reciprocal(self) if reciprocate && o.respond_to?(:'_add_reciprocal')
               \@#{plural} = nil
             end
 
             def remove_#{singular}(o, reciprocate = true)
-              db.set_remove_member(#{plural}_set_key, o.key)
+              if has_#{singular}?(o)
+                db.set_remove_member(#{plural}_set_key, o.key)
+                log_change("#{plural} removed \#{o.name}(\#{o.id})")
+              end
               o._remove_reciprocal(self) if reciprocate && o.respond_to?(:'_remove_reciprocal')
               \@#{plural} = nil
             end

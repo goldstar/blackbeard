@@ -4,10 +4,6 @@ module Blackbeard
     string_attributes :name, :description
     has_set :segments => :segment
 
-    def name
-      storable_attributes_hash['name'] || id
-    end
-
     def segment_for(context)
       return nil unless definition
       segment = definition.call(context.user, context.controller)

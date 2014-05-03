@@ -25,11 +25,32 @@ module Blackbeard
     let(:example){ HasManyExample.create(:example) }
     let(:thing){ Thing.create(:foo) }
 
-    it "should add and remove things" do
+    it "should add things" do
+      expect{
+        example.add_thing(thing)
+      }.to change{ example.has_thing?(thing) }.from(false).to(true)
+    end
+
+    it "should log a change when adding" do
+      expect{
+        example.add_thing(thing)
+      }.to change{ example.changes.count }.by(1)
+      example.changes.last.message.should == "things added #{thing.name}(#{thing.id})"
+    end
+
+    it "should remove things" do
       example.add_thing(thing)
       expect{
         example.remove_thing(thing)
       }.to change{ example.has_thing?(thing) }.from(true).to(false)
+    end
+
+    it "should log a change when removing" do
+      example.add_thing(thing)
+      expect{
+        example.remove_thing(thing)
+      }.to change{ example.changes.count }.by(1)
+      example.changes.last.message.should == "things added #{thing.name}(#{thing.id})"
     end
 
     it "should has_thing?" do
