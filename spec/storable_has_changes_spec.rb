@@ -7,7 +7,7 @@ module Blackbeard
   end
 
   describe StorableHasChanges do
-    let(:example){ HasChangesExample.create(:example) }
+    let!(:example){ HasChangesExample.create(:example) }
     let(:other_example) { HasChangesExample.create(:other_example) }
 
     describe "#log_change" do

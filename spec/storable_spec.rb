@@ -51,6 +51,12 @@ module Blackbeard
         storable = ExampleStorable.create(:some_id, {:name => 'hello world'})
         storable.reload.name.should == 'hello world'
       end
+
+      it "should log a change" do
+        newbie = ExampleStorable.create(:this_new_id)
+        newbie.should have(1).changes
+        newbie.changes.last.message.should == "was created"
+      end
     end
 
     describe "self.find_or_create" do

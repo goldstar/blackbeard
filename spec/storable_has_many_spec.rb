@@ -35,7 +35,7 @@ module Blackbeard
       expect{
         example.add_thing(thing)
       }.to change{ example.changes.count }.by(1)
-      example.changes.last.message.should == "things added #{thing.name}(#{thing.id})"
+      example.changes.first.message.should == "things added #{thing.name}(#{thing.id})"
     end
 
     it "should remove things" do
@@ -50,7 +50,7 @@ module Blackbeard
       expect{
         example.remove_thing(thing)
       }.to change{ example.changes.count }.by(1)
-      example.changes.last.message.should == "things added #{thing.name}(#{thing.id})"
+      example.changes.first.message.should == "things removed #{thing.name}(#{thing.id})"
     end
 
     it "should has_thing?" do

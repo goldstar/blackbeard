@@ -34,7 +34,7 @@ module Blackbeard
 
     attr_reader :id
     attr_accessor :new_record
-    
+
     include StorableHasMany
     include StorableHasSet
     include StorableAttributes
@@ -96,7 +96,7 @@ module Blackbeard
 
     def save
       if new_record?
-        db.hash_set_if_not_exists(master_key, key, tz.now.to_date)
+        db.hash_set_if_not_exists(master_key, key, tz.now.to_date) and log_change("was created")
         @new_record = false
       end
       self.class.on_save_methods.each{ |m| self.send(m) }
