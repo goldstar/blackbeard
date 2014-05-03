@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe Blackbeard::Storable do
   class ExampleStorableAttrBase < Blackbeard::Storable
     integer_attributes :number
-    string_attributes :name
+    string_attributes :foo, :name
     json_attributes :list
   end
 
@@ -97,23 +97,33 @@ describe Blackbeard::Storable do
     let(:storable){ ExampleStorableAttr.create("id") }
     it "should not raise raise_error with non-attributes" do
       expect{
-        storable.update_attributes(:name => 'hello')
+        storable.update_attributes(:foo => 'hello')
       }.to_not  raise_error
     end
     it "should update the attribute for known attributes" do
       expect{
-        storable.update_attributes(:name => 'hello')
-      }.to change{ storable.name }.from(nil).to('hello')
+        storable.update_attributes(:foo => 'hello')
+      }.to change{ storable.foo }.from(nil).to('hello')
     end
 
     it "should update the attribute for known attributes even when strings" do
       expect{
-        storable.update_attributes("name" => 'hello')
-      }.to change{ storable.name }.from(nil).to('hello')
+        storable.update_attributes("foo" => 'hello')
+      }.to change{ storable.foo }.from(nil).to('hello')
     end
     it "should persist the changes" do
-      storable.update_attributes("name" => 'hello')
-      storable.reload.name.should == 'hello'
+      storable.update_attributes("foo" => 'hello')
+      storable.reload.foo.should == 'hello'
+    end
+  end
+
+  describe "name" do
+    let(:storable){ ExampleStorableAttr.create("id") }
+
+    it "should return id by default" do
+      expect{
+        storable.update_attributes("name" => 'hello')
+      }.to change{ storable.name }.from("id").to('hello')
     end
   end
 end

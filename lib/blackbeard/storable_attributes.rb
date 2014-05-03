@@ -51,7 +51,7 @@ module Blackbeard
           method_name = method_name.to_sym
           send :define_method, method_name do
             storable_attributes_hash[method_name.to_s]
-          end
+          end unless method_name.to_s == 'name'
           send :define_method, "#{method_name}=".to_sym do |new_value|
             __update_storable_attribute(method_name.to_s, new_value.to_s)
           end
