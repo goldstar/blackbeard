@@ -58,6 +58,7 @@
   <% @groups.each do |group| %>
     $('#editable-group-segments-<%= group.id %>').editable({
         type: 'checklist',
+        placement: 'bottom',
         emptytext: 'No segments active',
         title: "Select segments",
         url: '<%= url("features/#{@feature.id}/groups/#{group.id}")%>',
