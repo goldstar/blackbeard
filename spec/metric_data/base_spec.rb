@@ -9,30 +9,30 @@ module Blackbeard
 
       describe "key" do
         it "should auto increment" do
-          metric_data.key.should == "data::1"
-          metric2.metric_data.key.should == "data::2"
+          expect(metric_data.key).to eq("data::1")
+          expect(metric2.metric_data.key).to eq("data::2")
         end
       end
 
       describe "hour_keys" do
 
         it "should return an empty array if no metrics" do
-          metric_data.send(:hour_keys).should == []
+          expect(metric_data.send(:hour_keys)).to eq([])
         end
 
         it "should return an array for each hour" do
           metric_data.add('user1', 1)
           key = metric_data.send(:key_for_hour, tz.now)
-          metric_data.send(:hour_keys).should have(1).key
+          expect(metric_data.send(:hour_keys).size).to eq(1)
         end
       end
 
       describe "hour_keys_for_day" do
         it "should return 1 key for every hour from morning to night" do
             keys_for_day = metric_data.hour_keys_for_day(Date.new(2014,1,1))
-            keys_for_day.should have(24).keys
-            keys_for_day.first.should == metric_data.send(:key_for_hour, Time.new(2014,1,1,0,0,0))
-            keys_for_day.last.should == metric_data.send(:key_for_hour, Time.new(2014,1,1,23,0,0))
+            expect(keys_for_day.size).to eq(24)
+            expect(keys_for_day.first).to eq(metric_data.send(:key_for_hour, Time.new(2014,1,1,0,0,0)))
+            expect(keys_for_day.last).to eq(metric_data.send(:key_for_hour, Time.new(2014,1,1,23,0,0)))
         end
       end
 

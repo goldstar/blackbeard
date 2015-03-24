@@ -13,11 +13,11 @@ module Blackbeard
     describe "#add with force" do
       context "no pre-existing cohort" do
         it "should call add without force" do
-          data.should_receive(:add_without_force).with(uid, hour)
+          expect(data).to receive(:add_without_force).with(uid, hour)
           data.add_with_force(uid, hour)
         end
         it "should return true" do
-          data.add_with_force(uid, hour).should be_true
+          expect(data.add_with_force(uid, hour)).to be_truthy
         end
       end
 
@@ -36,7 +36,7 @@ module Blackbeard
           }.to_not change{ data.hour_id_for_participant(uid) }
         end
         it "should return true" do
-          data.add_with_force(uid, hour).should be_true
+          expect(data.add_with_force(uid, hour)).to be_truthy
         end
       end
 
@@ -78,7 +78,7 @@ module Blackbeard
           }.to_not change{ data.participants_for_hour(hour) }
         end
         it "should return false" do
-          data.add_without_force(uid, hour).should be_false
+          expect(data.add_without_force(uid, hour)).to be_falsey
         end
       end
 
@@ -94,7 +94,7 @@ module Blackbeard
           }.to change{ data.participants_for_hour(hour) }.by(1)
         end
         it "should return true" do
-          data.add_without_force(uid, hour).should be_true
+          expect(data.add_without_force(uid, hour)).to be_truthy
         end
       end
     end
@@ -119,21 +119,21 @@ module Blackbeard
 
       describe "participants for hour" do
         it "should return the count for each hour" do
-          data.participants_for_hour(aug22_1pm).should == 2
-          data.participants_for_hour(aug22_11am).should == 1
-          data.participants_for_hour(aug22_9am).should == 0
+          expect(data.participants_for_hour(aug22_1pm)).to eq(2)
+          expect(data.participants_for_hour(aug22_11am)).to eq(1)
+          expect(data.participants_for_hour(aug22_9am)).to eq(0)
         end
       end
 
       describe "participants for hours" do
         it "should return the count for each hour" do
-          data.participants_for_hours([aug22_9am, aug22_11am, aug22_1pm]).should == [0,1,2]
+          expect(data.participants_for_hours([aug22_9am, aug22_11am, aug22_1pm])).to eq([0,1,2])
         end
       end
 
       describe "participants for day" do
         it "should sum the day" do
-          data.participants_for_day(aug22).should == 3
+          expect(data.participants_for_day(aug22)).to eq(3)
         end
       end
 

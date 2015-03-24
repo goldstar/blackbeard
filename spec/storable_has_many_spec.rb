@@ -35,7 +35,7 @@ module Blackbeard
       expect{
         example.add_thing(thing)
       }.to change{ example.changes.count }.by(1)
-      example.changes.first.message.should == "things added #{thing.name}(#{thing.id})"
+      expect(example.changes.first.message).to eq("things added #{thing.name}(#{thing.id})")
     end
 
     it "should remove things" do
@@ -50,12 +50,12 @@ module Blackbeard
       expect{
         example.remove_thing(thing)
       }.to change{ example.changes.count }.by(1)
-      example.changes.first.message.should == "things removed #{thing.name}(#{thing.id})"
+      expect(example.changes.first.message).to eq("things removed #{thing.name}(#{thing.id})")
     end
 
     it "should has_thing?" do
       example.add_thing(thing)
-      example.has_thing?(thing).should be_true
+      expect(example.has_thing?(thing)).to be_truthy
     end
 
     it "should list things" do
@@ -65,15 +65,15 @@ module Blackbeard
     end
 
     it "should list thing_ids" do
-      example.thing_ids.should == []
+      expect(example.thing_ids).to eq([])
       example.add_thing(thing)
-      example.thing_ids.should == [thing.id]
+      expect(example.thing_ids).to eq([thing.id])
     end
 
     it "should list the keys" do
-      example.thing_keys.should == []
+      expect(example.thing_keys).to eq([])
       example.add_thing(thing)
-      example.thing_keys.should == [thing.key]
+      expect(example.thing_keys).to eq([thing.key])
     end
 
     describe "reciprocal has_many" do

@@ -15,23 +15,23 @@ describe Blackbeard::Storable do
 
   describe "json_attributes" do
     it "should not blow up when nil" do
-        example.list.should be_nil
+        expect(example.list).to be_nil
     end
 
     it "should read and write" do
       example.list = ["hello", "world"]
-      example.list.should == ["hello", "world"]
+      expect(example.list).to eq(["hello", "world"])
     end
 
     it "should not persist if not saved" do
       example.list = ["hello", "world"]
-      example.reload.list.should_not == ["hello", "world"]
+      expect(example.reload.list).not_to eq(["hello", "world"])
     end
 
     it "should persist if saved" do
       example.list = ["hello", "world"]
       example.save
-      example.reload.list.should == ["hello", "world"]
+      expect(example.reload.list).to eq(["hello", "world"])
     end
 
     it "should create a change log" do
@@ -45,19 +45,19 @@ describe Blackbeard::Storable do
   describe "integer_attributes" do
     it "should be read and write" do
       example.number = 3
-      example.number.should == 3
+      expect(example.number).to eq(3)
     end
 
     it "should not persist if not saved" do
       example.number = 4
-      example.reload.number.should_not == 4
+      expect(example.reload.number).not_to eq(4)
     end
 
     it "should persist when saved" do
       example.number = 5
       example.save
 
-      example.reload.number.should == 5
+      expect(example.reload.number).to eq(5)
     end
 
     it "should create a change log" do
@@ -71,18 +71,18 @@ describe Blackbeard::Storable do
   describe "string_attributes" do
     it "should be read and write" do
       example.name = "Some name"
-      example.name.should == "Some name"
+      expect(example.name).to eq("Some name")
     end
 
     it "should not persist if not saved" do
       example.name = "Some name"
-      example.reload.name.should_not == "Some name"
+      expect(example.reload.name).not_to eq("Some name")
     end
 
     it "should persist when saved" do
       example.name = "Some name"
       example.save
-      example.reload.name.should == "Some name"
+      expect(example.reload.name).to eq("Some name")
     end
 
     it "should create a change log" do
@@ -113,7 +113,7 @@ describe Blackbeard::Storable do
     end
     it "should persist the changes" do
       storable.update_attributes("foo" => 'hello')
-      storable.reload.foo.should == 'hello'
+      expect(storable.reload.foo).to eq('hello')
     end
   end
 

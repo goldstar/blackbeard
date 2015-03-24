@@ -26,7 +26,7 @@ module Blackbeard
 
     it "should has_thing?" do
       example.add_thing(thing)
-      example.has_thing?(thing).should be_true
+      expect(example.has_thing?(thing)).to be_truthy
     end
 
     it "should list things" do

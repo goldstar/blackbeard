@@ -6,18 +6,18 @@ module Blackbeard
 
     describe "log" do
       it "should return a change object" do
-        Change.log(hash).should be_a(Change)
+        expect(Change.log(hash)).to be_a(Change)
       end
     end
 
     describe "find" do
       let(:id) { Change.log(hash).id }
       it "should return a change object" do
-        Change.find(id).should be_a(Change)
+        expect(Change.find(id)).to be_a(Change)
       end
 
       it "should be the hash" do
-        Change.find(id)[:foo].should == 'bar'
+        expect(Change.find(id)[:foo]).to eq('bar')
       end
     end
 
@@ -30,16 +30,16 @@ module Blackbeard
 
       describe "find_all" do
         it "should return each found" do
-          Change.find_all(@id_2, @id_1, 0, @id_3).map{|c| c.id}.should == [@id_2, @id_1, @id_3]
+          expect(Change.find_all(@id_2, @id_1, 0, @id_3).map{|c| c.id}).to eq([@id_2, @id_1, @id_3])
         end
         it "should return an empty array when none found" do
-          Change.find_all('nothng').should == []
+          expect(Change.find_all('nothng')).to eq([])
         end
       end
 
       describe "last" do
         it "should the last(x) newest to oldest" do
-          Change.last(2).map{|c| c.id}.should == [@id_3, @id_2]
+          expect(Change.last(2).map{|c| c.id}).to eq([@id_3, @id_2])
         end
       end
     end

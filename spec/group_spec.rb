@@ -6,29 +6,29 @@ describe Blackbeard::Group do
   describe "segment" do
     context "with no code defined" do
       it "should return nil" do
-        group.segment_for(context).should be(nil)
+        expect(group.segment_for(context)).to be(nil)
       end
     end
     context "with code defined" do
       it "return nil for nil" do
         Blackbeard.config.define_group(:example){ |r,u| nil }
-        group.segment_for(context).should be(nil)
+        expect(group.segment_for(context)).to be(nil)
       end
       it "return nil for false" do
         Blackbeard.config.define_group(:example){ |r,u| false }
-        group.segment_for(context).should be(nil)
+        expect(group.segment_for(context)).to be(nil)
       end
       it "return string for true" do
         Blackbeard.config.define_group(:example){ |r,u| true }
-        group.segment_for(context).should eq('example')
+        expect(group.segment_for(context)).to eq('example')
       end
       it "return string for string" do
         Blackbeard.config.define_group(:example){ |r,u| 'foo' }
-        group.segment_for(context).should eq('foo')
+        expect(group.segment_for(context)).to eq('foo')
       end
       it "return string for int" do
         Blackbeard.config.define_group(:example){ |r,u| 12 }
-        group.segment_for(context).should eq('12')
+        expect(group.segment_for(context)).to eq('12')
       end
     end
   end

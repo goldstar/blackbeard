@@ -14,8 +14,8 @@ module Blackbeard
         Feature.create("jostling")
         get "/features"
 
-        last_response.should be_ok
-        last_response.body.should include('jostling')
+        expect(last_response).to be_ok
+        expect(last_response.body).to include('jostling')
       end
     end
 
@@ -24,8 +24,8 @@ module Blackbeard
         feature = Feature.create("jostling")
         get "/features/#{feature.id}"
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
     end
 
@@ -34,8 +34,8 @@ module Blackbeard
         feature = Feature.create("jostling")
         post "/features/#{feature.id}", :name => 'hello'
 
-        last_response.should be_ok
-        feature.reload.name.should == 'hello'
+        expect(last_response).to be_ok
+        expect(feature.reload.name).to eq('hello')
       end
     end
 
@@ -44,8 +44,8 @@ module Blackbeard
         feature = Feature.create("jostling")
         post "/features/#{feature.id}/groups/hello", :segments => ["world","goodbye"]
 
-        last_response.should be_ok
-        feature.reload.group_segments_for(:hello).should include("world", "goodbye")
+        expect(last_response).to be_ok
+        expect(feature.reload.group_segments_for(:hello)).to include("world", "goodbye")
       end
     end
 
@@ -55,10 +55,10 @@ module Blackbeard
         metric = Metric.create("total", "jostling")
         post "/features/#{feature.id}/metrics", :metric_type => metric.type, :metric_type_id => metric.type_id
 
-        last_response.should be_redirect
+        expect(last_response).to be_redirect
         follow_redirect!
-        last_request.url.should == "http://example.org/features/#{feature.id}?metric_type=#{metric.type}&metric_type_id=#{metric.type_id}"
-        feature.has_metric?(metric).should be_true
+        expect(last_request.url).to eq("http://example.org/features/#{feature.id}?metric_type=#{metric.type}&metric_type_id=#{metric.type_id}")
+        expect(feature.has_metric?(metric)).to be_truthy
       end
     end
 

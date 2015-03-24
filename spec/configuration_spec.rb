@@ -8,13 +8,13 @@ module Blackbeard
         config.define_group(:hello) do |user,controller|
           "world"
         end
-        config.group_definitions[:hello].call.should == 'world'
+        expect(config.group_definitions[:hello].call).to eq('world')
       end
       it "should add segments if any" do
         config.define_group(:hello, ["world"]) do |user,controller|
           "world"
         end
-        Group.find(:hello).segments.should include("world")
+        expect(Group.find(:hello).segments).to include("world")
       end
     end
   end

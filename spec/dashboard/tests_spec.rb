@@ -14,8 +14,8 @@ module Blackbeard
         Test.create("jostling")
         get "/tests"
 
-        last_response.should be_ok
-        last_response.body.should include('jostling')
+        expect(last_response).to be_ok
+        expect(last_response.body).to include('jostling')
       end
     end
 
@@ -24,8 +24,8 @@ module Blackbeard
         test = Test.create("jostling")
         get "/tests/#{test.id}"
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
     end
 
@@ -34,8 +34,8 @@ module Blackbeard
         test = Test.create("jostling")
         post "/tests/#{test.id}", :name => 'hello'
 
-        last_response.should be_ok
-        test.reload.name.should == 'hello'
+        expect(last_response).to be_ok
+        expect(test.reload.name).to eq('hello')
       end
     end
 

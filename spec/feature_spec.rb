@@ -6,15 +6,15 @@ module Blackbeard
 
     describe "group_segments_for and set_group_segments_for" do
       it "should return an empty list if no segments" do
-        feature.group_segments_for(:nothing).should == []
+        expect(feature.group_segments_for(:nothing)).to eq([])
       end
 
       it "should return the segments for the group" do
         feature.set_group_segments_for(:hello, ["world", "goodbye"])
         feature.set_group_segments_for(:foo, "bar")
-        feature.group_segments_for(:hello).should include("world","goodbye")
-        feature.group_segments_for(:hello).should_not include("bar")
-        feature.group_segments_for(:foo).should == ["bar"]
+        expect(feature.group_segments_for(:hello)).to include("world","goodbye")
+        expect(feature.group_segments_for(:hello)).not_to include("bar")
+        expect(feature.group_segments_for(:foo)).to eq(["bar"])
       end
     end
 
@@ -23,20 +23,20 @@ module Blackbeard
 
       context "forgoing counting participation" do
         before :each do
-          feature.should_not_receive(:record_participant)
+          expect(feature).not_to receive(:record_participant)
         end
 
         context "when status is inactive" do
           it "should be false" do
             feature.status = :inactive
-            feature.active_for?(context, false).should be_false
+            expect(feature.active_for?(context, false)).to be_falsey
           end
         end
 
         context "when status is active" do
           it "should be true" do
             feature.status = :active
-            feature.active_for?(context, false).should be_true
+            expect(feature.active_for?(context, false)).to be_truthy
           end
         end
 
@@ -44,26 +44,26 @@ module Blackbeard
 
       context "counting participation" do
         before :each do
-          feature.should_receive(:record_participant).with(anything, context)
+          expect(feature).to receive(:record_participant).with(anything, context)
         end
 
         context "when status is nil" do
           it "should be false" do
-            feature.active_for?(context).should be_false
+            expect(feature.active_for?(context)).to be_falsey
           end
         end
 
         context "when status is inactive" do
           it "should be false" do
             feature.status = :inactive
-            feature.active_for?(context).should be_false
+            expect(feature.active_for?(context)).to be_falsey
           end
         end
 
         context "when status is active" do
           it "should be true" do
             feature.status = :active
-            feature.active_for?(context).should be_true
+            expect(feature.active_for?(context)).to be_truthy
           end
         end
 
@@ -71,8 +71,8 @@ module Blackbeard
           it "should defer to rollout?" do
             rollout_result = double
             feature.status = :rollout
-            feature.should_receive(:rollout?).with(context).and_return(rollout_result)
-            feature.active_for?(context).should be(rollout_result)
+            expect(feature).to receive(:rollout?).with(context).and_return(rollout_result)
+            expect(feature.active_for?(context)).to be(rollout_result)
           end
         end
 
@@ -84,7 +84,7 @@ module Blackbeard
 
       describe "when user has not encountered feature" do
         it "should return nil" do
-          feature.segment_for(context).should be_nil
+          expect(feature.segment_for(context)).to be_nil
         end
       end
 
@@ -93,7 +93,7 @@ module Blackbeard
           feature.active_participant_data.add(context.unique_identifier, Time.now)
         end
         it "should return active" do
-          feature.segment_for(context).should == "active"
+          expect(feature.segment_for(context)).to eq("active")
         end
       end
 
@@ -102,7 +102,7 @@ module Blackbeard
           feature.inactive_participant_data.add(context.unique_identifier, Time.now)
         end
         it "should return inactive" do
-          feature.segment_for(context).should == "inactive"
+          expect(feature.segment_for(context)).to eq("inactive")
         end
       end
 

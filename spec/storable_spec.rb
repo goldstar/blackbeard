@@ -31,7 +31,7 @@ module Blackbeard
         ExampleStorable.find(:some_id)
       end
       it "should return nil if the key does not exist" do
-        ExampleStorable.find(:some_id).should be_nil
+        expect(ExampleStorable.find(:some_id)).to be_nil
       end
     end
 
@@ -49,13 +49,13 @@ module Blackbeard
 
       it "should update attributes" do
         storable = ExampleStorable.create(:some_id, {:name => 'hello world'})
-        storable.reload.name.should == 'hello world'
+        expect(storable.reload.name).to eq('hello world')
       end
 
       it "should log a change" do
         newbie = ExampleStorable.create(:this_new_id)
-        newbie.should have(1).changes
-        newbie.changes.last.message.should == "was created"
+        expect(newbie.changes.size).to eq(1)
+        expect(newbie.changes.last.message).to eq("was created")
       end
     end
 
@@ -78,13 +78,13 @@ module Blackbeard
       end
 
       it "should return all the record" do
-        ExampleStorable.all.should include(@this, @that)
-        ExampleStorable.all.should_not include(@not_this)
+        expect(ExampleStorable.all).to include(@this, @that)
+        expect(ExampleStorable.all).not_to include(@not_this)
       end
 
       it "should mark them as not new records" do
         ExampleStorable.all.each do |r|
-          r.should_not be_new_record
+          expect(r).not_to be_new_record
         end
       end
     end
@@ -97,8 +97,8 @@ module Blackbeard
       end
 
       it "should return the number of committed storables" do
-        ExampleStorable.count.should == 2
-        AnotherStorable.count.should == 1
+        expect(ExampleStorable.count).to eq(2)
+        expect(AnotherStorable.count).to eq(1)
       end
     end
 
@@ -115,22 +115,22 @@ module Blackbeard
           }.to change{ new_record.new_record }.from(true).to(false)
       end
       it "should return true" do
-        new_record.save.should be_true
+        expect(new_record.save).to be_truthy
       end
     end
 
     describe "master_key" do
       it "should be by class" do
-        ExampleStorable.master_key.should == 'example'
-        AnotherStorable.master_key.should == 'another'
+        expect(ExampleStorable.master_key).to eq('example')
+        expect(AnotherStorable.master_key).to eq('another')
       end
     end
 
     describe "==" do
       it "should match class and id" do
-        (ExampleStorable.new("thing") == ExampleStorable.new("thing")).should be_true
-        (ExampleStorable.new("thing") == ExampleStorable.new("thing2")).should be_false
-        (ExampleStorable.new("thing") == AnotherStorable.new("thing")).should be_false
+        expect(ExampleStorable.new("thing") == ExampleStorable.new("thing")).to be_truthy
+        expect(ExampleStorable.new("thing") == ExampleStorable.new("thing2")).to be_falsey
+        expect(ExampleStorable.new("thing") == AnotherStorable.new("thing")).to be_falsey
       end
     end
 

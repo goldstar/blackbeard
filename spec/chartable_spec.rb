@@ -27,7 +27,7 @@ module Blackbeard
         let(:start_at) { Time.new(2014,1,1,12,0,0) }
 
         it "should return results for recent hours" do
-          example.recent_hours(3, start_at).should have(3).metric_hours
+          expect(example.recent_hours(3, start_at).size).to eq(3)
         end
       end
 
@@ -35,19 +35,19 @@ module Blackbeard
         let(:start_on) { Date.new(2014,1,3) }
 
         it "should return results for recent days" do
-          example.recent_days(3, start_on).should have(3).metric_days
+          expect(example.recent_days(3, start_on).size).to eq(3)
         end
       end
 
       describe "recent_hours_chart" do
         it "should return a chart obj" do
-          example.recent_hours_chart.should be_a(Chart)
+          expect(example.recent_hours_chart).to be_a(Chart)
         end
       end
 
       describe "recent_days_chart" do
         it "should return a chart obj" do
-          example.recent_days_chart.should be_a(Chart)
+          expect(example.recent_days_chart).to be_a(Chart)
         end
       end
 

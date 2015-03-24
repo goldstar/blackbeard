@@ -41,23 +41,23 @@ module Blackbeard
 
       describe "result_for_hour" do
         it "should empty if no metric has been recorded" do
-          metric_data.result_for_hour(tz.now).should be_empty
+          expect(metric_data.result_for_hour(tz.now)).to be_empty
         end
 
         it "should return 1 if metric called once" do
           metric_data.add(uid)
-          metric_data.result_for_hour(tz.now).should == {"uniques" => 1}
+          expect(metric_data.result_for_hour(tz.now)).to eq({"uniques" => 1})
         end
 
         it "should return 1 if metric called more than once" do
           3.times{ metric_data.add(uid) }
-          metric_data.result_for_hour(tz.now).should == {"uniques" => 1}
+          expect(metric_data.result_for_hour(tz.now)).to eq({"uniques" => 1})
         end
 
         it "should return 2 if metric was called with 2 uniques" do
           metric_data.add(uid)
           metric_data.add(ouid)
-          metric_data.result_for_hour(tz.now).should == {"uniques" => 2}
+          expect(metric_data.result_for_hour(tz.now)).to eq({"uniques" => 2})
         end
 
       end
@@ -75,12 +75,12 @@ module Blackbeard
         end
 
         it "should sum the hours" do
-          metric_data.send(:generate_result_for_day, date).should == {"uniques" => 4}
+          expect(metric_data.send(:generate_result_for_day, date)).to eq({"uniques" => 4})
         end
 
         it "should store the result if it's not today's result" do
           day_key = metric_data.send(:key_for_date, date)
-          db.should_receive(:hash_multi_set).with(day_key, {"uniques" => 4})
+          expect(db).to receive(:hash_multi_set).with(day_key, {"uniques" => 4})
           metric_data.send(:generate_result_for_day, date)
         end
 

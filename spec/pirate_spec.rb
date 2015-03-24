@@ -7,22 +7,22 @@ describe Blackbeard::Pirate do
     let(:name){ "bond" }
 
     it "should get metrics once" do
-      Blackbeard::Metric.should_receive(:find_or_create).with(:total, name).once.and_return(double)
+      expect(Blackbeard::Metric).to receive(:find_or_create).with(:total, name).once.and_return(double)
       4.times{ pirate.metric(:total, name) }
     end
 
     it "should get test once" do
-      Blackbeard::Test.should_receive(:find_or_create).with(name).once.and_return(double)
+      expect(Blackbeard::Test).to receive(:find_or_create).with(name).once.and_return(double)
       4.times{ pirate.test(name) }
     end
 
     it "should get features once" do
-      Blackbeard::Feature.should_receive(:find_or_create).with(name).once.and_return(double)
+      expect(Blackbeard::Feature).to receive(:find_or_create).with(name).once.and_return(double)
       4.times{ pirate.feature(name) }
     end
 
     it "should get cohorts once" do
-      Blackbeard::Cohort.should_receive(:find_or_create).with(name).once.and_return(double)
+      expect(Blackbeard::Cohort).to receive(:find_or_create).with(name).once.and_return(double)
       4.times{ pirate.cohort(name) }
     end
 
@@ -31,8 +31,8 @@ describe Blackbeard::Pirate do
   describe "#context" do
     it "should return a brand new context" do
       new_context = double
-      Blackbeard::Context.should_receive(:new).and_return(new_context)
-      pirate.context.should == new_context
+      expect(Blackbeard::Context).to receive(:new).and_return(new_context)
+      expect(pirate.context).to eq(new_context)
     end
   end
 
@@ -64,34 +64,34 @@ describe Blackbeard::Pirate do
       let!(:set_context){ pirate.set_context(user) }
 
       it "should delegate #add_unique" do
-        set_context.should_receive(:add_unique).with(:example_metric).and_return(set_context)
+        expect(set_context).to receive(:add_unique).with(:example_metric).and_return(set_context)
         pirate.add_unique(:example_metric)
       end
 
       it "should delegate #add_total" do
-        set_context.should_receive(:add_total).with(:example_metric, 1).and_return(set_context)
+        expect(set_context).to receive(:add_total).with(:example_metric, 1).and_return(set_context)
         pirate.add_total(:example_metric, 1)
       end
 
       it "should delegate #ab_test" do
-        set_context.should_receive(:ab_test).with(:example_test, :on => 1, :off => 2).and_return(set_context)
+        expect(set_context).to receive(:ab_test).with(:example_test, :on => 1, :off => 2).and_return(set_context)
         pirate.ab_test(:example_test, :on => 1, :off => 2)
       end
 
       it "should delegate #feature_active?" do
-        set_context.should_receive(:feature_active?).with(:example_feature, true).and_return(false)
+        expect(set_context).to receive(:feature_active?).with(:example_feature, true).and_return(false)
         pirate.feature_active?(:example_feature)
       end
 
       it "should delegate add_to_cohort" do
         timestamp = double
-        set_context.should_receive(:add_to_cohort).with(:example, timestamp).and_return(true)
+        expect(set_context).to receive(:add_to_cohort).with(:example, timestamp).and_return(true)
         pirate.add_to_cohort(:example, timestamp)
       end
 
       it "should delegate add_to_cohort!" do
         timestamp = double
-        set_context.should_receive(:add_to_cohort!).with(:example, timestamp).and_return(true)
+        expect(set_context).to receive(:add_to_cohort!).with(:example, timestamp).and_return(true)
         pirate.add_to_cohort!(:example, timestamp)
       end
     end

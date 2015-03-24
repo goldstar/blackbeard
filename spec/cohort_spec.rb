@@ -10,20 +10,20 @@ module Blackbeard
     describe "add" do
       let(:context){ double :unique_identifier => uid }
       before :each do
-        cohort.stub(:data).and_return(cohort_data)
+        allow(cohort).to receive(:data).and_return(cohort_data)
       end
 
       it "should save the cohort if its new" do
-        cohort.should_receive(:save)
+        expect(cohort).to receive(:save)
         cohort.add(context)
       end
       it "should call add_with_force if forced used" do
-        cohort_data.should_receive(:add_with_force).with(uid, hour).and_return(true)
-        cohort.add(context, hour, true).should be_true
+        expect(cohort_data).to receive(:add_with_force).with(uid, hour).and_return(true)
+        expect(cohort.add(context, hour, true)).to be_truthy
       end
       it "should call add_without_force if not forced used" do
-        cohort_data.should_receive(:add_without_force).with(uid, hour).and_return(true)
-        cohort.add(context, hour).should be_true
+        expect(cohort_data).to receive(:add_without_force).with(uid, hour).and_return(true)
+        expect(cohort.add(context, hour)).to be_truthy
       end
     end
 

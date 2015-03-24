@@ -11,14 +11,14 @@ module Blackbeard
       let(:context) { double(:unique_identifier => 'uid', :controller => double, :user => double) }
 
       it "should increment metric data" do
-        group.stub(:segment_for).and_return("segment")
-        metric_data.should_receive(:add).with("uid",1, "segment")
+        allow(group).to receive(:segment_for).and_return("segment")
+        expect(metric_data).to receive(:add).with("uid",1, "segment")
         group_metric.add(context, 1)
       end
 
       it "should not increment nil segments" do
-        group.stub(:segment_for).and_return(nil)
-        metric_data.should_not_receive(:add).with("uid",1, "segment")
+        allow(group).to receive(:segment_for).and_return(nil)
+        expect(metric_data).not_to receive(:add).with("uid",1, "segment")
         group_metric.add(context, 1)
       end
     end

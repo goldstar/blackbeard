@@ -26,8 +26,8 @@ module Blackbeard
 
       it "should create a change pointed to object" do
         example.log_change("+1")
-        Change.last.object.should == example
-        Change.last.message.should == "+1"
+        expect(Change.last.object).to eq(example)
+        expect(Change.last.message).to eq("+1")
       end
 
     end

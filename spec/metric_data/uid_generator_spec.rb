@@ -11,13 +11,13 @@ module Blackbeard
 
       context "already existing uid" do
         it "should return the existing uid" do
-          UidGenerator.new(metric_data).uid.should == UidGenerator.new(metric_data).uid
+          expect(UidGenerator.new(metric_data).uid).to eq(UidGenerator.new(metric_data).uid)
         end
       end
       context "new metric_data" do
         it "should increment to the next uid" do
           uid = UidGenerator.new(metric_data).uid
-          UidGenerator.new(metric_data2).uid.to_i.should == uid.to_i + 1
+          expect(UidGenerator.new(metric_data2).uid.to_i).to eq(uid.to_i + 1)
         end
       end
 
@@ -30,7 +30,7 @@ module Blackbeard
             metric.add_cohort(cohort)
             gen1 = UidGenerator.new(cohort_metric.metric_data)
             gen2 = UidGenerator.new(metric.metric_data)
-            gen1.send(:lookup_field).should_not == gen2.send(:lookup_field)
+            expect(gen1.send(:lookup_field)).not_to eq(gen2.send(:lookup_field))
           end
         end
       end

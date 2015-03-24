@@ -14,8 +14,8 @@ module Blackbeard
         Metric.create("total", "jostling")
         get "/metrics"
 
-        last_response.should be_ok
-        last_response.body.should include('jostling')
+        expect(last_response).to be_ok
+        expect(last_response.body).to include('jostling')
       end
     end
 
@@ -24,8 +24,8 @@ module Blackbeard
         metric = Metric.create("total", "jostling")
         get "/metrics/#{metric.type}/#{metric.type_id}"
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
 
       it "should show a metric with a group" do
@@ -34,8 +34,8 @@ module Blackbeard
         metric.add_group(group)
         get "/metrics/#{metric.type}/#{metric.type_id}", :group_id => group.id
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
 
       it "should show a metric with a cohort" do
@@ -44,8 +44,8 @@ module Blackbeard
         metric.add_cohort(cohort)
         get "/metrics/#{metric.type}/#{metric.type_id}", :cohort_id => cohort.id
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
 
     end
@@ -55,8 +55,8 @@ module Blackbeard
         metric = Metric.create("total", "jostling")
         post "/metrics/#{metric.type}/#{metric.type_id}", :name => 'hello'
 
-        last_response.should be_ok
-        Metric.find(:total, "jostling").name.should == 'hello'
+        expect(last_response).to be_ok
+        expect(Metric.find(:total, "jostling").name).to eq('hello')
       end
     end
 
@@ -66,10 +66,10 @@ module Blackbeard
         group = Group.create("admin")
         post "/metrics/#{metric.type}/#{metric.type_id}/groups", :group_id => group.id
 
-        last_response.should be_redirect
+        expect(last_response).to be_redirect
         follow_redirect!
-        last_request.url.should == "http://example.org/metrics/#{metric.type}/#{metric.type_id}?group_id=#{group.id}"
-        metric.has_group?(group).should be_true
+        expect(last_request.url).to eq("http://example.org/metrics/#{metric.type}/#{metric.type_id}?group_id=#{group.id}")
+        expect(metric.has_group?(group)).to be_truthy
       end
     end
 
@@ -80,10 +80,10 @@ module Blackbeard
         cohort = Cohort.create("admin")
         post "/metrics/#{metric.type}/#{metric.type_id}/cohorts", :cohort_id => cohort.id
 
-        last_response.should be_redirect
+        expect(last_response).to be_redirect
         follow_redirect!
-        last_request.url.should == "http://example.org/metrics/#{metric.type}/#{metric.type_id}?cohort_id=#{cohort.id}"
-        metric.has_cohort?(cohort).should be_true
+        expect(last_request.url).to eq("http://example.org/metrics/#{metric.type}/#{metric.type_id}?cohort_id=#{cohort.id}")
+        expect(metric.has_cohort?(cohort)).to be_truthy
       end
     end
 

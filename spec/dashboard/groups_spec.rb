@@ -14,8 +14,8 @@ module Blackbeard
         Group.create("jostling")
         get "/groups"
 
-        last_response.should be_ok
-        last_response.body.should include('jostling')
+        expect(last_response).to be_ok
+        expect(last_response.body).to include('jostling')
       end
     end
 
@@ -24,8 +24,8 @@ module Blackbeard
         group = Group.create("jostling")
         get "/groups/#{group.id}"
 
-        last_response.should be_ok
-        last_response.body.should include("jostling")
+        expect(last_response).to be_ok
+        expect(last_response.body).to include("jostling")
       end
     end
 
@@ -34,8 +34,8 @@ module Blackbeard
         group = Group.create("jostling")
         post "/groups/#{group.id}", :name => 'hello'
 
-        last_response.should be_ok
-        Group.find("jostling").name.should == 'hello'
+        expect(last_response).to be_ok
+        expect(Group.find("jostling").name).to eq('hello')
       end
     end
 

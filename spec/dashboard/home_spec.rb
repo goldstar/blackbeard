@@ -12,7 +12,7 @@ module Blackbeard
     describe "get /" do
       it "should redirect" do
         get "/"
-        last_response.should be_ok
+        expect(last_response).to be_ok
       end
     end
 
