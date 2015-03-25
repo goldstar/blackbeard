@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "sinatra-base", "~> 1.4"
   spec.add_runtime_dependency "sinatra-partial", "~> 0.4.0"
-  spec.add_runtime_dependency "tzinfo", "~> 1.1.0"
+  spec.add_runtime_dependency "tzinfo"
   spec.add_runtime_dependency 'redis', '~> 3.0', '>= 3.0.4'
   spec.add_runtime_dependency 'redis-namespace', '~> 1.4', '>= 1.4.1'
 end
