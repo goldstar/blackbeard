@@ -64,7 +64,7 @@ private
 
     def generate_visitor_id
       id = db.increment("visitor_id")
-      controller.request.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
+      controller.response.cookies[:bbd] = { :value => id, :expires => Time.now + 31536000 }
       id
     end
 
