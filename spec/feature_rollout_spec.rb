@@ -29,7 +29,7 @@ module Blackbeard
 
     describe "active_user?" do
       context "with no logged in user" do
-        it "should be true if users_rate is 100" do
+        it "should be false if users_rate is 100" do
           feature.users_rate = 100
           allow(context).to receive(:user).and_return(nil)
           expect(feature.active_user?(context)).to be_falsey
@@ -102,8 +102,9 @@ module Blackbeard
 
     describe "active_segment?" do
       it "should be false if there are no group segments" do
-          expect(feature.active_segment?(context)).to be_falsey
+        expect(feature.active_segment?(context)).to be_falsey
       end
+
       context "with group segments" do
         before :each do
           @group_a = Group.create(:a)
