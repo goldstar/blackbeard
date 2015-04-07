@@ -81,7 +81,7 @@ module Blackbeard
       it "should work without users" do
         request = double(:cookies => {})
         response = double(:cookies => {})
-        controller = double(:request => request)
+        controller = double(:request => request, :response => response)
         expect(Context.new(pirate, nil, controller).unique_identifier).to eq("b1")
       end
     end
