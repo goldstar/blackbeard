@@ -1,3 +1,5 @@
+require 'digest'
+
 module Blackbeard
   module FeatureRollout
     def rollout?(context)
@@ -21,7 +23,10 @@ module Blackbeard
       return true if users_rate == 100
 
       user_id = id_to_int(context.user_id)
-      (user_id % 100).between?(1,users_rate)
+      feature_id_hash = Digest::SHA256.hexdigest(@id).to_i(16)
+
+      user_id_xor_feature_id_hash = (user_id % 100)^(feature_id_hash % 100)
+      user_id_xor_feature_id_hash.between?(1,users_rate)
     end
 
     def active_visitor?(context)
