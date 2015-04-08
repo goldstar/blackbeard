@@ -57,14 +57,14 @@ module Blackbeard
     end
 
     def visitor_id
-      @visitor_id ||= controller.request.cookies[:bbd] || generate_visitor_id
+      @visitor_id ||= (controller.request.cookies['bbd'] || generate_visitor_id).to_i
     end
 
 private
 
     def generate_visitor_id
       id = db.increment("visitor_id")
-      controller.response.set_cookie(:bbd, { :value => id, :expires => Time.now + 31536000 })
+      controller.response.set_cookie('bbd', { :value => id, :expires => Time.now + 31536000 })
       id
     end
 
