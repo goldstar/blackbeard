@@ -1,11 +1,20 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
-  google.load('visualization', '1.0', {'packages':['corechart']});
+  google.load('visualization', '1.0', {'packages':['corechart','table']});
+
+  $(function(){
+    $(".toggle_data_table").on("click", function(e){
+      e.preventDefault();
+      $($(this).data("target")).toggle();
+    });
+  });
 </script>
 
 <% charts.each do |chart| %>
   <div id="<%= chart.dom_id %>"></div>
+  <p><a href="#" class="toggle_data_table" data-target="#<%= chart.dom_id %>_table">View/Hide Data Table</a></p>
+  <div id="<%= chart.dom_id %>_table" style="display:none;"></div>
   <script type="text/javascript">
     // Set a callback to run when the Google Visualization API is loaded.
     google.setOnLoadCallback(
@@ -14,7 +23,10 @@
         var options = <%= chart.options.to_json %>;
         var div = document.getElementById('<%= chart.dom_id %>');
         new google.visualization.LineChart(div).draw(data, options);
-    });
 
+        var chartDiv = document.getElementById('<%= chart.dom_id %>_table');
+        var table = new google.visualization.Table(chartDiv);
+        table.draw(data, {showRowNumber: false});
+    });
   </script>
 <% end %>
