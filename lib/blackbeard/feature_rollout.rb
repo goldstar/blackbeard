@@ -17,17 +17,18 @@ module Blackbeard
     end
 
     def active_user?(context)
-      return false if (users_rate.zero? || !context.user)
+      return false if (users_rate.zero? || context.user.nil?)
       return true if users_rate == 100
 
       user_id = id_to_int(context.user_id)
-      (user_id % 100).between?(1,users_rate)
+      threshold_moduli[user_id % 100].between?(0,users_rate)
     end
 
     def active_visitor?(context)
       return false if visitors_rate.zero?
       return true if visitors_rate == 100
-      (context.visitor_id % 100).between?(1,visitors_rate)
+
+      threshold_moduli[context.visitor_id % 100].between?(0,visitors_rate)
     end
 
     def id_to_int(id)
@@ -45,3 +46,4 @@ module Blackbeard
     end
   end
 end
+

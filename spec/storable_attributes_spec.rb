@@ -15,7 +15,7 @@ describe Blackbeard::Storable do
 
   describe "json_attributes" do
     it "should not blow up when nil" do
-        expect(example.list).to be_nil
+      expect(example.list).to be_nil
     end
 
     it "should read and write" do

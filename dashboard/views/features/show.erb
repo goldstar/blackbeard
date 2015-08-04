@@ -10,8 +10,9 @@
 
 <form id="add_metric" action="<%= url("/features/#{@feature.id}/metrics") %>" method="post"><input id="add_metric_type_input" type="hidden" name="metric_type"><input id="add_metric_type_id_input" type="hidden" name="metric_type_id"></form>
 <ul class="nav nav-tabs" style="margin-bottom: 20px">
-  <% if @metric.nil? && !@params.key?('activity') %><li class="active"><% else %><li><% end %><a href="?">Status</a></li>
+  <% if @metric.nil? && !%w(activity visibility).any?{|k| @params.key?(k) } %><li class="active"><% else %><li><% end %><a href="?">Status</a></li>
   <% if @params.key?('activity') %><li class="active"><% else %><li><% end %><a href="?activity">Activity</a></li>
+  <% if @params.key?('visibility') %><li class="active"><% else %><li><% end %><a href="?visibility">Visibility</a></li>
   <% @feature.metrics.each do |metric| %>
     <% if @metric == metric %><li class="active"><% else %><li><% end %><a href="?metric_type=<%= metric.type %>&amp;metric_type_id=<%= metric.type_id %>"><%= h metric.name %></a></li>
   <% end %>
@@ -66,7 +67,68 @@
     $( "#"+v ).removeClass("hidden");
   }
 
-  $(document).ready(updateButtonStates);
+  function clearHightlights() {
+    $("tr.highlight-red").removeClass("highlight-red");
+    $("tr.highlight-green").removeClass("highlight-green");
+    $("td.explanation").html("");
+  }
+
+  function explanation(thresholdModulus, usersRate, featureActiveForUser) {
+    var wholeExplanation = "&larr; Since this user's threshold modulus is " +
+      thresholdModulus + ", which is ";
+
+    if(featureActiveForUser) {
+      wholeExplanation += " &lt; <span class='users-rate'>" +
+        usersRate + "</span>, this feature is <span class='highlight-green'>active</span>.";
+    } else {
+      wholeExplanation += " &geq; <span class='users-rate'>" +
+        usersRate +
+        "</span>, this feature is <span class='highlight-red'>inactive</span>";
+    }
+
+    return wholeExplanation;
+  }
+
+  function highlightRow(index, userId) {
+    var thresholdModulus, usersRate,
+        usersRate = parseInt($("#users_rate")[0].value),
+        thresholdModulus = parseInt($("tr.row" + index + " td")[1].innerHTML),
+        featureActiveForUser = thresholdModulus < usersRate;
+
+    if(featureActiveForUser) {
+      $("tr.row" + index).addClass("highlight-green");
+    } else {
+      $("tr.row" + index).addClass("highlight-red");
+    }
+
+    $("tr.row" + index + " td.explanation").html(
+        explanation(thresholdModulus, usersRate, featureActiveForUser));
+  }
+
+  function calculateModulusAndHighlight() {
+    var userId = parseInt($("#user_id")[0].value),
+        index = -1;
+
+    if(userId >= 0) {
+      clearHightlights();
+      index = userId % 100;
+      highlightRow(index, userId);
+    } else {
+      clearHightlights();
+    }
+  }
+
+  function bindUserIdTextField() {
+    $("#user_id").keydown(calculateModulusAndHighlight);
+    $("#user_id").keyup(calculateModulusAndHighlight);
+    $("#users_rate").keydown(calculateModulusAndHighlight);
+    $("#users_rate").keyup(calculateModulusAndHighlight);
+  }
+
+  $(document).ready(function() {
+      updateButtonStates();
+      bindUserIdTextField();
+  });
 </script>
 
 <% if @metric %>
@@ -79,6 +141,31 @@
     <p>Activity is the number of times a feature was queried as active or inactive via <code>$pirate.feature_active?(:example)</code>. Ideally this is the number of times that a user did (or did not) experience a feature.
       To prevent counting you can pass false in as a second argument, <code>$pirate.feature_active?(:example, <strong>false</strong>)</code>.</p>
   </div>
-<% else %>
+<% elsif @params.key?('visibility') %>
+  <h2>Threshold moduli</h2>
+  <p><em>
+      In order to make features statistically indepdendent, each feature has a unique, randomized array of the numbers 0 to 99. The decision of whether a given user or visitor will see a feature is made by checking if the following statement is true:
+      <pre>threshold_moduli[user_id % 100] < <span class="users-rate">users_rate</span></pre>
+  </em></p>
+
+  <label for="user_id" style="margin-top: 30px">user_id</label>
+  <input id="user_id" type="text" style="margin-right: 15px;"></input>
+
+  <label for="users_rate">users_rate</label>
+  <input id="users_rate" class="users-rate" type="text" value="50" style="margin-bottom: 30px"></input>
+
+  <table class="threshold-moduli">
+    <tr>
+      <th>Index</th>
+      <th>Threshold Modulus</th>
+    </tr>
+    <% @feature.threshold_moduli.each_with_index do |threshold_modulus, index| %>
+      <tr class="row<%= index %>">
+        <td><%= index %></td>
+        <td><%= threshold_modulus %></td>
+        <td class="explanation"></td>
+      </tr>
+    <% end %>
+  <% else %>
   <%= partial :'features/status_panel' %>
 <% end %>
