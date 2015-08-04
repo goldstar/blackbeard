@@ -6,9 +6,31 @@ module Blackbeard
     set_master_key :features
     string_attributes :name, :description, :status
     integer_attributes :visitors_rate, :users_rate
-    json_attributes :group_segments
+    json_attributes :group_segments, :threshold_moduli
 
     has_many :metrics => 'Metric'
+
+    def self.find(id)
+      feature = super(id)
+      return if feature.nil?
+      if feature.threshold_moduli.nil? || feature.threshold_moduli.count != 100
+        feature.threshold_moduli = (0..99).to_a
+      end
+      feature
+    end
+
+    def self.create(id)
+      feature = super(id)
+      feature.threshold_moduli = (0..99).to_a.sample(100)
+      feature.save
+      feature
+    end
+
+    def self.find_or_create(id)
+      feature = find(id)
+      feature = create(id) if feature.nil?
+      feature
+    end
 
     def group_segments_for(group_id)
       (group_segments && group_segments[group_id.to_s]) || []
