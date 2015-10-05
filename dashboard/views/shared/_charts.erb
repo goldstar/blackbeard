@@ -21,6 +21,11 @@
       function(){
         var data = new google.visualization.DataTable(<%= chart.data.to_json %>);
 
+        var options = <%= chart.options.to_json %>;
+        var div = document.getElementById('<%= chart.dom_id %>');
+        new google.visualization.LineChart(div).draw(data, options);
+
+        // add total row for table only
         function getSum(data, column) {
           var total = 0;
           for (i = 0; i < data.getNumberOfRows(); i++)
@@ -28,10 +33,6 @@
           return total;
         }
         data.addRow(['Total', getSum(data,1), getSum(data,2)]);
-
-        var options = <%= chart.options.to_json %>;
-        var div = document.getElementById('<%= chart.dom_id %>');
-        new google.visualization.LineChart(div).draw(data, options);
 
         var chartDiv = document.getElementById('<%= chart.dom_id %>_table');
         var table = new google.visualization.Table(chartDiv);
