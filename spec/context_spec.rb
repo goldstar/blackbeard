@@ -3,13 +3,46 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 module Blackbeard
   describe Context do
     let(:pirate) { Pirate.new }
-    let(:user) { double(:id => 1) }
+    let(:user) { double(id: 1) }
     let(:context) { Context.new(pirate, user) }
     let(:uid) { context.unique_identifier }
     let(:total_metric) { Metric.create(:total, :things) }
     let(:unique_metric) { Metric.create(:unique, :things) }
     let(:test) { Test.create(:example_test) }
     let(:cohort) { Cohort.create(:joined) }
+
+    describe "#user_id" do
+      let(:context) { Context.new(pirate, user, controller) }
+      let(:visitor_id) { 58 }
+      let(:response) { double }
+      let(:request) { double(cookies: {}) }
+      let(:controller) { double(request: request, response: response) }
+
+      it "equals @user.id" do
+        expect(context.user_id).to eq(user.id)
+      end
+
+      context "when bbd cookie is present" do
+        let(:request) { double(cookies: {'bbd' => visitor_id}) }
+
+        context "and user_id value is stored" do
+          it "ignores the cookie and uses the stored value" do
+            stored_value = Blackbeard::VisitorUserTracker.get_visitor_id_for_user(user.id)
+            expect(Blackbeard::VisitorUserTracker).not_to receive(:set_visitor_id_for_user).with(user_id: user.id,
+                                                                                             visitor_id: stored_value)
+          end
+        end
+
+        context "and user_id value is not found" do
+          it "stores the bbd value for that user_id" do
+            allow(Blackbeard::VisitorUserTracker).to receive(:get_visitor_id_for_user).with(user.id).and_return(nil)
+            expect(Blackbeard::VisitorUserTracker).to receive(:set_visitor_id_for_user).with(user_id: user.id,
+                                                                                             visitor_id: visitor_id)
+            context.user_id
+          end
+        end
+      end
+    end
 
     describe "#add_total" do
       it "should call add on the total metric" do
@@ -43,7 +76,7 @@ module Blackbeard
       it "should call select_variation on the test" do
         expect(test).to receive(:add_variations).with([:on, :off]).and_return(test)
         expect(test).to receive(:select_variation).and_return(:off)
-        context.ab_test(:example_test, :on => 1, :off => 2)
+        context.ab_test(:example_test, on: 1, off: 2)
       end
 
       context "when passed options" do
@@ -52,11 +85,11 @@ module Blackbeard
         end
 
         it "should return the value of selected option" do
-          expect(context.ab_test(:example_test, :on => 1, :off => 2, :double => 'trouble')).to eq('trouble')
+          expect(context.ab_test(:example_test, on: 1, off: 2, double: 'trouble')).to eq('trouble')
         end
 
         it "should return nil when the selected variation is not an option" do
-          expect(context.ab_test(:example_test, :on => 1, :off => 2)).to be_nil
+          expect(context.ab_test(:example_test, on: 1, off: 2)).to be_nil
         end
       end
 
@@ -79,10 +112,10 @@ module Blackbeard
         expect(Context.new(pirate, user, nil).unique_identifier).to eq("a1")
       end
       it "should work without users" do
-        request = double(:cookies => {})
+        request = double(cookies: {})
         response = double
         allow(response).to receive(:set_cookie).with(any_args).and_return(true)
-        controller = double(:request => request, :response => response)
+        controller = double(request: request, response: response)
         expect(Context.new(pirate, nil, controller).unique_identifier).to eq("b1")
       end
     end

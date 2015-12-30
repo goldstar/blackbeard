@@ -39,6 +39,7 @@ require "blackbeard/cohort"
 require "blackbeard/pirate"
 require 'blackbeard/chart'
 require 'blackbeard/cohort_data'
+require 'blackbeard/visitor_user_tracker'
 
 module Blackbeard
   class << self

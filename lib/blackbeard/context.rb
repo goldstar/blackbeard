@@ -53,14 +53,25 @@ module Blackbeard
     end
 
     def user_id
+      if !visitor_id_from_cookie.nil?
+        VisitorUserTracker.set_visitor_id_for_user(user_id: @user.id, visitor_id: visitor_id_from_cookie)
+      end
+
+      vid = VisitorUserTracker.get_visitor_id_for_user(@user.id)
+      return vid if vid
       @user.id
     end
 
     def visitor_id
-      @visitor_id ||= (controller.request.cookies['bbd'] || generate_visitor_id).to_i
+      @visitor_id ||= (visitor_id_from_cookie || generate_visitor_id).to_i
     end
 
 private
+
+    def visitor_id_from_cookie
+      return nil if controller.nil? || controller.request.nil?
+      controller.request.cookies['bbd']
+    end
 
     def generate_visitor_id
       id = db.increment("visitor_id")
