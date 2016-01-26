@@ -2,32 +2,34 @@ module Blackbeard
   class Storable
     include ConfigurationMethods
 
-    def self.set_master_key(master_key)
-      @master_key = master_key.to_s
-    end
+    class << self
+      def set_master_key(master_key)
+        @master_key = master_key.to_s
+      end
 
-    def self.master_key
-      return @master_key if defined? @master_key
-      return self.superclass.master_key if self.superclass.respond_to?(:master_key)
-      raise StorableMasterKeyUndefined, "define master key in the class that inherits from storable"
-    end
+      def master_key
+        return @master_key if defined? @master_key
+        return self.superclass.master_key if self.superclass.respond_to?(:master_key)
+        raise StorableMasterKeyUndefined, "define master key in the class that inherits from storable"
+      end
 
-    def self.on_save(method)
-      on_save_methods.push(method)
-    end
+      def on_save(method)
+        on_save_methods.push(method)
+      end
 
-    def self.on_save_methods
-      @on_save_methods ||= self.superclass.on_save_methods.dup if self.superclass.respond_to?(:on_save_methods)
-      @on_save_methods ||= []
-    end
+      def on_save_methods
+        @on_save_methods ||= self.superclass.on_save_methods.dup if self.superclass.respond_to?(:on_save_methods)
+        @on_save_methods ||= []
+      end
 
-    def self.on_reload(method)
-      on_reload_methods.push(method)
-    end
+      def on_reload(method)
+        on_reload_methods.push(method)
+      end
 
-    def self.on_reload_methods
-      @on_reload_methods ||= self.superclass.on_reload_methods.dup if self.superclass.respond_to?(:on_reload_methods)
-      @on_reload_methods ||= []
+      def on_reload_methods
+        @on_reload_methods ||= self.superclass.on_reload_methods.dup if self.superclass.respond_to?(:on_reload_methods)
+        @on_reload_methods ||= []
+      end
     end
 
     attr_reader :id

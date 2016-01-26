@@ -6,7 +6,7 @@ require 'blackbeard/version'
 Gem::Specification.new do |spec|
   spec.name          = "blackbeard"
   spec.version       = Blackbeard::VERSION
-  spec.authors       = ["Robert Graff", "Matt White", "Tobi Lehman", "Ryan Szulczewski", "Tim Barkow", "John Deerhake"]
+  spec.authors       = ["Robert Graff"]
   spec.email         = ["robert_graff@yahoo.com"]
   spec.description   = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard. It dreams of being a replacement for rollout and split, but is early in its development.}
   spec.summary       = %q{Blackbeard is a Redis backed metrics collection system with a Rack dashboard}

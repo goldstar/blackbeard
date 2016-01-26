@@ -78,28 +78,3 @@ body {
 .bs-callout-info h4 {
     color: #5bc0de
 }
-
-.highlight-green {
-  background-color: #DFFFA5;
-}
-
-.highlight-red {
-  background-color: #FFC1C1;
-}
-
-.explanation {
-  background-color: white;
-}
-
-.threshold-moduli th {
-  padding-left: 20px;
-}
-
-.threshold-moduli td {
-  padding-left: 20px;
-}
-
-.users-rate {
-  background-color: #cde7f0;
-}
-

@@ -7,7 +7,7 @@ module Blackbeard
     let(:metric_data) { feature_metric.metric_data }
     let(:feature_metric){ FeatureMetric.new( feature, metric) }
 
-    describe "#add" do
+    describe "add" do
       let(:context) { double(:unique_identifier => 'uid', :controller => double, :user => double) }
 
       it "should increment metric data" do
@@ -22,6 +22,5 @@ module Blackbeard
         feature_metric.add(context, 1)
       end
     end
-
   end
 end

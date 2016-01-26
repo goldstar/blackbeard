@@ -97,12 +97,4 @@ describe Blackbeard::Pirate do
     end
   end
 
-  context "when feature is not found" do
-
-    it "should not raise an error" do
-      expect{ pirate.feature(:foo_bar) }.to_not raise_error
-    end
-
-  end
-
 end

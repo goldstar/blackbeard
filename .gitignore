@@ -1,5 +1,4 @@
 *.gem
-.*.swp
 *.rbc
 .bundle
 .config

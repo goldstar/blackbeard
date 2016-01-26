@@ -4,67 +4,6 @@ module Blackbeard
   describe Feature do
     let(:feature){ Blackbeard::Feature.create('example') }
 
-    describe ".find" do
-      let(:feature) { Blackbeard::Feature.find('legacy-feature') }
-
-      context "when feature's threshold_moduli is not empty" do
-        it "should preserve the pre-existing value of threshold_moduli" do
-          threshold_moduli = Blackbeard::Feature.create('example3').threshold_moduli
-          feature = Blackbeard::Feature.find('example3')
-          expect(feature.threshold_moduli).to eq(threshold_moduli)
-        end
-      end
-
-      context "when feature's threshold_moduli is empty" do
-        before do
-          # to simulate a legacy feature, we can create a feature and set it's
-          # threshold_moduli to nil
-          legacy_feature = Blackbeard::Feature.create('legacy-feature')
-          legacy_feature.threshold_moduli = []
-          legacy_feature.save
-        end
-
-        it "should store a threshold_moduli value of (0..99) to preserve the existing behavior" do
-          expect(feature.threshold_moduli).to eq((0..99).to_a)
-        end
-      end
-    end
-
-    describe ".create" do
-      let(:feature){ Blackbeard::Feature.create('created-example') }
-
-      it "creates a randomized threshold_moduli and stores it" do
-        expect(feature.threshold_moduli).to_not eq((0..99).to_a)
-      end
-    end
-
-    describe ".find_or_create" do
-      it "calls .find" do
-        expect(Blackbeard::Feature).to receive(:find).with("foobar")
-        Blackbeard::Feature.find_or_create("foobar")
-      end
-
-      context "when feature is not found"
-      it "calls .find" do
-        allow(Blackbeard::Feature).to receive(:find).and_return(nil)
-        expect(Blackbeard::Feature).to receive(:create).with("foobar")
-        Blackbeard::Feature.find_or_create("foobar")
-      end
-    end
-
-    describe "#threshold_moduli" do
-      let(:feature) { Blackbeard::Feature.create("example2") }
-      let!(:threshold_moduli) { feature.threshold_moduli }
-
-      it "should have exactly 100 elements" do
-        expect(feature.threshold_moduli.count).to eq(100)
-      end
-
-      it "has each number from 0 to 99 exactly once" do
-        expect(feature.threshold_moduli.sort).to eq((0..99).to_a)
-      end
-    end
-
     describe "group_segments_for and set_group_segments_for" do
       it "should return an empty list if no segments" do
         expect(feature.group_segments_for(:nothing)).to eq([])
@@ -80,7 +19,7 @@ module Blackbeard
     end
 
     describe "#active_for?" do
-      let(:context) { double(unique_identifier: 'bob') }
+      let(:context){ double :unique_identifier => 'bob' }
 
       context "forgoing counting participation" do
         before :each do
@@ -141,7 +80,7 @@ module Blackbeard
     end
 
     describe "segment_for" do
-      let(:context){ double(unique_identifier: 'newbie') }
+      let(:context){ double :unique_identifier => 'newbie' }
 
       describe "when user has not encountered feature" do
         it "should return nil" do
