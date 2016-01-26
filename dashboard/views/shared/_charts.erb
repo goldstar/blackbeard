@@ -32,7 +32,7 @@
             total = total + data.getValue(i, column);
           return total;
         }
-        data.addRow(['Total', getSum(data,1), getSum(data,2)]);
+        data.addRow(['Total', getSum(data, 1)]);
 
         var chartDiv = document.getElementById('<%= chart.dom_id %>_table');
         var table = new google.visualization.Table(chartDiv);
