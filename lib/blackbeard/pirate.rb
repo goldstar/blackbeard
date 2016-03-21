@@ -67,6 +67,11 @@ module Blackbeard
       @set_context.feature_active?(id, count_participation = true)
     end
 
+    def requested_features
+      return {} unless @set_context
+      @set_context.requested_features
+    end
+
 
   end
 end
