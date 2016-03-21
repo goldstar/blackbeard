@@ -105,6 +105,14 @@ module Blackbeard
         expect(inactive_feature).to receive(:active_for?).with(context, true).and_return(false)
         expect(context.feature_active?(:inactive_feature)).to be_falsey
       end
+
+      it 'adds the feature to the requested features' do
+        expect {
+          context.feature_active?(:active_feature)
+        }.to change {
+          context.requested_features.key?('active_feature')
+        }.from(false).to(true)
+      end
     end
 
   end

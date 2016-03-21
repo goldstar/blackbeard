@@ -1,13 +1,14 @@
 module Blackbeard
   class Context
     include ConfigurationMethods
-    attr_reader :controller, :user
+    attr_reader :controller, :user, :requested_features
 
     def initialize(pirate, user, controller = nil)
       # TODO: remove pirate. access cache via separate cache class
       @pirate = pirate
       @controller = controller
       @user = user
+      @requested_features = {}
 
       if (@user == false) || (@user && guest_method && @user.send(guest_method) == false)
         @user = nil
@@ -45,7 +46,10 @@ module Blackbeard
     end
 
     def feature_active?(id, count_participation = true)
-      @pirate.feature(id.to_s).reload.active_for?(self, count_participation)
+      feature = @pirate.feature(id.to_s).reload
+      feature.active_for?(self, count_participation).tap { |result|
+        @requested_features.merge!(id.to_s => result)
+      }
     end
 
     def unique_identifier
