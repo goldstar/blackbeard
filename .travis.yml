@@ -1,9 +1,0 @@
-language: ruby
-rvm:
-  - 1.9.3
-  - 2.0.0
-services:
-  - redis-server
-addons:
-    code_climate:
-        repo_token: c4f9d40da5073ae61d9bea245b5602eb70566eab3e47248b68dcccc25cb79b56

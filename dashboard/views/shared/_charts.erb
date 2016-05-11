@@ -32,7 +32,12 @@
             total = total + data.getValue(i, column);
           return total;
         }
-        data.addRow(['Total', getSum(data, 1)]);
+
+        var total_cells = ['Total'];
+        for (j = 1; j < data.getNumberOfColumns(); j++) {
+          total_cells.push( getSum(data, j) );
+        }
+        data.addRow(total_cells);
 
         var chartDiv = document.getElementById('<%= chart.dom_id %>_table');
         var table = new google.visualization.Table(chartDiv);

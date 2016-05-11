@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.2.0"
   spec.add_development_dependency 'rack-test', '~> 0.6'
   spec.add_development_dependency 'guard-rspec', '~> 4.2.5'
+  spec.add_development_dependency 'listen', '~> 3.0.0'
   spec.add_development_dependency 'terminal-notifier-guard'
   spec.add_development_dependency 'codeclimate-test-reporter'
 
