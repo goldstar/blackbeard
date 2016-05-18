@@ -70,12 +70,15 @@
 </script>
 
 <% if @metric %>
+
   <% chartable = Blackbeard::FeatureMetric.new(@feature, @metric) %>
-  <%= partial :'shared/charts', :locals => {:charts => [chartable.recent_hours_chart, chartable.recent_days_chart]} %>
+  <%= partial :'shared/tests', locals: {chartable: chartable} %>
+  <%= partial :'shared/charts', locals: {charts: [chartable.recent_hours_chart, chartable.recent_days_chart]} %>
+
 <% elsif @params.key?('activity') %>
   <%= partial :'shared/charts', :locals => {:charts => [@feature.recent_hours_chart, @feature.recent_days_chart]} %>
   <div class="bs-callout bs-callout-info">
-    <h4>Understanding Feature Activtity</h4>
+    <h4>Understanding Feature Activity</h4>
     <p>Activity is the number of times a feature was queried as active or inactive via <code>$pirate.feature_active?(:example)</code>. Ideally this is the number of times that a user did (or did not) experience a feature.
       To prevent counting you can pass false in as a second argument, <code>$pirate.feature_active?(:example, <strong>false</strong>)</code>.</p>
   </div>

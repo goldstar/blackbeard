@@ -1,0 +1,59 @@
+<script>
+  $(function() {
+    // requires test json data
+    $( "#successes1" ).val( test['agroup']['conversion'] );
+    $( "#successes2" ).val( test['bgroup']['conversion'] );
+    $( "#trials1" ).val( test['agroup']['total'] );
+    $( "#trials2" ).val( test['bgroup']['total'] );
+    update_result();
+  });
+</script>
+
+<div class="test-results">
+  <a href='#' id='show-test' class='pull-right btn btn-default btn-xs' onclick="$('.test-chisquared').toggle()">Test Details</a>
+  <div id="verdict">
+    Chi-Squared Verdict:
+    <span id="verdict_text">No significant difference </span>
+    &nbsp;
+    <span class='test-stats'>
+      [ <span>p <span id="p_value_operator">=</span> <b id="p_value">0</b></span>
+      &bull; confidence level: <b id="confidence_value">95%</b> ]
+    </span>
+  </div>
+
+  <div class='test test-chisquared' style='display:none;'>
+    <table cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th></th>
+          <th class='text-center text-nowrap'># successes</th>
+          <th></th>
+          <th class='text-center text-nowrap'># trials</th>
+          <th width="100%"> &nbsp; Confidence interval</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td align="right"><nobr>Active</nobr></td>
+          <td><input type="text" id="successes1" size="4"></td>
+          <td>/</td>
+          <td><input type="text" id="trials1" size="4"></td>
+          <td><div class="baseline"></div><div class="certain" id="lower_ci1"></div>
+            <div class="uncertain" id="upper_ci1"></div><div id="ci_label1" class="bar_label">
+              <span id="lower_ci_value1"></span>% – <span id="upper_ci_value1"></span>%</div></td>
+        </tr>
+        <tr>
+          <td align="right"><nobr>Inactive</nobr></td>
+          <td><input type="text" id="successes2" size="4"></td>
+          <td>/</td>
+          <td><input type="text" id="trials2" size="4"></td>
+          <td><div class="baseline"></div><div class="certain" id="lower_ci2"></div><div class="uncertain" id="upper_ci2"></div><div id="ci_label2" class="bar_label"><span id="lower_ci_value2"></span>% – <span id="upper_ci_value2"></span>%</div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class='test-notes'>
+      <p>If the experiment is repeated many times, the confidence level is the percent of the time each sample's success rate will fall within the reported confidence interval. It is also the percent of the time no difference will be detected between the two groups, assuming no difference exists.</p>
+    </div>
+  </div>
+</div>

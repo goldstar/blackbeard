@@ -43,5 +43,34 @@ module Blackbeard
       )
     end
 
+    def test_values
+      values = {
+        agroup: {
+          conversion: metric_active_total,
+          total: activity_active_total
+          },
+        bgroup: {
+          conversion: metric_inactive_total,
+          total: activity_inactive_total
+        }
+      }
+    end
+
+    def activity_active_total(count = 28, starting_on = tz.now.to_date)
+      group.recent_days(count, starting_on).inject(0){ |sum, r| sum + r.result['active_requests'].to_i }
+    end
+
+    def activity_inactive_total(count = 28, starting_on = tz.now.to_date)
+      group.recent_days(count, starting_on).inject(0){ |sum, r| sum + r.result['inactive_requests'].to_i }
+    end
+
+    def metric_active_total(count = 28, starting_on = tz.now.to_date)
+      recent_days(count, starting_on).inject(0){ |sum, r| sum + r.result['active'].to_i }
+    end
+
+    def metric_inactive_total(count = 28, starting_on = tz.now.to_date)
+      recent_days(count, starting_on).inject(0){ |sum, r| sum + r.result['inactive'].to_i }
+    end
+
   end
 end

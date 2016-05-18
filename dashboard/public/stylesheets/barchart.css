@@ -1,0 +1,75 @@
+
+.panel-test {
+  background-color: #fefbec;
+}
+
+.test-title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#verdict b { text-decoration: underline; }
+
+#verdict_text {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.test-stats { color: #999; }
+
+.test-notes {
+  font-size: 10px;
+}
+
+.test-notes p {
+  margin: .25em 0;
+}
+
+.test table { margin: .5em 0; }
+
+.test th {
+  font-size: .75em;
+}
+
+.test td, .test th {
+  padding: 0 .25em;
+}
+
+.test td input {
+  width: 60px;
+  text-align: center;
+}
+
+.baseline {
+    margin-left: 6px;
+    width: 1px;
+    height: 32px;
+    float: left;
+    background-color: #000;
+}
+.certain {
+    margin-top: 6px;
+    float: left;
+    width: 100px;
+    height: 20px;
+    background-color: #0082c4;
+}
+.uncertain {
+    margin-left: 0px;
+    margin-top: 6px;
+    width: 40px;
+    height: 20px;
+    background-color: #ddd;
+    float: left;
+}
+.bar_label {
+    font-style: italic;
+    font-weight: bold;
+    margin-left: 1em;
+    margin-top: 6px;
+    font-size: .75em;
+    line-height: 20px;
+    float: left;
+}
+
+.text-nowrap { white-space: nowrap; }

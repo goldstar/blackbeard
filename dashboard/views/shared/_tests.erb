@@ -1,0 +1,18 @@
+<script src="<%= url('javascripts/jstat-0.1.0.min.js') %>"></script>
+<script src="<%= url('javascripts/format.js') %>"></script>
+<script src="<%= url('javascripts/ppnd.js') %>"></script>
+<script src="<%= url('javascripts/chi-squared.js') %>"></script>
+<link rel="stylesheet" href="<%= url('stylesheets/barchart.css') %>">
+<%
+  # require "pry"; binding.pry
+%>
+
+<script>
+  var test = <%= chartable.test_values.to_json %>;
+</script>
+
+<div class="panel panel-default panel-test">
+  <div class="panel-body">
+    <%= partial :'shared/tests/chi_squared' %>
+  </div>
+</div>
