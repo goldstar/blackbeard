@@ -4,18 +4,31 @@
 </div>
 
 <% if @tests.any? %>
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title">Active Tests</h3>
-  </div>
-  <ul class="list-group">
-  <% @tests.each do |test| %>
-  <li class="list-group-item"><a href="<%= url(test.path) %>"><%= h test.name %></a></li>
-  <% end %>
-  </ul>
-</div>
+    <% @tests.each do |test| %>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><a href="<%= url(test.path) %>"><%= h test.name %></a></h3>
+            </div>
+            <table class="test-stats">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Participants</th>
+                    <th>Completed</th>
+                    <th>Completed Rate</th>
+                </tr>
+                <tr>
+                    <td><%= test.name %></td>
+                    <td><%= test.description %></td>
+                    <td><%= test.participant_count %></td>
+                    <td><%= test.finishers.count %></td>
+                    <td><%= 0 %></td>
+                </tr>
+            </table>
+        </div>
+    <% end %>
 <% else %>
-  <div class="alert alert-danger">
-    <strong>No tests!</strong> Something may be wrong or you may just need to define some tests.
-  </div>
+    <div class="alert alert-danger">
+        <strong>No tests!</strong> Something may be wrong or you may just need to define some tests.
+    </div>
 <% end %>

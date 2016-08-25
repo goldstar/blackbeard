@@ -144,16 +144,15 @@ $pirate.context(user).add_total(:like, +1).add_unique(:likers)
 ```
 
 
-### Defining AB Tests
+### Defining A/B Tests
 
-AB tests are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
-
-**_Note that ab_tests are implmented, but experiments to control them is not. AB tests and experiments are in active development._**
+A/B tests are defined in your views, controller or anywhere in your app via the global $pirate.  There is no configuration necessary (but see the gotcha below).
 
 In a view:
 
 ```erb
-<%= $pirate.ab_test(:new_onboarding, :control => '/onboarding', :welcome_flow => '/welcome') %>
+<%= $pirate.ab_test(:new_onboarding, :control => '/onboarding', :welcome_flow => '/welcome').tap |variation| %>
+<% end %>
 ```
 
 In a controller:
@@ -200,6 +199,31 @@ $pirate.ab_test(:new_onboarding, :one => 'one', :two => 'two') # is the same as 
 $pirate.ab_test(:new_onboarding, :inactive => nil, :one => 'one', :two => 'two') # nil when test is inactive
 $pirate.ab_test(:new_onboarding, :default => 'one', :two => 'two') # => 'one' when test is inactive
 ```
+
+#### Variation selection
+In a standard two-variation (A/B) test, we show 50% of the users variation A, and the other 50% 
+variation B. Then we measure the success rate for each. We would like the feature selection to 
+be permanent, that is, user 81 will always see the same variation throughout the experiment.
+
+One way to acheive this is to take the `user_id % 100` which gives an integer in the range `0..99`, 
+if that number is less than 50, show them A, otherwise show them B. This solves the permanence problem,
+but it presents a new problem when we run two A/B tests, call them A<sub>1</sub>/B<sub>1</sub> and 
+A<sub>2</sub>/B<sub>2</sub>. Notice that user 81 will see B<sub>1</sub> and B<sub>2</sub>, and it 
+works out that any user that sees B<sub>1</sub> will also see B<sub>2</sub>. It will be impossible to
+make valid inferences about A<sub>1</sub>/B<sub>1</sub> because it's perfectly correlated with 
+A<sub>2</sub>/B<sub>2</sub>.
+
+The above explains the independence problem, which is that our experiments are not independent of 
+one another. The solution is to generate a randomized permutation of `0..99`, such as:
+
+```
+[14, 31, 60, 15, ... 55, 47, 21, 40]
+# 0   1   2   3  ... 96  97  98  99  <--- index = user_id % 100
+```
+
+This array is called the Test's `index_moduli`, it is stored on the A/B test itself and used to 
+determine which variation to show.
+
 
 ### Features
 

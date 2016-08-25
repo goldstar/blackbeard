@@ -6,12 +6,12 @@
 <% if @test.variations.any? %>
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">Known Variations</h3>
+   <h3 class="panel-title">Known Variations</h3>
   </div>
   <ul class="list-group">
-  <% @test.variations.each do |variant| %>
-  <li class="list-group-item"><%= h variant %></li>
-  <% end %>
+      <% @test.variations.each do |variant| %>
+          <li class="list-group-item"><%= h variant %></li>
+      <% end %>
   </ul>
 </div>
 

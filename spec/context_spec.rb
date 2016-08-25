@@ -20,7 +20,7 @@ module Blackbeard
       end
     end
 
-    context 'when it it IS passed a controller context' do
+    context 'when it is passed a controller context' do
       let(:context) { Context.new(pirate, user, controller) }
       let(:controller) { double(request: double(cookies: { 'bbd' => '1' })) }
 
@@ -90,6 +90,24 @@ module Blackbeard
         end
       end
 
+    end
+
+    describe "#ab_finished" do
+      let(:test) { Test.find_or_create(:button_color) }
+      before :each do
+        expect(pirate).to receive(:test).with(test.id).and_return(test).at_least(1).times
+      end
+
+      before(:each) do
+        # register the default and alternative variations for the test
+        context.ab_test(:button_color, default: 'blue', alternative: 'green')
+      end
+
+      it "records that the user has finished the test (e.g. made a purchase)" do
+        expect {
+          context.ab_finished(:button_color)
+        }.to change(test.finishers, :count).by(1)
+      end
     end
 
     describe "unique_identifier" do
