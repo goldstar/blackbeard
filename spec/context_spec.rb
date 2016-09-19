@@ -11,6 +11,15 @@ module Blackbeard
     let(:test) { Test.create(:example_test) }
     let(:cohort) { Cohort.create(:joined) }
 
+    context "when not passed a controller context" do
+      let(:context) { Context.new(pirate, user) }
+      let(:user) { double(:id => nil) }
+
+      it 'can still get a visitor id' do
+        expect(context.visitor_id).to be_an_instance_of(Fixnum)
+      end
+    end
+
     describe "#add_total" do
       it "should call add on the total metric" do
         expect(pirate).to receive(:metric).with(:total, total_metric.id){ total_metric }
