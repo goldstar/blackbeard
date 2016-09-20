@@ -63,7 +63,7 @@ module Blackbeard
     def visitor_id
       @visitor_id ||=
         if controller && controller.request.cookies['bbd']
-          controller.request.cookies['bbd']
+          controller.request.cookies['bbd'].to_i
         else
           generate_visitor_id.to_i
         end

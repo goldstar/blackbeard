@@ -20,6 +20,15 @@ module Blackbeard
       end
     end
 
+    context 'when it it IS passed a controller context' do
+      let(:context) { Context.new(pirate, user, controller) }
+      let(:controller) { double(request: double(cookies: { 'bbd' => '1' })) }
+
+      it 'still gets a fixnum' do
+        expect(context.visitor_id).to be_an_instance_of(Fixnum)
+      end
+    end
+
     describe "#add_total" do
       it "should call add on the total metric" do
         expect(pirate).to receive(:metric).with(:total, total_metric.id){ total_metric }
