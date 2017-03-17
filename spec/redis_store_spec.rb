@@ -3,11 +3,6 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 module Blackbeard
   describe RedisStore do
 
-    it "should keep keys" do
-      db.set("hello", "world")
-      expect(db.keys).to eq(["hello"])
-    end
-
     describe "hashes" do
       it "should set and get" do
         db.hash_set('a_hash', 'hello', 'world')
