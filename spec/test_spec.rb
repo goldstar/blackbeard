@@ -14,6 +14,47 @@ describe Blackbeard::Test do
     end
   end
 
+  context "probability of A or B" do
+
+    # Assuming only two variations A and B, the test rate is the rate for A,
+    # and B is 100% - a_rate
+    describe "#a_rate" do
+      subject { test.a_rate }
+      it { is_expected.to eq(50) }
+    end
+
+    describe "#b_rate" do
+      subject { test.b_rate }
+
+      it { is_expected.to eq(50) }
+
+      context "when a_rate is 25%" do
+        let(:test){ pirate.test('example2') }
+        before do
+          test.a_rate = 25
+        end
+
+        it { is_expected.to eq(75) }
+      end
+
+    end
+
+    it "has a_rate + b_rate = 100" do
+      expect(test.a_rate + test.b_rate).to eq(100)
+    end
+
+  end
+
+  # aNUM is the unique id for a user
+  # bNUM is for a visitor
+  # Since a and b are both hex digits, it is fast and convenient to interpret
+  # this as an integer in hexadecimal for the purposes of indexing into the
+  describe "#index_from_unique_id" do
+    let(:unique_identifier) { "a206" }
+
+    it "equals  "
+  end
+
   describe "#select_variation" do
 
     context "when feature is static variation" do

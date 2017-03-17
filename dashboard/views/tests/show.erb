@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1><span id="editable-name"><%= h @test.name %></span></h1>
-  <p id="editable-description"><%= h @test.description %></p>
+  <h1><span id="editable-name"><%= h(@test.name) %></span></h1>
+  <p id="editable-description"><%= h(@test.description) %></p>
 </div>
 
 <% if @test.variations.any? %>
@@ -9,9 +9,26 @@
    <h3 class="panel-title">Known Variations</h3>
   </div>
   <ul class="list-group">
-      <% @test.variations.each do |variant| %>
-          <li class="list-group-item"><%= h variant %></li>
-      <% end %>
+      <% @a_test, @b_test = @test.ab_variations %>
+
+    <li class="list-group-item">
+      <%= h(@a_test) %>
+
+      <div class="progress" id="editable-a_rate">
+        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; overflow: visible;">
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <%= h(@b_test) %>
+
+      <div class="progress" id="editable-b_rate">
+        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; overflow: visible;">
+        </div>
+      </div>
+    </li>
+
   </ul>
 </div>
 
@@ -54,5 +71,51 @@
       name: 'description',
       title: 'Edit test description'
     });
+    $('#editable-a_rate').editable({
+      type: 'number',
+      value: <%= @test.a_rate %>,
+      display: function(value, sourceData) {
+        var color = "#fff";
+        if (value < 10) {
+          color = "#000";
+        }
+        $(".progress-bar", this).attr("aria-valuenow", value).
+                                 html(value + "% probability of seeing A").
+                                 width(value+'%').
+                                 css('color', color);
+      },
+      url: '<%= url(@test.path) %>',
+      name: 'a_rate',
+      title: '%',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+
+    $('#editable-b_rate').editable({
+      type: 'number',
+      value: <%= @test.b_rate %>,
+      display: function(value, sourceData) {
+        var color = "#fff";
+        if (value < 10) {
+          color = "#000";
+        }
+        $(".progress-bar", this).attr("aria-valuenow", value).
+                                 html(value + "% probability of seeing B").
+                                 width(value+'%').
+                                 css('color', color);
+      },
+      url: '<%= url(@test.path) %>',
+      name: 'b_rate',
+      title: '%',
+      validate: function(value) {
+         if($.trim(value) == '') {
+          return 'This field is required';
+        }
+      }
+    });
+
   });
 </script>

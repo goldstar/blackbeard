@@ -2,6 +2,7 @@ module Blackbeard
   class Test < Storable
     set_master_key :tests
     string_attributes :name, :description
+    integer_attributes :a_rate # A rate is the probability of observing the A variation
     has_set :variations => :variation
     has_set :participants => :participant
     has_set :finishers => :finisher
@@ -20,6 +21,17 @@ module Blackbeard
       variation
     end
 
+    def b_rate
+      100 - a_rate
+    end
+
+    def b_rate=(value)
+      a_rate = 100 - value
+    end
+
+    def index_from_unique_id(unique_identifier)
+    end
+
     def self.find(id)
       test = super(id)
       return if test.nil?
@@ -32,6 +44,7 @@ module Blackbeard
     def self.create(id)
       test = super(id)
       test.index_moduli = (0..99).to_a.shuffle
+      test.a_rate = 50
       test.save
       test
     end
