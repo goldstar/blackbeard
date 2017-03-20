@@ -87,6 +87,7 @@
       url: '<%= url(@test.path) %>',
       name: 'a_rate',
       title: '%',
+      success: function () { window.location.reload() },
       validate: function(value) {
          if($.trim(value) == '') {
           return 'This field is required';
@@ -110,6 +111,7 @@
       url: '<%= url(@test.path) %>',
       name: 'b_rate',
       title: '%',
+      success: function () { window.location.reload() },
       validate: function(value) {
          if($.trim(value) == '') {
           return 'This field is required';
