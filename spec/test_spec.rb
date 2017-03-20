@@ -1,3 +1,4 @@
+# coding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Blackbeard::Test do
@@ -48,6 +49,31 @@ describe Blackbeard::Test do
 
   end
 
+  # To understand this, read Evan Miller's excellent article on Bayesian A/B testing:
+  # http://www.evanmiller.org/bayesian-ab-testing.html#implementation
+  describe "#probability_b_greater_than_a" do
+
+    let(:α_A) { 1 + number_of_successes_for_a }
+    let(:β_A) { 1 + number_of_failures_for_a }
+    let(:α_B) { 1 + number_of_successes_for_b }
+    let(:β_B) { 1 + number_of_failures_for_b }
+
+    let(:expected_probability) {
+      (0..(α_B-1)).map { |i|
+        beta(α_A + i, β_B + β_A) / (
+          (β_B + i) * beta(1+i, β_B) * beta(α_A, β_A) )
+      }.inject(:+)
+    }
+
+    let(:number_of_successes_for_a) {  }
+    # participants that saw A (finished = success)
+    # participants that saw B (finished = success)
+
+    it { is_expected.to be_within(0.01).of(expected_probability) }
+
+  end
+
+
   # aNUM is the unique id for a user
   # bNUM is for a visitor
   # Since a and b are both hex digits, it is fast and convenient to interpret
@@ -89,7 +115,7 @@ describe Blackbeard::Test do
           test.select_variation("a2")
           test.select_variation("a3")
 
-          expect(test.participants).to eq(%W(a1 a2 a3))
+          expect(test.participants.sort).to eq(%W(a1 a2 a3))
         end
 
       end

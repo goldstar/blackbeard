@@ -18,8 +18,7 @@ module Blackbeard
 
       a, b = ab_variations
       variation = (i < a_rate) ? a : b
-      save_participant(unique_identifier)
-
+      add_participant(unique_identifier)
       variation
     end
 
@@ -29,6 +28,31 @@ module Blackbeard
 
     def b_rate=(value)
       a_rate = 100 - value
+    end
+
+    def finisher_ratio
+      return 0 if participant_count.zero?
+
+      finisher_count / participant_count.to_f
+    end
+
+    def probability_b_greater_than_a
+    end
+
+    def participants_who_saw_a
+      participants.select { |id| select_variation(id) == variations.first }
+    end
+
+    def participants_who_saw_b
+      participants.select { |id| select_variation(id) == variations.second }
+    end
+
+    def finishers_who_saw_a
+      finishers.select { |id| select_variation(id) == variations.first }
+    end
+
+    def finishers_who_saw_b
+      finishers.select { |id| select_variation(id) == variations.second }
     end
 
     # The modulus index deterministically maps the unique user id into the range [0..99],
@@ -65,7 +89,7 @@ module Blackbeard
       participants.count
     end
 
-    def finishers_count
+    def finisher_count
       finishers.count
     end
 
@@ -75,15 +99,6 @@ module Blackbeard
       variations.sort.reject { |variation|
         %W(off, inactive).member?(variation.to_s)
       }.first(2).map(&:to_sym)
-    end
-
-    private
-
-    def save_participant(unique_id)
-      return if unique_id.nil?
-      unless participants.member?(unique_id)
-        participants << unique_id
-      end
     end
 
   end

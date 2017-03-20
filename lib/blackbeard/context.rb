@@ -27,10 +27,10 @@ module Blackbeard
 
     def ab_test(id, options = nil)
       test = @pirate.test(id.to_s)
-      if options.is_a? Hash
+      if options.is_a?(Hash)
         test.add_variations(options.keys)
         variation = test.select_variation(unique_identifier)
-        options[variation.to_sym]
+        options[variation]
       else
         variation = test.select_variation(unique_identifier)
         SelectedVariation.new(test, variation)
@@ -39,7 +39,7 @@ module Blackbeard
 
     def ab_finished(id)
       test = @pirate.test(id.to_s)
-      test.finishers << unique_identifier
+      test.add_finishers([unique_identifier])
     end
 
     def add_to_cohort(id, timestamp = nil, force = false)

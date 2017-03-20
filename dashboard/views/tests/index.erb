@@ -3,6 +3,10 @@
   <p>Tests are elements or features that you can change or turn off.</p>
 </div>
 
+<style>
+ th { padding: 10px; }
+</style>
+
 <% if @tests.any? %>
     <% @tests.each do |test| %>
         <div class="panel panel-primary">
@@ -14,15 +18,15 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Participants</th>
-                    <th>Completed</th>
-                    <th>Completed Rate</th>
+                    <th>Finished</th>
+                    <th>Finished Ratio</th>
                 </tr>
                 <tr>
                     <td><%= test.name %></td>
                     <td><%= test.description %></td>
                     <td><%= test.participant_count %></td>
-                    <td><%= test.finishers.count %></td>
-                    <td><%= 0 %></td>
+                    <td><%= test.finisher_count %></td>
+                    <td><%= test.finisher_ratio %></td>
                 </tr>
             </table>
         </div>

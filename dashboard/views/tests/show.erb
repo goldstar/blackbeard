@@ -3,6 +3,35 @@
   <p id="editable-description"><%= h(@test.description) %></p>
 </div>
 
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Test settings</h3>
+
+  </div>
+
+  <table class="table">
+    <tr>
+      <td> Participant Count: </td>
+      <td> <%= @test.participant_count %> </td>
+    </tr>
+
+    <tr>
+      <td> Finished Count: </td>
+      <td> <%= @test.finisher_count %> </td>
+    </tr>
+
+    <tr>
+      <td> Finished Ratio: </td>
+      <td> <%= @test.finisher_ratio %> </td>
+    </tr>
+
+    <tr>
+      <td> Probability that B is better than A: </td>
+      <td> <%= @test.probability_b_greater_than_a %> </td>
+    </tr>
+  </table>
+</div>
+
 <% if @test.variations.any? %>
 <div class="panel panel-primary">
   <div class="panel-heading">
@@ -30,6 +59,7 @@
     </li>
 
   </ul>
+
 </div>
 
 <% else %>

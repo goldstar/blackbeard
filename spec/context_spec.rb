@@ -66,7 +66,7 @@ module Blackbeard
 
       context "when passed options" do
         before :each do
-          expect(test).to receive(:select_variation).and_return('double')
+          expect(test).to receive(:select_variation).and_return(:double)
         end
 
         it "should return the value of selected option" do
@@ -80,7 +80,7 @@ module Blackbeard
 
       context "when not passed options" do
         before :each do
-          expect(test).to receive(:select_variation).and_return('double')
+          expect(test).to receive(:select_variation).and_return(:double)
         end
 
         it "should return a select_variation obj equal to the selected variation" do
@@ -106,7 +106,7 @@ module Blackbeard
       it "records that the user has finished the test (e.g. made a purchase)" do
         expect {
           context.ab_finished(:button_color)
-        }.to change(test.finishers, :count).by(1)
+        }.to change(test.reload.finishers, :count).by(1)
       end
     end
 
