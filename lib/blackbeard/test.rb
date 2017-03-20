@@ -14,8 +14,10 @@ module Blackbeard
       return :off if unique_identifier.nil?
 
       # calculate index of variation
-      index = index_moduli[unique_identifier.to_i(16) % 100] % 2
-      variation = ab_variations[index].to_sym
+      i = index_moduli[modulus_index(unique_identifier)]
+
+      a, b = ab_variations
+      variation = (i < a_rate) ? a : b
       save_participant(unique_identifier)
 
       variation
@@ -29,7 +31,11 @@ module Blackbeard
       a_rate = 100 - value
     end
 
-    def index_from_unique_id(unique_identifier)
+    # The modulus index deterministically maps the unique user id into the range [0..99],
+    # this way we can reproduce what the user sees, but since each test has a different
+    # index_moduli array, we can still get the independent random behavior we want.
+    def modulus_index(unique_identifier)
+      unique_identifier.to_i(16) % 100
     end
 
     def self.find(id)
@@ -68,7 +74,7 @@ module Blackbeard
     def ab_variations
       variations.sort.reject { |variation|
         %W(off, inactive).member?(variation.to_s)
-      }.first(2)
+      }.first(2).map(&:to_sym)
     end
 
     private

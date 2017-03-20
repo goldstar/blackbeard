@@ -5,7 +5,10 @@ describe Blackbeard::Test do
   let(:pirate) { Blackbeard::Pirate.new }
   before do
     test.add_variations('one', 'two')
+    test.index_moduli = [1, 53, 88, 90, 74, 42, 8, 4, 12, 68, 98, 47, 49, 0, 76, 77, 73, 71, 27, 2, 78, 14, 46, 37, 75, 15, 32, 20, 38, 40, 70, 59, 30, 11, 36, 56, 16, 51, 58, 93, 18, 45, 52, 64, 29, 35, 28, 41, 17, 19, 54, 61, 94, 48, 65, 63, 5, 97, 39, 43, 24, 69, 9, 96, 82, 83, 23, 92, 50, 66, 26, 7, 80, 13, 81, 72, 91, 44, 21, 6, 89, 67, 87, 95, 22, 34, 33, 79, 10, 57, 86, 99, 62, 60, 84, 3, 55, 25, 31, 85]
+    test.save
   end
+
   let(:test){ pirate.test('example') }
 
   describe ".create" do
@@ -49,10 +52,12 @@ describe Blackbeard::Test do
   # bNUM is for a visitor
   # Since a and b are both hex digits, it is fast and convenient to interpret
   # this as an integer in hexadecimal for the purposes of indexing into the
-  describe "#index_from_unique_id" do
+  describe "#modulus_index" do
     let(:unique_identifier) { "a206" }
 
-    it "equals  "
+    it "equals the hex value of a206 mod 100" do
+      expect(test.modulus_index(unique_identifier)).to eq(0xa206 % 100)
+    end
   end
 
   describe "#select_variation" do
@@ -92,9 +97,10 @@ describe Blackbeard::Test do
 
       context "unique_identifier has not already seen the variation" do
         it "uses the unique identifier a2934 or b2093 as a hex integer and mods it by 100" do
-          index = test.index_moduli[uniq_id.to_i(16) % 100] % 2
-          expected_variation = test.ab_variations[index].to_sym
-          expect(test.select_variation(uniq_id)).to eq(expected_variation)
+          # 0b20877 % 100 = 75, so we expect this to be a B
+          test.a_rate = 50
+          _ , b = test.ab_variations
+          expect(test.select_variation(uniq_id)).to eq(b)
         end
 
       end
