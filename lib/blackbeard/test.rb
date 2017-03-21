@@ -1,3 +1,4 @@
+# coding: utf-8
 module Blackbeard
   class Test < Storable
     set_master_key :tests
@@ -37,22 +38,32 @@ module Blackbeard
     end
 
     def probability_b_greater_than_a
+      α_A = 1 + number_of_successes_for_a
+      β_A = 1 + number_of_failures_for_a
+      α_B = 1 + number_of_successes_for_b
+      β_B = 1 + number_of_failures_for_b
+
+      (0..(α_B-1)).map { |i|
+        Math.beta(α_A + i, β_B + β_A) / (
+          (β_B + i) * Math.beta(1+i, β_B) * Math.beta(α_A, β_A)
+        )
+      }.inject(:+)
     end
 
     def participants_who_saw_a
-      participants.select { |id| select_variation(id) == variations.first }
+      participants.select { |id| select_variation(id) == ab_variations.first }
     end
 
     def participants_who_saw_b
-      participants.select { |id| select_variation(id) == variations.second }
+      participants.select { |id| select_variation(id) == ab_variations.second }
     end
 
     def finishers_who_saw_a
-      finishers.select { |id| select_variation(id) == variations.first }
+      finishers.select { |id| select_variation(id) == ab_variations.first }
     end
 
     def finishers_who_saw_b
-      finishers.select { |id| select_variation(id) == variations.second }
+      finishers.select { |id| select_variation(id) == ab_variations.second }
     end
 
     # The modulus index deterministically maps the unique user id into the range [0..99],
@@ -99,6 +110,22 @@ module Blackbeard
       variations.sort.reject { |variation|
         %W(off, inactive).member?(variation.to_s)
       }.first(2).map(&:to_sym)
+    end
+
+    def number_of_successes_for_a
+      finishers_who_saw_a.count
+    end
+
+    def number_of_failures_for_a
+      participants_who_saw_a.count - number_of_successes_for_a
+    end
+
+    def number_of_successes_for_b
+      finishers_who_saw_b.count
+    end
+
+    def number_of_failures_for_b
+      participants_who_saw_b.count - number_of_successes_for_b
     end
 
   end

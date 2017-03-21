@@ -7,7 +7,8 @@ module Blackbeard
       ly = ::Math.lgamma(y).first
       lxplusy = ::Math.lgamma(x + y).first
 
-      ::Math.exp(lx + ly - lxplusy)
+      precision = 5
+      ::BigMath.exp(lx + ly - lxplusy, precision)
     end
   end
 end

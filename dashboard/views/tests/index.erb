@@ -19,14 +19,14 @@
                     <th>Description</th>
                     <th>Participants</th>
                     <th>Finished</th>
-                    <th>Finished Ratio</th>
+                    <th>Probability B beats A</th>
                 </tr>
                 <tr>
                     <td><%= test.name %></td>
                     <td><%= test.description %></td>
                     <td><%= test.participant_count %></td>
                     <td><%= test.finisher_count %></td>
-                    <td><%= test.finisher_ratio %></td>
+                    <td><%= (test.probability_b_greater_than_a.to_f * 100).round(2) %>%</td>
                 </tr>
             </table>
         </div>

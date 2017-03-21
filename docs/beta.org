@@ -119,13 +119,13 @@ def beta(x,y)
   ly = Math.lgamma(y).first
   lxplusy = Math.lgamma(x + y).first
 
-  require 'pry'; binding.pry
-  puts Math.exp(lx + ly - lxplusy)
-  puts BigMath::E(lx + ly - lxplusy)
+  prec = 5
+  BigMath.exp(lx + ly - lxplusy, prec)
 end
 
-beta(1001,1000)
+beta(1000,1000)
 #+end_src
 
 #+RESULTS:
+: #<BigDecimal:7faa4b0bdd38,'0.97649E-603',9(27)>
 

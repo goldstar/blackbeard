@@ -11,23 +11,28 @@
 
   <table class="table">
     <tr>
-      <td> Participant Count: </td>
-      <td> <%= @test.participant_count %> </td>
+      <td> Participants who saw A: </td>
+      <td> <%= @test.participants_who_saw_a.count %> </td>
     </tr>
 
     <tr>
-      <td> Finished Count: </td>
-      <td> <%= @test.finisher_count %> </td>
+      <td> Finishers who saw A: </td>
+      <td> <%= @test.finishers_who_saw_a.count %> </td>
     </tr>
 
     <tr>
-      <td> Finished Ratio: </td>
-      <td> <%= @test.finisher_ratio %> </td>
+      <td> Participants who saw B: </td>
+      <td> <%= @test.participants_who_saw_b.count %> </td>
     </tr>
 
     <tr>
-      <td> Probability that B is better than A: </td>
-      <td> <%= @test.probability_b_greater_than_a %> </td>
+      <td> Finishers who saw B: </td>
+      <td> <%= @test.finishers_who_saw_b.count %> </td>
+    </tr>
+
+    <tr>
+      <td> Probability B is better than A: </td>
+      <td> <%= (@test.probability_b_greater_than_a * 100).round(2) %>% </td>
     </tr>
   </table>
 </div>
