@@ -7,8 +7,8 @@ module Blackbeard
       @redis = Redis::Namespace.new(namespace.to_sym, :redis => r)
     end
 
-    def keys
-      redis.keys
+    def scan_each(&blk)
+      @redis.scan_each(&blk)
     end
 
     # Hash commands

@@ -78,3 +78,7 @@ body {
 .bs-callout-info h4 {
     color: #5bc0de
 }
+
+table.test-stats tr td {
+    padding: 15px;
+}

@@ -57,7 +57,7 @@ module Blackbeard
       @set_context.add_to_cohort!(id, timestamp)
     end
 
-    def ab_test(id, options)
+    def ab_test(id, options = nil)
       return self unless @set_context
       @set_context.ab_test(id, options)
     end

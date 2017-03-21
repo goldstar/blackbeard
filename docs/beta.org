@@ -1,0 +1,131 @@
+#+STARTUP: entitiespretty
+
+* Beta function in ruby
+** Motivation
+Bayesian A/B testing has the advantage of allowing the test to run as long or as short as desired. The number of 
+observations does not have to be specified in order for the inference to be valid. The question we are interested in 
+is /what is the probability that variation B is greater than A, given the observations we have/?
+
+Symbolically, that is P(p_B > p_A | X) where X is our set of observations from the test so far.
+
+The binary nature of the A/B test suggests modeling it as a binomial random variable. The [[https://en.wikipedia.org/wiki/Conjugate_prior][conjugate prior]] of the 
+binomial distribution is the beta distribution, in order to do calculations with the beta distribution, we need the 
+[[https://en.wikipedia.org/wiki/Beta_function][beta function]] 
+
+** Definition
+*** Gamma function
+The beta function is related to the Gamma function, which is the continuous version of the factorial function.
+
+The factorial function should be familiar, factorial(n) = n! = n*(n-1)*(n-2)*...*3*2*1
+
+The Gamma function, denoted \Gamma(x) where x \geq 0 is any non-negative real number. It has the property that:
+
+\Gamma(n) = (n-1)!   for all integers n > 0
+
+*** Beta function
+The Beta function B(x,y) can be defined in terms of the [[Gamma function]]:
+
+B(x, y) = \Gamma(x)\Gamma(y)/\Gamma(x+y)
+
+** Implementation in ruby
+Now that we have the definition of Beta in terms of Gamma, we should be able to implement Beta using the stdlib Math.gamma 
+like so:
+
+#+begin_src ruby
+def beta(x,y)
+  (Math.gamma(x) * Math.gamma(y)) / Math.gamma(x + y)
+end
+
+beta(2,3)
+#+end_src
+
+#+RESULTS:
+: 0.08333333333333333
+
+Checking against known values of the Gamma function, looks like it's correct, awesome! Now we are done.
+
+However, since the distribution of p after S successes and F failures is Beta(S+1, F+1), and S and F can get into the hundreds
+or thousands, the Gamma values in the numerator and the denominator get really large. Just look at what happens when we try 
+to compute beta(200, 100)
+
+#+begin_src ruby
+def beta(x,y)
+  (Math.gamma(x) * Math.gamma(y)) / Math.gamma(x + y)
+end
+
+beta(200,100)
+#+end_src
+
+#+RESULTS:
+NaN
+
+We get overflow really fast, however, the corect value of beta(200,100) = 3.60729e-84
+
+
+
+#+begin_src ruby
+3.60729e-84
+#+end_src
+
+#+RESULTS:
+: 3.60729e-84
+
+That fits comfortably into a floating point value, so we will need to bust out some logarithms.
+
+Since Log(AB) = Log(A) + Log(B) and Log(A/B) = Log(A) - Log(B)
+
+
+B(x, y) = \Gamma(x)\Gamma(y)/\Gamma(x+y)
+
+Log(B(x,y)) = Log(\Gamma(x)\Gamma(y)) - Log(\Gamma(x+y)) = Log(\Gamma(x)) + Log(\Gamma(x)) - Log(\Gamma(x+y))
+
+Ruby's stdlib provides an lgamma function so that we can compute all these values, then plug them in 
+and Math.exp them back to get our value.
+
+NOTE: The ruby Math.lgamma function returns an array containing the logarithmic gamma and the sign of 
+gamma of x, for the values of x we are interested in, the signs are all positive.
+
+
+#+begin_src ruby
+def beta(x,y)
+  lx = Math.lgamma(x).first
+  ly = Math.lgamma(y).first
+  lxplusy = Math.lgamma(x + y).first
+
+  Math.exp(lx + ly - lxplusy)
+end
+
+beta(200,100)
+#+end_src
+
+#+begin_src ruby
+3.607285449794902e-84
+#+end_src
+
+#+RESULTS:
+: 3.607285449794902e-84
+
+Which is what we expected.
+
+As the inputs get bigger (into the tens of thousands) Math.exp quickly overflows, so we can handle the exp 
+step using the BigMath::E function:
+
+
+#+begin_src ruby :output both
+require 'bigdecimal/math'
+
+def beta(x,y)
+  lx = Math.lgamma(x).first
+  ly = Math.lgamma(y).first
+  lxplusy = Math.lgamma(x + y).first
+
+  prec = 5
+  BigMath.exp(lx + ly - lxplusy, prec)
+end
+
+beta(1000,1000)
+#+end_src
+
+#+RESULTS:
+: #<BigDecimal:7faa4b0bdd38,'0.97649E-603',9(27)>
+
