@@ -29,7 +29,7 @@ module Blackbeard
 
     describe "active_user?" do
       context "with no logged in user" do
-        it "should be true if users_rate is 100" do
+        it "should be false if users_rate is 100" do
           feature.users_rate = 100
           allow(context).to receive(:user).and_return(nil)
           expect(feature.active_user?(context)).to be_falsey
@@ -49,24 +49,29 @@ module Blackbeard
           expect(feature.active_user?(context)).to be_truthy
         end
 
-        describe "by user_id modulus" do
-          [212,201,1,113,1008].each do |i|
-            it "should be true" do
-              feature.users_rate = 13
-              allow(context).to receive(:user).and_return(double :id => i)
-              allow(context).to receive(:user_id).and_return(i)
-              expect(feature.active_user?(context)).to be_truthy
-            end
-          end
+        # Currently the way we do incremental rollout is by calulatined 
+        # the user_id mod 100, this has the property of being deterministic, 
+        # but it is not independent.
+        #
+        # If we have two features, feature x and feature y, and each are 
+        # turned on for 50% of our users, then independence implies that 
+        # there should be a 25% chance that any single user sees both 
+        # features x and y. However, since the visibility of the feature 
+        # only depends on user_id, users with an id that is less than 50 
+        # mod 100 will see both x and y.
+        it "should allow statistically indepdendent features" do
+          featureX = Blackbeard::Feature.create('feature x')
+          featureX.users_rate = 50
 
-          [200,231,17,199,1018].each do |i|
-            it "should be true" do
-              feature.users_rate = 13
-              allow(context).to receive(:user).and_return(double :id => i)
-              allow(context).to receive(:user_id).and_return(i)
-              expect(feature.active_user?(context)).to be_falsey
-            end
-          end
+          featureY = Blackbeard::Feature.create('feature y')
+          featureY.users_rate = 50
+
+          user_id = 10
+          allow(context).to receive(:user).and_return(double :id => user_id)
+          allow(context).to receive(:user_id).and_return user_id
+
+          expect(featureX.active_user?(context)).to be_falsey
+          expect(featureY.active_user?(context)).to be_truthy
         end
       end
     end
@@ -102,8 +107,9 @@ module Blackbeard
 
     describe "active_segment?" do
       it "should be false if there are no group segments" do
-          expect(feature.active_segment?(context)).to be_falsey
+        expect(feature.active_segment?(context)).to be_falsey
       end
+
       context "with group segments" do
         before :each do
           @group_a = Group.create(:a)
