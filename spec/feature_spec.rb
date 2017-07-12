@@ -108,6 +108,20 @@ module Blackbeard
 
     end
 
+    describe '#destroy_participant_data' do
+      let(:active_participant_data) { feature.active_participant_data }
+      let(:inactive_participant_data) { feature.inactive_participant_data }
+
+      it 'destroys the active participant data' do
+        expect(active_participant_data).to receive(:destroy)
+        feature.destroy_participant_data
+      end
+
+      it 'destroys the inactive participant data' do
+        expect(inactive_participant_data).to receive(:destroy)
+        feature.destroy_participant_data
+      end
+    end
 
   end
 end

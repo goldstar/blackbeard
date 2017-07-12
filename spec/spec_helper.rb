@@ -6,9 +6,8 @@ RSpec.configure do |config|
     Blackbeard.configure! do |c|
       c.namespace = "BlackbeardTests"
     end
-    redis = Blackbeard.config.db
-    keys = redis.keys
-    redis.del(keys) if keys.any?
+    redis = Blackbeard.config.db.redis
+    redis.scan_each { |k| redis.del(k) }
   end
 end
 
