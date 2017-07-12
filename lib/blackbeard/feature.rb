@@ -78,7 +78,12 @@ module Blackbeard
       FeatureMetric.new(self,metric).metric_data
     end
 
-  private
+    def destroy_participant_data
+      active_participant_data.destroy
+      inactive_participant_data.destroy
+    end
+
+    private
 
     def active?(context)
       case status

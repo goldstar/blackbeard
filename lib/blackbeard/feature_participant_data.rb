@@ -17,7 +17,12 @@ module Blackbeard
       db.hash_get(participants_hash_key, uid)
     end
 
-  private
+    def destroy
+      db.del(hours_hash_key)
+      db.del(participants_hash_key)
+    end
+
+    private
 
     def key
       @feature.key
