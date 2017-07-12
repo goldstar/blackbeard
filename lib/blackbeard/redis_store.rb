@@ -7,10 +7,6 @@ module Blackbeard
       @redis = Redis::Namespace.new(namespace.to_sym, :redis => r)
     end
 
-    def keys
-      redis.keys
-    end
-
     # Hash commands
     def hash_set_if_not_exists(hash_key, field, value)
       redis.hsetnx(hash_key, field, value)
