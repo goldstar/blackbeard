@@ -34,13 +34,20 @@ module Blackbeard
       redis.hkeys(hash_key)
     end
 
-    def hash_del_all(hash_key, count: 1_000)
+    def hash_del_all(hash_key, scan_count: 1_000, del_count: nil, scan_sleep: 0, del_sleep: 0)
       cursor = '0'
 
       loop {
-        cursor, response = redis.hscan(hash_key, cursor, count: count)
+        cursor, response = redis.hscan(hash_key, cursor, count: scan_count)
+        sleep(scan_sleep)
         fields = response.map(&:first)
-        redis.hdel(hash_key, fields) if fields.any?
+
+        until fields.empty?
+          fields_to_delete = fields.take(del_count || scan_count)
+          redis.hdel(hash_key, fields_to_delete) if fields_to_delete.any?
+          sleep(del_sleep)
+          fields -= fields_to_delete
+        end
 
         break if cursor == '0'
       }

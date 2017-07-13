@@ -187,7 +187,7 @@ module Blackbeard
     it 'deletes the hash' do
       1.upto(1000).each {|f| db.hash_set(hash_key, f, true) }
       expect {
-        db.hash_del_all(hash_key, count: 10)
+        db.hash_del_all(hash_key, scan_count: 10)
       }.to change {
         db.exists(hash_key)
       }.from(true).to(false)
