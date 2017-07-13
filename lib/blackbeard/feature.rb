@@ -78,9 +78,9 @@ module Blackbeard
       FeatureMetric.new(self,metric).metric_data
     end
 
-    def destroy_participant_data
-      active_participant_data.destroy
-      inactive_participant_data.destroy
+    def destroy_participant_data(**options)
+      active_participant_data.destroy(**options)
+      inactive_participant_data.destroy(**options)
     end
 
     private

@@ -17,9 +17,9 @@ module Blackbeard
       db.hash_get(participants_hash_key, uid)
     end
 
-    def destroy
-      db.hash_del_all(hours_hash_key)
-      db.hash_del_all(participants_hash_key)
+    def destroy(**options)
+      db.hash_del_all(hours_hash_key, **options)
+      db.hash_del_all(participants_hash_key, **options)
     end
 
     private
