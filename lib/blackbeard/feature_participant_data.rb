@@ -18,8 +18,8 @@ module Blackbeard
     end
 
     def destroy
-      db.del(hours_hash_key)
-      db.del(participants_hash_key)
+      db.hash_del_all(hours_hash_key)
+      db.hash_del_all(participants_hash_key)
     end
 
     private

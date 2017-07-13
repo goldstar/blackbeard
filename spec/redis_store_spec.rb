@@ -180,4 +180,17 @@ module Blackbeard
       end
     end
   end
+
+  describe '#hash_del_all' do
+    let(:hash_key) { 'test_hash' }
+
+    it 'deletes the hash' do
+      1.upto(1000).each {|f| db.hash_set(hash_key, f, true) }
+      expect {
+        db.hash_del_all(hash_key, count: 10)
+      }.to change {
+        db.exists(hash_key)
+      }.from(true).to(false)
+    end
+  end
 end

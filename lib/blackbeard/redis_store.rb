@@ -34,6 +34,20 @@ module Blackbeard
       redis.hkeys(hash_key)
     end
 
+    def hash_del_all(hash_key, count: 1_000)
+      cursor = '0'
+
+      loop {
+        cursor, response = redis.hscan(hash_key, cursor, count: count)
+        fields = response.map(&:first)
+        redis.hdel(hash_key, fields) if fields.any?
+
+        break if cursor == '0'
+      }
+
+      redis.del(hash_key)
+    end
+
     def hash_get(hash_key, field)
       redis.hget(hash_key, field)
     end
@@ -128,6 +142,10 @@ module Blackbeard
 
     def set(key, value)
       redis.set(key, value)
+    end
+
+    def exists(key)
+      redis.exists(key)
     end
 
   end
