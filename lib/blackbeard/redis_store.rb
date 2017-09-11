@@ -7,6 +7,18 @@ module Blackbeard
       @redis = Redis::Namespace.new(namespace.to_sym, :redis => r)
     end
 
+    def keys
+      iter = nil
+      all_keys = []
+
+      while iter != '0'
+        iter, keys = redis.scan(iter || 0, count: 1000)
+        all_keys += keys
+      end
+
+      all_keys
+    end
+
     # Hash commands
     def hash_set_if_not_exists(hash_key, field, value)
       redis.hsetnx(hash_key, field, value)

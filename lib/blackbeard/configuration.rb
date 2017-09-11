@@ -1,7 +1,17 @@
 module Blackbeard
   class Configuration
-    attr_accessor :timezone, :namespace, :redis, :guest_method, :announcer
-    attr_reader :group_definitions
+    attr_accessor :timezone, :namespace, :redis, :guest_method, :announcer, :revision_header
+    attr_reader :group_definitions, :parse_revision_proc
+
+    DEFAULT_PARSE_REVISION_PROC = ->(rev) {
+      return '0.00' if rev.nil?
+
+      if String(rev)['.'].nil?
+        "#{rev}.00"
+      else
+        String(rev)
+      end
+    }
 
     def initialize
       @timezone = 'America/Los_Angeles'
@@ -9,6 +19,8 @@ module Blackbeard
       @group_definitions = {}
       @redis = nil
       @announcer = nil
+      @revision_header = nil
+      @parse_revision_proc = DEFAULT_PARSE_REVISION_PROC
     end
 
     def db
@@ -21,6 +33,10 @@ module Blackbeard
 
     def on_change(&block)
       @announcer = block
+    end
+
+    def to_parse_revision(&block)
+      @parse_revision_proc = block
     end
 
     def define_group(id, segments = nil, &block)

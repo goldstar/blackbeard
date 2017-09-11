@@ -69,6 +69,14 @@ module Blackbeard
         end
     end
 
+    def app_revision
+      if controller.nil?
+        AppRevision.new('0', self)
+      else
+        AppRevision.new(controller.request.headers[revision_header], self)
+      end
+    end
+
     private
 
     def generate_visitor_id

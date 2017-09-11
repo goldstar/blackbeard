@@ -1,0 +1,5 @@
+<div class="page-header">
+  <h1><span id="editable-name"><%= h @revision.to_s %></span> <small>Revisions</small></h1>
+</div>
+
+<%= partial :'shared/charts', :locals => {:charts => @charts } %>

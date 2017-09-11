@@ -1,0 +1,21 @@
+<div class="page-header">
+  <h1>Revisions</h1>
+  <p>Revisions are particular releases of the Goldstar API with gated functionality - you can tell when no clients are using a release when there are no `older` clients.</p>
+</div>
+
+<% if @revisions.any? %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Queried Revisions</h3>
+  </div>
+  <ul class="list-group">
+  <% @revisions.each do |revision| %>
+  <li class="list-group-item"><a href="<%= url(revision.path) %>"><%= revision.name %></a></li>
+  <% end %>
+  </ul>
+</div>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>No revisions!</strong> Something may be wrong or you may just need to define some revisions.
+  </div>
+<% end %>
