@@ -105,6 +105,39 @@ module Blackbeard
       end
     end
 
+    describe '#app_revision' do
+
+      context 'when not in a controller context' do
+        subject(:context) { Context.new(pirate, user) }
+
+        it 'returns a zero app revision' do
+          expect(context.app_revision).to eq '0'
+        end
+      end
+
+      context 'when in an controller context' do
+        let(:header) { { 'X-App-Revision' => '20170911' } }
+        let(:controller) { double(request: double(headers: header)) }
+
+        before do
+          # you set this in configuration - we stub it here for ease - it will
+          # _always_ return revision 0 (old as shit or unknown) if it's not set
+          expect(context).to receive(:revision_header).and_return('X-App-Revision')
+        end
+
+        subject(:context) { Context.new(pirate, user, controller) }
+
+        it 'returns an app revision equal to the header' do
+          # the `to eq` expectation doesn't do quite what we want here.
+          expect(context.app_revision == '20170911.00').to be true
+        end
+      end
+
+      it 'should return an app_revision floatish' do
+        expect(context.app_revision).to be_an_instance_of(Blackbeard::AppRevision)
+      end
+    end
+
     describe "#feature_active?" do
       let(:inactive_feature) { Blackbeard::Feature.create(:inactive_feature) }
       let(:active_feature) { Blackbeard::Feature.create(:active_feature) }

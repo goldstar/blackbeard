@@ -25,20 +25,23 @@ require 'blackbeard/storable_has_set'
 require 'blackbeard/storable'
 require 'blackbeard/metric_data/base'
 require 'blackbeard/participant_methods'
-require "blackbeard/redis_store"
-require "blackbeard/group"
-require "blackbeard/context"
-require "blackbeard/metric"
-require "blackbeard/metric_data/unique"
-require "blackbeard/metric_data/total"
-require "blackbeard/test"
-require "blackbeard/errors"
-require "blackbeard/group"
-require "blackbeard/feature"
-require "blackbeard/cohort"
-require "blackbeard/pirate"
+require 'blackbeard/redis_store'
+require 'blackbeard/group'
+require 'blackbeard/context'
+require 'blackbeard/metric'
+require 'blackbeard/metric_data/unique'
+require 'blackbeard/metric_data/total'
+require 'blackbeard/test'
+require 'blackbeard/errors'
+require 'blackbeard/group'
+require 'blackbeard/feature'
+require 'blackbeard/cohort'
+require 'blackbeard/pirate'
 require 'blackbeard/chart'
 require 'blackbeard/cohort_data'
+require 'blackbeard/app_revision_participant_data'
+require 'blackbeard/revision'
+require 'blackbeard/app_revision'
 
 module Blackbeard
   class << self

@@ -20,5 +20,12 @@ module Blackbeard
       config.guest_method
     end
 
+    def revision_header
+      config.revision_header
+    end
+
+    def parse_revision(revision_number)
+      config.parse_revision_proc.call(revision_number)
+    end
   end
 end

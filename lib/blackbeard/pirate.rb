@@ -62,6 +62,11 @@ module Blackbeard
       @set_context.ab_test(id, options)
     end
 
+    def app_revision
+      return AppRevision.new('0', self) unless @set_context
+      @set_context.app_revision
+    end
+
     def feature_active?(id, count_participation = true)
       return false unless @set_context
       @set_context.feature_active?(id, count_participation = true)
