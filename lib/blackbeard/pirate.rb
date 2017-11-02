@@ -63,7 +63,7 @@ module Blackbeard
     end
 
     def app_revision
-      return AppRevision.new('0', self) unless @set_context
+      return AppRevision.new('0') unless @set_context
       @set_context.app_revision
     end
 
