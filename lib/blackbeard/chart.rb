@@ -44,7 +44,7 @@ private
 
     def cell_type(value)
       case value.class.name
-      when 'Fixnum'
+      when 'Integer'
         'number'
       when 'Float'
         'number'

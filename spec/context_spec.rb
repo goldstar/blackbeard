@@ -16,7 +16,7 @@ module Blackbeard
       let(:user) { double(:id => nil) }
 
       it 'can still get a visitor id' do
-        expect(context.visitor_id).to be_an_instance_of(Fixnum)
+        expect(context.visitor_id).to be_an_instance_of(Integer)
       end
     end
 
@@ -25,7 +25,7 @@ module Blackbeard
       let(:controller) { double(request: double(cookies: { 'bbd' => '1' })) }
 
       it 'still gets a fixnum' do
-        expect(context.visitor_id).to be_an_instance_of(Fixnum)
+        expect(context.visitor_id).to be_an_instance_of(Integer)
       end
     end
 
