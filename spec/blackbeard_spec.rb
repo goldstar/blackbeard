@@ -6,14 +6,24 @@ describe Blackbeard do
   end
 
   describe "pirate" do
-    it "can configure" do
-      p = Blackbeard.pirate do |config|
+    it 'is memoized within the same thread' do
+      expect(Blackbeard.pirate).to equal(Blackbeard.pirate)
+    end
+
+    it 'is unique across threads' do
+      expect(Blackbeard.pirate).to_not equal(Thread.new{Blackbeard.pirate}.value)
+    end
+  end
+
+  describe '#configure!' do
+    after { Blackbeard.configure! {} }
+
+    it "sets the values as expected" do
+      Blackbeard.configure! do |config|
         config.timezone = 'America/Somewhere'
       end
+
       expect(Blackbeard.config.timezone).to eq('America/Somewhere')
-    end
-    it "returns a pirate" do
-        expect(Blackbeard.pirate).to be_a(Blackbeard::Pirate)
     end
   end
 

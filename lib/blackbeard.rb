@@ -60,10 +60,9 @@ module Blackbeard
     end
 
     def pirate
-      yield(config) if block_given?
-      Blackbeard::Pirate.new
+      Thread.current[:blackbeard_pirate] ||= Blackbeard::Pirate.new
     end
   end
 end
 
-Blackbeard.pirate {}
+Blackbeard.configure! {}
