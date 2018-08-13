@@ -62,6 +62,10 @@ module Blackbeard
     def pirate
       Thread.current[:blackbeard_pirate] ||= Blackbeard::Pirate.new
     end
+
+    def walk_the_plank!
+      Thread.current[:blackbeard_pirate] = nil
+    end
   end
 end
 
