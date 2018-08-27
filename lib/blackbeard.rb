@@ -42,6 +42,7 @@ require 'blackbeard/cohort_data'
 require 'blackbeard/app_revision_participant_data'
 require 'blackbeard/revision'
 require 'blackbeard/app_revision'
+require 'blackbeard/railtie' if defined? Rails
 
 module Blackbeard
   class << self
@@ -60,11 +61,16 @@ module Blackbeard
     end
 
     def pirate
-      Thread.current[:blackbeard_pirate] ||= Blackbeard::Pirate.new
+      store[:blackbeard_pirate] ||= Blackbeard::Pirate.new
     end
 
     def walk_the_plank!
-      Thread.current[:blackbeard_pirate] = nil
+      store[:blackbeard_pirate] = nil
+    end
+
+    # Must impliment a Hash interface
+    def store
+      Thread.current
     end
   end
 end
