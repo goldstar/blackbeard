@@ -190,7 +190,7 @@ module Blackbeard
         db.hash_del_all(hash_key, scan_count: 10)
       }.to change {
         db.exists(hash_key)
-      }.from(true).to(false)
+      }.from(1).to(0)
     end
   end
 end
