@@ -45,7 +45,7 @@ module Blackbeard
       add_to_cohort(id, timestamp, true)
     end
 
-    def feature_active?(id, count_participation = true)
+    def feature_active?(id, count_participation = false)
       feature = @pirate.feature(id.to_s).reload
       feature.active_for?(self, count_participation).tap { |result|
         @requested_features.merge!(id.to_s => result)

@@ -67,9 +67,9 @@ module Blackbeard
       @set_context.app_revision
     end
 
-    def feature_active?(id, count_participation = true)
+    def feature_active?(id, count_participation = false)
       return false unless @set_context
-      @set_context.feature_active?(id, count_participation = true)
+      @set_context.feature_active?(id, count_participation)
     end
 
     def requested_features

@@ -79,7 +79,7 @@ describe Blackbeard::Pirate do
       end
 
       it "should delegate #feature_active?" do
-        expect(set_context).to receive(:feature_active?).with(:example_feature, true).and_return(false)
+        expect(set_context).to receive(:feature_active?).with(:example_feature, false).and_return(false)
         pirate.feature_active?(:example_feature)
       end
 

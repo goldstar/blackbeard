@@ -148,12 +148,12 @@ module Blackbeard
       end
 
       it "should return true when active" do
-        expect(active_feature).to receive(:active_for?).with(context, true).and_return(true)
+        expect(active_feature).to receive(:active_for?).with(context, false).and_return(true)
         expect(context.feature_active?(:active_feature)).to be_truthy
       end
 
       it "should return true when active" do
-        expect(inactive_feature).to receive(:active_for?).with(context, true).and_return(false)
+        expect(inactive_feature).to receive(:active_for?).with(context, false).and_return(false)
         expect(context.feature_active?(:inactive_feature)).to be_falsey
       end
 
@@ -163,6 +163,13 @@ module Blackbeard
         }.to change {
           context.requested_features.key?('active_feature')
         }.from(false).to(true)
+      end
+
+      context "when counting participartion" do
+        it "forwards the truthy count_partifipation value" do
+          expect(inactive_feature).to receive(:active_for?).with(context, true).and_return(false)
+          context.feature_active?(:inactive_feature, true)
+        end
       end
     end
 
